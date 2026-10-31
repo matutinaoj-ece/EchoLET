@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EchoLET - Professional Education Classroom</title>
+  <title>EchoLET - Classroom Reviewer</title>
   
   <!-- Pencil Icon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
@@ -28,7 +28,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Google Sans", Roboto, Arial, sans-serif; }
-    body { background-color: var(--bg); color: var(--text-main); padding-bottom: 4rem; }
+    body { background-color: var(--bg); color: var(--text-main); padding-bottom: 4rem; line-height: 1.6; }
 
     /* Header */
     header {
@@ -77,10 +77,10 @@
     /* Banner */
     .classroom-banner {
       background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);
-      color: white; padding: 2.2rem; border-radius: var(--radius); margin-bottom: 1.5rem;
+      color: white; padding: 2rem; border-radius: var(--radius); margin-bottom: 1.5rem;
       border-bottom: 4px solid var(--gold); position: relative;
     }
-    .classroom-banner h1 { font-size: 1.65rem; color: var(--gold); margin-bottom: 0.2rem; }
+    .classroom-banner h1 { font-size: 1.6rem; color: var(--gold); margin-bottom: 0.2rem; }
     .classroom-banner p { font-size: 0.95rem; color: #fce8e6; }
     .student-greeting { margin-top: 0.8rem; font-size: 0.9rem; color: #fff; font-weight: 500; }
 
@@ -97,26 +97,52 @@
       color: var(--crimson-dark); font-weight: 800; display: flex; align-items: center;
       justify-content: center; font-size: 0.9rem; border: 1px solid var(--gold); flex-shrink: 0;
     }
-    .subject-title { font-size: 0.96rem; font-weight: 600; color: var(--text-main); }
+    .subject-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
     .subject-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* Content View (Reader) */
+    /* Verbatim Content Viewer */
     .content-view {
       display: none; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 2rem; animation: fadeIn 0.25s ease;
+      border-radius: var(--radius); padding: 2rem;
     }
-    .content-header { border-bottom: 2px solid var(--gold-light); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-    .content-header h2 { color: var(--crimson); font-size: 1.35rem; }
+    .content-header {
+      border-bottom: 2px solid var(--gold-light); padding-bottom: 1rem; margin-bottom: 1.5rem;
+    }
+    .content-header h2 { color: var(--crimson); font-size: 1.35rem; line-height: 1.3; }
 
-    .section-card {
-      background: #fafafa; border: 1px solid #e5e7eb; border-left: 5px solid var(--crimson);
-      padding: 1.2rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem;
+    /* Quick Jump Navigation */
+    .toc-box {
+      background: var(--gold-light); border: 1px solid var(--gold); border-radius: 8px;
+      padding: 1rem; margin-bottom: 1.8rem;
     }
-    .section-card h3 { color: var(--crimson); margin-bottom: 0.6rem; font-size: 1.05rem; }
-    .section-card h4 { color: var(--gold-dark); margin: 0.7rem 0 0.3rem 0; font-size: 0.95rem; }
-    .section-card p { font-size: 0.9rem; line-height: 1.55; margin-bottom: 0.5rem; }
-    .section-card ul { padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.6rem; }
-    .section-card li { margin-bottom: 0.35rem; }
+    .toc-box h4 { color: var(--crimson-dark); font-size: 0.95rem; margin-bottom: 0.5rem; }
+    .toc-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-link {
+      background: white; border: 1px solid var(--border); padding: 0.35rem 0.65rem;
+      border-radius: 20px; font-size: 0.8rem; color: var(--crimson); text-decoration: none;
+      font-weight: 600; transition: all 0.15s;
+    }
+    .toc-link:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+    .verbatim-block {
+      background: #FFFFFF; border: 1px solid #E5E7EB; border-left: 5px solid var(--crimson);
+      padding: 1.4rem; border-radius: 0 8px 8px 0; margin-bottom: 1.6rem;
+    }
+    .verbatim-block h3 { color: var(--crimson); margin-bottom: 0.7rem; font-size: 1.15rem; }
+    .verbatim-block h4 { color: var(--gold-dark); margin: 0.9rem 0 0.3rem 0; font-size: 1rem; }
+    .verbatim-block h5 { color: var(--crimson-dark); margin: 0.7rem 0 0.2rem 0; font-size: 0.92rem; }
+    .verbatim-block p { font-size: 0.92rem; margin-bottom: 0.6rem; color: var(--text-main); }
+    .verbatim-block ul { padding-left: 1.3rem; font-size: 0.92rem; margin-bottom: 0.8rem; }
+    .verbatim-block li { margin-bottom: 0.35rem; }
+
+    /* Two-Way Comparison Table (Leader vs Manager & School/Community) */
+    .compare-table {
+      width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem;
+    }
+    .compare-table th, .compare-table td {
+      border: 1px solid var(--border); padding: 0.65rem 0.85rem; text-align: left;
+    }
+    .compare-table th { background: var(--gold-light); color: var(--crimson-dark); }
 
     /* Quiz Panel */
     .quiz-view {
@@ -171,12 +197,11 @@
     .grades-table th { background: var(--gold-light); color: var(--crimson-dark); font-weight: 700; }
 
     .hidden { display: none !important; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <!-- Google Classroom Header -->
+  <!-- Header -->
   <header>
     <div class="header-left">
       <div class="pencil-logo">
@@ -204,7 +229,7 @@
     <!-- Banner -->
     <div class="classroom-banner">
       <h1>Professional Education (ProfEd) Reviewer</h1>
-      <p>Course Instructor: Teacher Echo &bull; 10 Competency Domains</p>
+      <p>Course Instructor: Teacher Echo &bull; Complete Reference Curriculum</p>
       <div id="studentGreeting" class="student-greeting">Welcome! Click any subject to review content and solve the quiz.</div>
     </div>
 
@@ -213,16 +238,34 @@
       <div id="subjectsContainer"></div>
     </section>
 
-    <!-- 2. SUBJECT STUDY CONTENT VIEW (Notes First) -->
+    <!-- 2. VERBATIM STUDY CONTENT VIEW -->
     <section id="contentView" class="content-view">
       <div class="content-header">
         <button onclick="backToSubjects()" style="background:none; border:none; color:var(--crimson); font-weight:700; cursor:pointer; margin-bottom:0.5rem;">← Back to All Subjects</button>
         <h2 id="contentSubjectTitle">Subject Title</h2>
       </div>
 
-      <div id="contentSectionsContainer">
-        <!-- Structured study sections injected by JS -->
+      <!-- Quick Jump Menu for long reading -->
+      <div class="toc-box">
+        <h4>📑 Quick Jump Table of Contents:</h4>
+        <div class="toc-links">
+          <a class="toc-link" href="#sec-philosophy">1. Philosophical Foundations</a>
+          <a class="toc-link" href="#sec-eastern">2. Eastern Philosophies</a>
+          <a class="toc-link" href="#sec-history-world">3. Historical Foundations (World)</a>
+          <a class="toc-link" href="#sec-history-ph">4. Historical Foundations (PH)</a>
+          <a class="toc-link" href="#sec-sociology">5. Sociological Foundations</a>
+          <a class="toc-link" href="#sec-theories">6. Social Science Theories</a>
+          <a class="toc-link" href="#sec-mdg-sdg">7. MDGs & SDGs</a>
+          <a class="toc-link" href="#sec-anthropology">8. Anthropological Foundations</a>
+          <a class="toc-link" href="#sec-community">9. School & Community Partnership</a>
+          <a class="toc-link" href="#sec-culture-climate">10. School Culture & Climate</a>
+          <a class="toc-link" href="#sec-leadership">11. Organizational Leadership & SBM</a>
+          <a class="toc-link" href="#sec-standards">12. NCBS-SH & PPSSH</a>
+        </div>
       </div>
+
+      <!-- VERBATIM TEXT CONTAINER FOR SUBJECT 1 -->
+      <div id="verbatimContentArea"></div>
 
       <div style="display:flex; justify-content:flex-end; margin-top:2rem;">
         <button id="startSubjectQuizBtn" class="btn-action">Take Subject Quiz Now →</button>
@@ -297,263 +340,673 @@
 
   <script>
     // -------------------------------------------------------------------
-    // DATA STORE: ALL 10 SUBJECTS (SUBJECT 1 FULLY POPULATED WITH YOUR NOTES)
+    // 10 SUBJECTS: SUBJECT 1 IS 100% VERBATIM AND UNALTERED
     // -------------------------------------------------------------------
     const profEdData = [
       {
         id: 1,
-        title: "The Teacher and the Community, School Culture and Organizational Leadership",
-        sections: [
-          {
-            title: "1. Philosophical Foundations of Education",
-            content: `
-              <p><strong>Philosophy:</strong> Derived from Greek <em>philia</em> (love/pursuit) and <em>sophia</em> (wisdom) — "lover of wisdom".</p>
-              <h4>Branches of Philosophy</h4>
-              <ul>
-                <li><strong>Metaphysics:</strong> Nature of reality and existence. Focus: <em>What is the nature of reality?</em>
-                  <br>• <strong>Ontology:</strong> Study of being and existence.
-                  <br>• <strong>Cosmology:</strong> Origin and structure of the universe.
-                  <br>• <strong>Theology:</strong> Divine nature and religious concepts.
-                  <br>• <strong>Universal Science:</strong> Principles/laws underlying all existence.
-                  <br>• <strong>Anthropology:</strong> Study of human societies and cultures.
-                </li>
-                <li><strong>Epistemology:</strong> Examination of knowledge and belief. Focus: <em>What is knowledge? How is it acquired?</em></li>
-                <li><strong>Axiology:</strong> Study of value.
-                  <br>• <strong>Ethics:</strong> Moral philosophy (right vs. wrong).
-                  <br>• <strong>Aesthetics:</strong> Nature of beauty and art.
-                </li>
-                <li><strong>Logic:</strong> Valid reasoning and argumentation.</li>
-                <li><strong>Political Philosophy:</strong> Principles of government and the just state.</li>
-                <li><strong>Philosophy of Mind:</strong> Nature of mind and mental processes.</li>
-              </ul>
-              <h4>Sources of Knowledge in Epistemology</h4>
-              <ul>
-                <li><strong>Empirical Observation / Empiricism:</strong> Direct sensory experience (sight, touch, etc.).</li>
-                <li><strong>Reason & Logic / Rationalism:</strong> Deductive/inductive conclusions, innate ideas independent of sensory experience.</li>
-                <li><strong>Intuition:</strong> Immediate knowledge without conscious reasoning.</li>
-                <li><strong>Testimony & Authority:</strong> Acceptance based on credibility and expertise of others.</li>
-                <li><strong>Memory:</strong> Recollection of past experiences.</li>
-                <li><strong>Social Constructivism:</strong> Knowledge shaped by social interaction and cultural context.</li>
-                <li><strong>Pragmatism:</strong> Knowledge is verified by practical consequences and real utility.</li>
-              </ul>
-            `
-          },
-          {
-            title: "2. Eastern Philosophies",
-            content: `
-              <ul>
-                <li><strong>Hinduism (Oldest in Asia):</strong>
-                  <br>• <em>Dharma:</em> Moral duty/righteousness.
-                  <br>• <em>Karma:</em> Law of cause and effect.
-                  <br>• <em>Samsara:</em> Cycle of birth, death, and rebirth.
-                  <br>• <em>Moksha:</em> Liberation from reincarnation to unite with Brahman (Cosmic Spirit). <em>Atman:</em> Individual soul.
-                </li>
-                <li><strong>Buddhism (Siddhartha Gautama):</strong>
-                  <br>• Four Noble Truths & Eightfold Path leading to <em>Nirvana</em> (liberation from suffering).
-                  <br>• <em>Anicca:</em> Impermanence.
-                  <br>• <em>Anatta:</em> Non-self.
-                  <br>• <em>Middle Way:</em> Balance between extremes.
-                </li>
-                <li><strong>Confucianism (Confucius):</strong>
-                  <br>• <em>Ren:</em> Benevolence/humaneness.
-                  <br>• <em>Li:</em> Ritual propriety/etiquette.
-                  <br>• <em>Xiao:</em> Filial piety. Focus on Five Relationships and virtue in society.
-                </li>
-                <li><strong>Taoism (Lao Tzu):</strong>
-                  <br>• <em>Tao:</em> The Way; ultimate unity.
-                  <br>• <em>Wu Wei:</em> Non-action, effortless spontaneity, living in harmony with nature. Yin & Yang balance.
-                </li>
-                <li><strong>Zen Buddhism:</strong>
-                  <br>• Zazen (seated meditation), Koan (paradoxical riddle), Satori (instant enlightenment), Sunyata (emptiness).
-                </li>
-                <li><strong>Sikhism:</strong>
-                  <br>• One God (Ik Onkar), equality of all humans, Guru Granth Sahib scripture. <em>Sewa:</em> Selfless service; <em>Simran:</em> Remembrance of God.
-                </li>
-              </ul>
-            `
-          },
-          {
-            title: "3. Historical Foundations of Education (World & Philippines)",
-            content: `
-              <h4>Ancient World Civilizations (Survival & Conformity)</h4>
-              <ul>
-                <li><strong>Sumerians (cuneiform):</strong> Training scribes and priests for administrative records.</li>
-                <li><strong>Egyptians (hieroglyphics):</strong> Formal education for bureaucracy and religious ceremonies.</li>
-                <li><strong>Ancient China:</strong> Confucian focus on moral character and social harmony.</li>
-                <li><strong>Sparta:</strong> <em>Agoge</em> system starting at age 7 — military discipline, physical toughness, warrior training.</li>
-                <li><strong>Athens:</strong> Well-rounded liberal education (literature, poetry, gymnasium, philosophy).</li>
-                <li><strong>Rome:</strong> Civic duty, rhetoric, and oratory to produce public servants.</li>
-              </ul>
-              <h4>Philippine Educational Eras</h4>
-              <ul>
-                <li><strong>Pre-Colonial:</strong> Informal, oral traditions, holistic survival skills, spiritual leadership via <em>Babaylan</em>.</li>
-                <li><strong>Spanish:</strong> Formal, centralized religious instruction, catechism; limited access favored the elite.</li>
-                <li><strong>American:</strong> Public secular schooling, Normal schools, democratic values, English as medium of instruction.</li>
-                <li><strong>Japanese:</strong> Love for labor, vocational/health education, Niponggo replaced English.</li>
-                <li><strong>Contemporary:</strong> R.A. 10533 (K-12 Basic Education Program, 2013), global competitiveness.</li>
-              </ul>
-            `
-          },
-          {
-            title: "4. Sociological Foundations & Theories",
-            content: `
-              <p><strong>Culture:</strong> Shared, learned, symbolic, dynamic, integrated, and normative.</p>
-              <h4>Types of Norms</h4>
-              <ul>
-                <li><strong>Folkways:</strong> Organized, repetitive customary routines of everyday life (e.g., table manners).</li>
-                <li><strong>Mores:</strong> Norms with deep moral and ethical value (violations are viewed as offensive/sinful).</li>
-                <li><strong>Laws:</strong> Formalized, codified norms enacted and enforced by political authorities.</li>
-                <li><strong>Rituals:</strong> Scripted ceremonial interactions.</li>
-              </ul>
-              <h4>Social Science Theories</h4>
-              <ul>
-                <li><strong>Structural Functionalism:</strong> Society is a system of interrelated parts working together to maintain social order and equilibrium.</li>
-                <li><strong>Conflict Theory:</strong> Society is shaped by power struggles and inequality; social change stems from conflict.</li>
-                <li><strong>Symbolic Interactionism:</strong> Micro-level face-to-face interactions using shared symbols and language.</li>
-                <li><strong>Social Exchange Theory:</strong> Social relationships are based on calculated costs vs. rewards.</li>
-                <li><strong>Consensus Theory:</strong> Shared values create social cohesion.</li>
-              </ul>
-              <h4>Global Goals</h4>
-              <ul>
-                <li><strong>MDGs (2000–2015):</strong> 8 Millennium Development Goals (focus on primary education, poverty reduction).</li>
-                <li><strong>SDGs (2016–2030):</strong> 17 Sustainable Development Goals. Goal 4: Quality, inclusive, equitable lifelong education for all.</li>
-              </ul>
-            `
-          },
-          {
-            title: "5. Anthropological Foundations & School-Community Relations",
-            content: `
-              <h4>Anthropological Terms</h4>
-              <ul>
-                <li><strong>Cultural Relativism:</strong> Evaluating a culture based on its own standards, without foreign prejudice.</li>
-                <li><strong>Ethnocentrism:</strong> Judging other cultures as inferior compared to one's own.</li>
-                <li><strong>Xenocentrism:</strong> Believing foreign cultural practices/products are superior to one's own.</li>
-              </ul>
-              <h4>Modes of Cultural Transmission</h4>
-              <ul>
-                <li><strong>Enculturation:</strong> Learning one's own native culture through family and primary social groups.</li>
-                <li><strong>Acculturation:</strong> Adopting elements from another culture through direct intercultural contact.</li>
-                <li><strong>Assimilation:</strong> Fully integrating into the dominant culture, losing original cultural identity.</li>
-                <li><strong>Cultural Diffusion:</strong> The spread of cultural elements (ideas, tools) across societies via trade or media.</li>
-              </ul>
-              <h4>School & Community Partnership</h4>
-              <ul>
-                <li><strong>Community to School:</strong> Brigada Eskwela, work immersions, advisory councils, resource sharing.</li>
-                <li><strong>School to Community:</strong> Evacuation shelters, polling centers, literacy outreach, medical missions.</li>
-              </ul>
-            `
-          },
-          {
-            title: "6. School Culture, Climate, Leadership, and DepEd Standards",
-            content: `
-              <h4>School Culture vs. School Climate</h4>
-              <ul>
-                <li><strong>Culture:</strong> The shared core values, deep beliefs, traditions, and institutional customs.</li>
-                <li><strong>Climate:</strong> The current atmosphere or "feel" (feelings of physical/emotional safety, relational warmth, daily vibe).</li>
-              </ul>
-              <h4>Leadership Styles</h4>
-              <ul>
-                <li><strong>Autocratic:</strong> Unilateral decisions, top-down directives.</li>
-                <li><strong>Democratic / Participative:</strong> Shared decision-making with faculty and stakeholders.</li>
-                <li><strong>Laissez-Faire:</strong> Hands-off approach, delegating full autonomy.</li>
-                <li><strong>Transformational:</strong> Visionary leadership inspiring innovation and systemic growth.</li>
-                <li><strong>Servant Leadership:</strong> Prioritizing the welfare and professional empowerment of others.</li>
-              </ul>
-              <h4>School-Based Management (SBM)</h4>
-              <p>Institutionalized under R.A. 9155; decentralizes authority to principals and local school boards with participatory accountability.</p>
-              <h4>DepEd Standards for School Heads</h4>
-              <ul>
-                <li><strong>NCBS-SH (DepEd Order 32, s. 2010):</strong> 7 Domains (School Leadership, Instructional Leadership, Student-Centered Climate, HR & PD, Community Partnership, Operations, Personal Attributes).</li>
-                <li><strong>PPSSH (DepEd Order 24, s. 2020):</strong> 5 Domains (1. Leading Strategically, 2. Managing Operations and Resources, 3. Focusing on Teaching and Learning, 4. Developing Self and Others, 5. Building Connections).</li>
-              </ul>
-            `
-          }
-        ],
+        title: "THE TEACHER AND THE COMMUNITY, SCHOOL CULTURE AND ORGANIZATIONAL LEADERSHIP",
+        rawHTML: `
+          <!-- 1. PHILOSOPHICAL FOUNDATIONS -->
+          <div id="sec-philosophy" class="verbatim-block">
+            <h3>Philosophical Foundations of Education</h3>
+            <p><strong>Philosophy:</strong> derived from ancient Greek, in which the philosopher is a lover or pursuer (philia) of wisdom (sophia).</p>
+            
+            <h4>Branch of Philosophy</h4>
+            <ul>
+              <li><strong>1. Metaphysics</strong><br>
+                - Study of the nature of reality and existence<br>
+                <em>Focus:</em> What is the nature of reality?
+              </li>
+              <li><strong>2. Epistemology</strong><br>
+                - Examination of knowledge and the nature of belief<br>
+                <em>Focus:</em> What is knowledge? How is it acquired?
+              </li>
+              <li><strong>3. Axiology</strong><br>
+                - Study of value, including ethics and aesthetics<br>
+                <em>Focus:</em> What is the nature of value? How are values determined?<br>
+                • <strong>Ethics (Moral Philosophy)</strong> – exploration of concepts of right and wrong, good and evil<br>
+                • <strong>Aesthetics</strong> – inquiry into the nature of beauty and art
+              </li>
+              <li><strong>4. Logic</strong><br>
+                - Study of valid reasoning and argumentation<br>
+                <em>Focus:</em> What makes an argument logically sound?
+              </li>
+              <li><strong>5. Political Philosophy</strong><br>
+                - Analysis of the nature and principles of government<br>
+                <em>Focus:</em> What is the just state? How should societies be governed?
+              </li>
+              <li><strong>6. Philosophy of Mind</strong><br>
+                - Study of the nature of the mind and mental processes<br>
+                <em>Focus:</em> What is the mind? How does it relate to the body?
+              </li>
+            </ul>
+
+            <h4>Sub-Branches of Metaphysics</h4>
+            <ul>
+              <li><strong>a. Ontology:</strong> Focus: Study of being and existence. <em>Key Questions:</em> What exists? What is the nature of being?</li>
+              <li><strong>b. Cosmology:</strong> Focus: Examination of the nature of the universe. <em>Key Questions:</em> What is the origin and structure of the universe?</li>
+              <li><strong>c. Theology:</strong> Focus: Inquiry into the nature of the divine and religious concepts. <em>Key Questions:</em> What is the nature of God? What is the relationship between God and the world?</li>
+              <li><strong>d. Universal Science:</strong> Focus: General principles and laws underlying all existence. <em>Key Questions:</em> Are there universal principles governing all things?</li>
+              <li><strong>e. Anthropology:</strong> Focus: Study of human societies and cultures. <em>Key Questions:</em> What defines humanity? How do societies and cultures develop?</li>
+            </ul>
+
+            <h4>Sources of Knowledge in Epistemology</h4>
+            <ul>
+              <li><strong>1. Empirical Observation:</strong> Information gained through direct observation of the world using the senses. Involves seeing, hearing, touching, tasting, and smelling.</li>
+              <li><strong>2. Reason and Logic:</strong> Knowledge acquired through deductive and inductive reasoning. Involves drawing conclusions based on premises or evidence.</li>
+              <li><strong>3. Intuition:</strong> Immediate knowledge without the need for conscious reasoning. Gut feelings or insights that are not necessarily based on evidence.</li>
+              <li><strong>4. Testimony:</strong> Acquiring knowledge from the statements or experiences of others. Relies on trust in the credibility and reliability of the source.</li>
+              <li><strong>5. Memory:</strong> Recollection of past experiences and information. Involves relying on the accuracy of one's memory.</li>
+              <li><strong>6. Authority:</strong> Acceptance of information based on the authority or expertise of the source. Trust in the knowledge and credibility of those considered experts.</li>
+              <li><strong>7. Rationalism:</strong> Emphasizes the role of reason and innate ideas in acquiring knowledge. Belief that certain knowledge is independent of sensory experience.</li>
+              <li><strong>8. Empiricism:</strong> Emphasizes the role of sensory experience and observation in acquiring knowledge. Belief that knowledge is derived from sensory input and empirical evidence.</li>
+              <li><strong>9. Social Constructivism:</strong> Knowledge is shaped by social interactions and cultural context. Emphasizes the role of social and cultural influences on the construction of knowledge.</li>
+              <li><strong>10. Pragmatism:</strong> Knowledge is useful if it has practical application. Focus on the practical consequences and utility of knowledge.</li>
+            </ul>
+          </div>
+
+          <!-- 2. EASTERN PHILOSOPHIES -->
+          <div id="sec-eastern" class="verbatim-block">
+            <h3>Eastern Philosophies</h3>
+            
+            <h4>1. Hinduism (Oldest religion in Asia)</h4>
+            <p><strong>Core Beliefs:</strong></p>
+            <ul>
+              <li><strong>Dharma:</strong> Moral duty or righteousness that varies based on one's role in society.</li>
+              <li><strong>Karma:</strong> Law of cause and effect, where actions determine future consequences.</li>
+              <li><strong>Samsara:</strong> Cycle of birth, death, and rebirth.</li>
+              <li><strong>Moksha:</strong> Liberation from the cycle of rebirth, achieving union with Brahman.</li>
+            </ul>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+              <li><strong>Brahman:</strong> Ultimate reality or cosmic spirit.</li>
+              <li><strong>Atman:</strong> Individual soul.</li>
+              <li><strong>Yoga:</strong> Paths to spiritual realization through discipline and meditation.</li>
+            </ul>
+
+            <h4>2. Buddhism: (Siddhartha Gautama)</h4>
+            <p><strong>Core Beliefs:</strong></p>
+            <ul>
+              <li><strong>Four Noble Truths:</strong> Suffering, its cause, its end, and the path to its end.</li>
+              <li><strong>Eightfold Path:</strong> Guiding principles for ethical and mental development.</li>
+              <li><strong>Nirvana:</strong> Liberation from suffering and the cycle of rebirth.</li>
+            </ul>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+              <li><strong>Impermanence (Anicca):</strong> Nothing is permanent.</li>
+              <li><strong>Non-Self (Anatta):</strong> The absence of a permanent self.</li>
+              <li><strong>Middle Way:</strong> Avoidance of extremes, finding balance.</li>
+            </ul>
+
+            <h4>3. Confucianism: (Confucius – the first teacher of Ancient China)</h4>
+            <p><strong>Core Beliefs:</strong></p>
+            <ul>
+              <li><strong>Ren:</strong> Benevolence or humaneness.</li>
+              <li><strong>Li:</strong> Ritual propriety or etiquette.</li>
+              <li><strong>Xiao:</strong> Filial piety or respect for family.</li>
+            </ul>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+              <li><strong>Five Relationships:</strong> Hierarchical relationships emphasizing virtue.</li>
+              <li><strong>Confucian Analects:</strong> Collection of sayings attributed to Confucius.</li>
+            </ul>
+
+            <h4>4. Taoism (Daoism): (Lao Tzu)</h4>
+            <p><strong>Core Beliefs:</strong></p>
+            <ul>
+              <li><strong>Tao:</strong> The Way, the fundamental principle that underlies and unites everything.</li>
+              <li><strong>Wu Wei:</strong> Non-action or natural spontaneity.</li>
+              <li><strong>Yin and Yang:</strong> Complementary opposites.</li>
+            </ul>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+              <li><strong>Harmony with nature:</strong> Living in accordance with the natural order.</li>
+              <li><strong>Spontaneity:</strong> Acting without deliberate effort.</li>
+            </ul>
+
+            <h4>5. Zen Buddhism:</h4>
+            <p><strong>Core Beliefs:</strong></p>
+            <ul>
+              <li><strong>Zazen:</strong> Seated meditation.</li>
+              <li><strong>Koan:</strong> Paradoxical question used in meditation.</li>
+              <li><strong>Satori:</strong> Instantaneous enlightenment.</li>
+            </ul>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+              <li><strong>Direct experience:</strong> Emphasizes experiential understanding.</li>
+              <li><strong>Mindfulness:</strong> Present-moment awareness.</li>
+              <li><strong>Emptiness (Sunyata):</strong> The concept of non-substantiality.</li>
+            </ul>
+
+            <h4>6. Sikhism:</h4>
+            <p><strong>Core Beliefs:</strong></p>
+            <ul>
+              <li><strong>One God (Ik Onkar):</strong> The belief in a single, formless, and eternal God.</li>
+              <li><strong>Guru Granth Sahib:</strong> The central religious scripture.</li>
+              <li><strong>Equality of all humans:</strong> Rejecting discrimination based on caste, creed, or gender.</li>
+            </ul>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+              <li><strong>Sewa:</strong> Selfless service for the well-being of others.</li>
+              <li><strong>Simran:</strong> Remembrance of God.</li>
+            </ul>
+          </div>
+
+          <!-- 3. HISTORICAL FOUNDATIONS WORLD -->
+          <div id="sec-history-world" class="verbatim-block">
+            <h3>Historical Foundations of Education in the World</h3>
+            
+            <h4>Ancient Civilizations:</h4>
+            <p><strong>General Focus:</strong> Goal: Survival and conformity</p>
+
+            <h5>Sumerians (3500–1900 BCE):</h5>
+            <p><strong>Contribution:</strong> Developed the earliest known writing system, cuneiform, around 3500 BCE. Utilized clay tablets for recording various aspects of life, including trade, religion, and administrative matters.<br>
+            <strong>Focus:</strong> Education centered around training scribes and priests. Scribes played a crucial role in maintaining records, managing accounts, and performing religious rituals.</p>
+
+            <h5>Ancient Egyptians (3100–332 BCE):</h5>
+            <p><strong>Contribution:</strong> Established a system of hieroglyphic writing, using symbols and images, by 3100 BCE. Formalized education for scribes, who held significant roles in the bureaucracy and religious institutions.<br>
+            <strong>Focus:</strong> Education aimed at preparing individuals for administrative roles and religious duties. Scribes were responsible for maintaining records, conducting rituals, and ensuring the smooth functioning of the state.</p>
+
+            <h5>Indus Valley Civilization (3300–1300 BCE):</h5>
+            <p><strong>Contribution:</strong> Developed an advanced urban society with evidence of standardized weights, measures, and town planning. The script remains undeciphered, but educational structures indicate the existence of organized learning.<br>
+            <strong>Focus:</strong> Limited information on education, but likely tied to societal needs such as trade, agriculture, and religious practices. The emphasis on practical skills for daily life might have been a key focus.</p>
+
+            <h5>Ancient China (c. 1600–1046 BCE):</h5>
+            <p><strong>Contribution:</strong> Confucius (551–479 BCE) emphasized the importance of education for moral development. Encouraged the pursuit of knowledge as a means of cultivating ethical behavior.<br>
+            <strong>Focus:</strong> Education aimed at producing virtuous individuals contributing to social harmony. Confucian education emphasized moral principles, etiquette, and the study of classical texts.</p>
+
+            <h5>Ancient Greece (800–146 BCE):</h5>
+            <p><strong>Sparta:</strong><br>
+            • <em>Contribution:</em> Primarily concerned with producing strong and disciplined warriors. Played a significant role in shaping the educational system.<br>
+            • <em>Focus:</em> <strong>Agoge:</strong> The Spartan education system, which began at age 7, focused on physical fitness, military training, and instilling discipline. Spartan boys lived in communal barracks to foster a sense of camaraderie and loyalty. Academic pursuits were secondary to physical training and the development of strong character.</p>
+
+            <p><strong>Athens:</strong><br>
+            • <em>Contribution:</em> Valued a more well-rounded education that included intellectual and physical development. Had a more diverse and inclusive approach compared to Sparta.<br>
+            • <em>Focus:</em> Early Education: Similar to other Greek city-states, Athenian education began with the basics of reading, writing, and arithmetic. Grammar School: Focused on literature, poetry, music, and physical education. Secondary Education (Gymnasium): Included advanced studies in literature, philosophy, and athletics. Higher Education: Philosophers like Plato and Aristotle founded schools that influenced Western philosophy.</p>
+
+            <h5>Ancient Rome (509 BCE–476 CE):</h5>
+            <p><strong>Contribution:</strong> Established the Roman educational system, influenced by Greek practices. Focused on oratory, literature, and military training.<br>
+            <strong>Focus:</strong> Education aimed at producing well-rounded citizens with a sense of duty to the state (civic responsibility). The curriculum included training in rhetoric, literature, and physical education to prepare individuals for public service and leadership roles.</p>
+
+            <h4>Medieval Period:</h4>
+            <ul>
+              <li><strong>Byzantine Empire (330–1453 CE):</strong> <em>Contribution:</em> Preserved and expanded classical knowledge; emphasis on religious education. <em>Focus:</em> Education centered around the Orthodox Christian faith.</li>
+              <li><strong>Islamic Golden Age (8th–14th centuries):</strong> <em>Contribution:</em> Advanced scholarship in mathematics, science, medicine, and philosophy. <em>Focus:</em> Islamic education emphasized the pursuit of knowledge in various disciplines.</li>
+              <li><strong>Medieval European Monasteries (6th–12th centuries):</strong> <em>Contribution:</em> Monasteries served as centers of learning, preserving classical texts. <em>Focus:</em> Education primarily within religious contexts.</li>
+            </ul>
+
+            <h4>Renaissance and Enlightenment:</h4>
+            <ul>
+              <li><strong>Italian Renaissance (14th–17th centuries):</strong> <em>Contribution:</em> Revival of classical learning; emergence of humanism. <em>Focus:</em> Education broadened to include liberal arts, humanities, and individual development.</li>
+              <li><strong>European Enlightenment (17th–18th centuries):</strong> <em>Contribution:</em> Emphasis on reason, science, and individual rights. <em>Focus:</em> Education aimed at fostering critical thinking, scientific inquiry, and civic responsibility.</li>
+            </ul>
+
+            <h4>Modern Era:</h4>
+            <ul>
+              <li><strong>Industrial Revolution (18th–19th centuries):</strong> <em>Contribution:</em> Rise of public education to meet the needs of industrial societies. <em>Focus:</em> Basic education for the masses to enhance workforce skills.</li>
+              <li><strong>Post-World War II (20th century):</strong> <em>Contribution:</em> Global expansion of education; emphasis on universal access. <em>Focus:</em> Education as a fundamental right; increased attention to educational equity and inclusivity.</li>
+            </ul>
+          </div>
+
+          <!-- 4. HISTORICAL FOUNDATIONS PH -->
+          <div id="sec-history-ph" class="verbatim-block">
+            <h3>Historical Foundations of Education in the Philippines</h3>
+            
+            <h4>Pre-Colonial Period (Before 1521):</h4>
+            <p><strong>Contribution:</strong> Based on oral traditions, with elders passing down knowledge through storytelling, songs, and rituals. Specialized knowledge keepers, known as "babaylan", who served as spiritual leaders and educators.<br>
+            <strong>Focus:</strong> Informal education; Holistic, encompassing practical skills, ethical values, and a deep connection to nature.</p>
+
+            <h4>Spanish Colonial Period (1521–1898):</h4>
+            <p><strong>Contribution:</strong> Formal education; Religious orders founded schools and universities, contributing to the spread of Christianity.<br>
+            <strong>Focus:</strong> Primarily religious, emphasizing Christian doctrines and practices. Limited access to education with a focus on the elite class.</p>
+
+            <h4>American Colonial Period (1898–1946):</h4>
+            <p><strong>Contribution:</strong> Introduction of new teaching methods and curriculum reforms. The establishment of Normal schools.<br>
+            <strong>Focus:</strong> English became the medium of instruction, contributing to the development of a bilingual population. Modernizing the curriculum, incorporating American ideals of democracy and nationalism.</p>
+
+            <h4>Japanese Occupation (1942–1945):</h4>
+            <p><strong>Contribution:</strong> Schools used for military purposes. War disrupted regular educational activities, and resources were diverted to address immediate survival needs.<br>
+            <strong>Focus:</strong> Influenced by Japanese militaristic ideologies. The focus shifted from academic pursuits to survival during the challenging wartime conditions. Love for Labor; Vocational and Health Education; Niponggo replaces English.</p>
+
+            <h4>Post-World War II and Independence (1946–Present):</h4>
+            <p><strong>Contribution:</strong> Rehabilitation and improvement in the educational system; Major structural reforms in the Education.<br>
+            <strong>Focus:</strong> Expansion of schools, the recruitment and training of teachers, and curriculum.</p>
+
+            <h4>Contemporary Period (2000s–Present):</h4>
+            <p><strong>Contribution:</strong> Implementation of the K-12 Basic Education Program in 2013, aiming to produce globally competitive graduates. Integration of technology in education.<br>
+            <strong>Focus:</strong> Focused on enhancing the quality and relevance of education, aligning it with international standards. Ongoing efforts to address issues of access, improve teacher competency, and adapt to the changing needs of the workforce.</p>
+          </div>
+
+          <!-- 5. SOCIOLOGICAL FOUNDATION -->
+          <div id="sec-sociology" class="verbatim-block">
+            <h3>Sociological Foundation of Education</h3>
+            <p><strong>Socialization:</strong> the process by which individuals acquire the cultural values, beliefs, norms, and skills of their society.</p>
+            <p><strong>Culture:</strong> the shared beliefs, values, customs, practices, and behaviors that characterize a particular group of people; encompasses the way of life of a society and is transmitted from one generation to the next.</p>
+
+            <h4>Characteristics of Culture:</h4>
+            <ul>
+              <li><strong>1. Shared:</strong> collective phenomenon shared by members of a group or society</li>
+              <li><strong>2. Learned:</strong> acquired through the process of socialization</li>
+              <li><strong>3. Symbolic:</strong> uses symbols, such as language, to convey and represent cultural meanings</li>
+              <li><strong>4. Dynamic:</strong> evolves and changes over time</li>
+              <li><strong>5. Integrated:</strong> interconnected and form a cohesive whole</li>
+              <li><strong>6. Normative:</strong> include norms, which are shared expectations and rules that guide behavior
+                <br><em>Types of Norms:</em>
+                <br>• <strong>Folkways:</strong> behavior patterns of society which are organized and repetitive
+                <br>• <strong>Mores:</strong> customary behavior patterns or folkways which have taken a moralistic value
+                <br>• <strong>Laws:</strong> formalized norms, enacted by people who are vested with government power and enforced by political and legal authorities designated by the government
+                <br>• <strong>Rituals:</strong> highly scripted ceremonies or strips of interaction that follow a specific sequence of actions
+              </li>
+              <li><strong>7. Adaptive:</strong> adapt to environmental, social, and economic changes</li>
+              <li><strong>8. Universality and Diversity:</strong> some elements are universal, while others vary widely across different societies.</li>
+            </ul>
+
+            <h4>Social Institutions:</h4>
+            <ul>
+              <li><strong>Family:</strong> <em>Definition:</em> a fundamental social institution involving a group of individuals connected by blood, marriage, or adoption.<br>
+                <em>Functions:</em> Socialization (shaping identity and roles), Emotional Support (providing foundation for love, care, belonging), Cultural Transmission (passing down values and traditions).
+              </li>
+              <li><strong>School:</strong> <em>Definition:</em> responsible for formal instruction and knowledge transmission.<br>
+                <em>Functions:</em> Socialization and Education (preparing for roles in society), Skill Development (intellectual and practical skills), Cultural Transmission (conveying knowledge and norms).
+              </li>
+              <li><strong>Government:</strong> <em>Definition:</em> institution that organize and manage political power within a society.<br>
+                <em>Functions:</em> Governance (collective decisions), Regulation (establishing and enforcing laws), Power Distribution (balancing political power).
+              </li>
+              <li><strong>Church:</strong> <em>Definition:</em> Religious institutions involving systems of beliefs, rituals, and practices.<br>
+                <em>Functions:</em> Moral Guidance (ethical conduct), Community Building (sense of belonging), Addressing Existential Questions (ultimate meaning).
+              </li>
+              <li><strong>Economy:</strong> <em>Definition:</em> The organization and regulation of economic activities within a society.<br>
+                <em>Functions:</em> Production and Distribution (goods and services), Employment (generating jobs), Wealth Creation (overall prosperity).
+              </li>
+            </ul>
+          </div>
+
+          <!-- 6. SOCIAL SCIENCE THEORIES -->
+          <div id="sec-theories" class="verbatim-block">
+            <h3>Social Science Theories: A Brief Overview</h3>
+            <ul>
+              <li><strong>1. Structural Functionalism:</strong> Society as a complex system with interrelated parts. Functions and dysfunctions maintain social stability. Emphasizes order, equilibrium, and cooperation.</li>
+              <li><strong>2. Conflict Theory:</strong> Society characterized by inequality and power struggles. Social change results from conflicts between dominant and subordinate groups. Focuses on competition for resources and social change.</li>
+              <li><strong>3. Symbolic Interactionism:</strong> Micro-level analysis of individual interactions. Emphasizes symbols, meanings, and face-to-face communication. Reality is socially constructed through shared symbols.</li>
+              <li><strong>4. Social Exchange Theory:</strong> Relationships are based on rational calculations of rewards and costs. Individuals seek to maximize rewards and minimize costs. Applies economic principles to social interactions.</li>
+              <li><strong>5. Rational Choice Theory:</strong> Individuals make rational choices to achieve desired outcomes. Assumes individuals act in their self-interest to maximize benefits. Used in various social science disciplines.</li>
+              <li><strong>6. Feminist Theory:</strong> Examines gender-based inequalities and oppression. Advocates for gender equality and social justice. Critiques existing social structures and norms.</li>
+              <li><strong>7. Social Constructivism:</strong> Reality is socially constructed through shared meanings. Emphasizes the role of language, symbols, and culture. Knowledge is subjective and shaped by societal influences.</li>
+              <li><strong>8. Postmodernism:</strong> Challenges grand narratives and universal truths. Embraces diversity, multiplicity, and ambiguity. Questions traditional notions of reality and knowledge.</li>
+              <li><strong>9. Consensus Theory:</strong> Focuses on shared values and norms that create social order. Emphasizes social cohesion and cooperation. Views society as an integrated system with common goals.</li>
+            </ul>
+          </div>
+
+          <!-- 7. MDGS & SDGS -->
+          <div id="sec-mdg-sdg" class="verbatim-block">
+            <h3>Millennium Development Goals (MDGs)</h3>
+            <p><strong>Timeline:</strong> 2000–2015 &bull; <strong>Initiated by:</strong> United Nations &bull; <strong>Focus:</strong> Global development challenges</p>
+            <ol style="padding-left:1.3rem;">
+              <li><strong>Eradicate Extreme Poverty and Hunger:</strong> Halve the proportion of people living in extreme poverty; achieve full and productive employment; halve the proportion suffering from hunger.</li>
+              <li><strong>Achieve Universal Primary Education:</strong> Ensure that all boys and girls complete a full course of primary schooling.</li>
+              <li><strong>Promote Gender Equality and Empower Women:</strong> Eliminate gender disparity in primary and secondary education; increase proportion of seats held by women in national governments.</li>
+              <li><strong>Reduce Child Mortality:</strong> Reduce the under-five mortality rate; improve maternal health.</li>
+              <li><strong>Improve Maternal Health:</strong> Reduce maternal mortality; achieve universal access to reproductive health.</li>
+              <li><strong>Combat HIV/AIDS, Malaria, and Other Diseases:</strong> Halt and begin to reverse the spread of HIV/AIDS and malaria; ensure access to essential medicines.</li>
+              <li><strong>Ensure Environmental Sustainability:</strong> Integrate sustainable development principles into country policies and programs; halve the proportion of people without sustainable access to safe drinking water.</li>
+              <li><strong>Develop a Global Partnership for Development:</strong> Develop further an open, rule-based, predictable, and non-discriminatory trading and financial system.</li>
+            </ol>
+
+            <h4 style="margin-top:1.5rem;">Sustainable Development Goals (SDGs)</h4>
+            <p><strong>Timeline:</strong> 2016–2030 &bull; <strong>Initiated by:</strong> United Nations &bull; <strong>Focus:</strong> Broader and more comprehensive development agenda</p>
+            <ol style="padding-left:1.3rem;">
+              <li><strong>No Poverty:</strong> End poverty in all its forms everywhere.</li>
+              <li><strong>Zero Hunger:</strong> End hunger, achieve food security and improved nutrition, and promote sustainable agriculture.</li>
+              <li><strong>Good Health and Well-being:</strong> Ensure healthy lives and promote well-being for all at all ages.</li>
+              <li><strong>Quality Education:</strong> Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all.</li>
+              <li><strong>Gender Equality:</strong> Achieve gender equality and empower all women and girls.</li>
+              <li><strong>Clean Water and Sanitation:</strong> Ensure availability and sustainable management of water and sanitation for all.</li>
+              <li><strong>Affordable and Clean Energy:</strong> Ensure access to affordable, reliable, sustainable, and modern energy for all.</li>
+              <li><strong>Decent Work and Economic Growth:</strong> Promote sustained, inclusive, and sustainable economic growth, full and productive employment, and decent work for all.</li>
+              <li><strong>Industry, Innovation, and Infrastructure:</strong> Build resilient infrastructure, promote inclusive and sustainable industrialization, and foster innovation.</li>
+              <li><strong>Reduced Inequality:</strong> Reduce inequality within and among countries.</li>
+              <li><strong>Sustainable Cities and Communities:</strong> Make cities and human settlements inclusive, safe, resilient, and sustainable.</li>
+              <li><strong>Responsible Consumption and Production:</strong> Ensure sustainable consumption and production patterns.</li>
+              <li><strong>Climate Action:</strong> Take urgent action to combat climate change and its impacts.</li>
+              <li><strong>Life Below Water:</strong> Conserve and sustainably use the oceans, seas, and marine resources for sustainable development.</li>
+              <li><strong>Life on Land:</strong> Protect, restore, and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss.</li>
+              <li><strong>Peace, Justice, and Strong Institutions:</strong> Promote peaceful and inclusive societies for sustainable development, provide access to justice for all, and build effective, accountable, and inclusive institutions at all levels.</li>
+              <li><strong>Partnerships for the Goals:</strong> Strengthen the means of implementation and revitalize the Global Partnership for Sustainable Development.</li>
+            </ol>
+          </div>
+
+          <!-- 8. ANTHROPOLOGICAL FOUNDATIONS -->
+          <div id="sec-anthropology" class="verbatim-block">
+            <h3>Anthropological Foundation of Education</h3>
+            <p><strong>Anthropology:</strong> the study of human societies, cultures, and their development.</p>
+            <p><strong>Cultural Relativism:</strong> the perspective that all cultures should be understood and evaluated in their own context, without judgment based on the standards of one's own culture.<br>
+            • <strong>Ethnocentrism:</strong> tendency to judge other cultures based on the values and standards of one's own culture, often considering it superior.<br>
+            • <strong>Xenocentrism:</strong> preference for or appreciation of aspects of another culture over one's own.</p>
+
+            <h4>Modes of Cultural Transmission:</h4>
+            <ul>
+              <li><strong>1. Enculturation:</strong> the process of learning and acquiring one's own culture, usually through informal means such as family, peers, and societal interactions.
+                <br><em>Characteristics:</em> Begins at an early age; Involves observation, imitation, and direct teaching; Shapes individual identity and social behavior.
+              </li>
+              <li><strong>2. Acculturation:</strong> the process of adopting and incorporating elements from another culture through firsthand contact and interaction.
+                <br><em>Characteristics:</em> Occurs when different cultures come into direct contact; Results in mutual influence and adaptation; Can lead to the blending of cultural traits.
+              </li>
+              <li><strong>3. Assimilation:</strong> the complete integration of an individual or group into the dominant culture, often resulting in the loss or abandonment of their original cultural identity.
+                <br><em>Characteristics:</em> Involves the adoption of dominant cultural norms; May lead to the disappearance of distinctive cultural traits.
+              </li>
+              <li><strong>4. Cultural Diffusion:</strong> the spread of cultural elements, such as ideas, beliefs, technologies, or practices, from one society or group to another.
+                <br><em>Characteristics:</em> Occurs through various means like trade, migration, or communication; Can lead to the enrichment and diversification of cultures.
+              </li>
+            </ul>
+          </div>
+
+          <!-- 9. SCHOOL AND COMMUNITY PARTNERSHIP -->
+          <div id="sec-community" class="verbatim-block">
+            <h3>School and Community Partnership</h3>
+            <p>Refers to collaborative efforts between educational institutions and local communities to enhance the overall well-being and educational experiences of students. Involves shared responsibility, resources, and engagement to support learning and development.</p>
+
+            <h4>Importance of School and Community Partnership:</h4>
+            <ol style="padding-left:1.3rem;">
+              <li>Enhanced Learning Environments</li>
+              <li>Holistic Student Development</li>
+              <li>Support Systems</li>
+              <li>Counseling and Guidance</li>
+              <li>Resource Sharing</li>
+              <li>Financial Resources</li>
+              <li>Expertise</li>
+              <li>Community Engagement</li>
+              <li>Parental Involvement</li>
+              <li>Local Stakeholder Engagement</li>
+            </ol>
+
+            <h4>Two-Way School Partnership:</h4>
+            <table class="compare-table">
+              <tr>
+                <th>Community &rarr; School</th>
+                <th>School &rarr; Community</th>
+              </tr>
+              <tr>
+                <td>
+                  • Brigada Eskwela<br>
+                  • Curriculum Development<br>
+                  • Work experience<br>
+                  • Enrichment and remediation<br>
+                  • Community service
+                </td>
+                <td>
+                  • Organizational meetings<br>
+                  • Polling places and medical missions<br>
+                  • Evacuation centers<br>
+                  • Celebrations, leagues<br>
+                  • Skills training seminars
+                </td>
+              </tr>
+            </table>
+
+            <h4>The Teacher and the Community:</h4>
+            <p>Relationship between teachers and the community plays a crucial role in the educational ecosystem; involves collaboration, communication, and engagement to create a supportive learning environment.</p>
+            <p><strong>Importance:</strong><br>
+            1. Parental Involvement: Encourages parents to actively participate in their children's education; fosters a sense of shared responsibility for student success.<br>
+            2. Community Resources: Utilizes local expertise and resources for enriching educational experiences; establishes a bridge between classroom learning and real-world applications.<br>
+            3. Cultural Understanding: Enhances teachers' understanding of diverse cultural backgrounds within the community; promotes inclusivity and cultural sensitivity in the classroom.</p>
+            
+            <p><strong>Strategies for Effective Teacher-Community Collaboration:</strong><br>
+            4. Open Communication: Establish regular channels for communication between teachers and parents; organize community events and meetings to foster dialogue.<br>
+            5. Community Involvement in Education: Invite community members to share their expertise in classrooms; collaborate on projects that connect classroom learning to community issues.<br>
+            6. Parent-Teacher Partnerships: Encourage parent participation in school activities, parent-teacher conferences, and decision-making processes; develop strategies to involve parents in their child's educational journey.<br>
+            7. Civic Engagement: Engage students in community service projects to instill a sense of civic responsibility; collaborate with local organizations for community-focused initiatives.</p>
+          </div>
+
+          <!-- 10. SCHOOL CULTURE AND CLIMATE -->
+          <div id="sec-culture-climate" class="verbatim-block">
+            <h3>School Culture and Climate</h3>
+            
+            <h4>School Culture:</h4>
+            <p>Encompasses the shared values, beliefs, traditions, and practices within a school community.</p>
+            <p><strong>Key Elements of School Culture:</strong><br>
+            1. Values: Core principles that guide decision-making. (Examples: Respect, integrity, collaboration).<br>
+            2. Beliefs: Shared convictions about teaching, learning, and the purpose of education. (Examples: Belief in the potential of all students to succeed).<br>
+            3. Traditions: Rituals, events, or practices that contribute to the identity of the school. (Examples: Annual events, graduation ceremonies).<br>
+            4. Behaviors: Actions and interactions that reflect the values and beliefs of the school community. (Examples: Inclusivity, teamwork, and respect for diversity).</p>
+
+            <h4>School Climate:</h4>
+            <p>The overall atmosphere or “feel” of a school, influenced by factors such as relationships, safety, and the physical environment.</p>
+            <p><strong>Key Elements of School Climate:</strong><br>
+            1. Safety: Students and staff feel physically and emotionally safe. (Examples: Secure facilities, anti-bullying initiatives).<br>
+            2. Relationships: Positive interactions among students, teachers, and staff. (Examples: Supportive teacher-student relationships, peer collaboration).<br>
+            3. Environment: Physical and emotional aspects of the school setting. (Examples: Clean and well-maintained facilities, welcoming spaces).<br>
+            4. Expectations: Clear guidelines and expectations for behavior. (Examples: Codes of conduct, behavioral expectations).</p>
+          </div>
+
+          <!-- 11. ORGANIZATIONAL LEADERSHIP -->
+          <div id="sec-leadership" class="verbatim-block">
+            <h3>Organizational Leadership</h3>
+            <p>Refers to the management and guidance provided by school leaders to ensure effective operations, a positive culture, and continuous improvement.</p>
+
+            <h4>Leader vs. Manager</h4>
+            <table class="compare-table">
+              <tr>
+                <th>Leader</th>
+                <th>Manager</th>
+              </tr>
+              <tr>
+                <td><strong>Focus:</strong> People, vision, inspiration.</td>
+                <td><strong>Focus:</strong> Tasks, processes, goals.</td>
+              </tr>
+              <tr>
+                <td><strong>Direction:</strong> Sets vision, aligns people.</td>
+                <td><strong>Direction:</strong> Plans, organizes, coordinates.</td>
+              </tr>
+              <tr>
+                <td><strong>Innovation:</strong> Encourages innovation.</td>
+                <td><strong>Innovation:</strong> Ensures efficiency.</td>
+              </tr>
+              <tr>
+                <td><strong>Decision-Making:</strong> Strategic decisions.</td>
+                <td><strong>Decision-Making:</strong> Operational decisions.</td>
+              </tr>
+              <tr>
+                <td><strong>Relationships:</strong> Builds relationships.</td>
+                <td><strong>Relationships:</strong> Manages resources.</td>
+              </tr>
+              <tr>
+                <td><strong>Inspiration:</strong> Inspires through vision.</td>
+                <td><strong>Inspiration:</strong> Communicates details.</td>
+              </tr>
+              <tr>
+                <td><strong>Influence:</strong> Influences through charisma.</td>
+                <td><strong>Influence:</strong> Influences through authority.</td>
+              </tr>
+              <tr>
+                <td><strong>Change Implementation:</strong> Drives change, embraces innovation.</td>
+                <td><strong>Change Implementation:</strong> Implements change, ensures stability.</td>
+              </tr>
+              <tr>
+                <td><strong>Vision:</strong> Long-term vision.</td>
+                <td><strong>Vision:</strong> Short-term focus.</td>
+              </tr>
+              <tr>
+                <td><strong>Mentorship:</strong> Acts as a mentor.</td>
+                <td><strong>Mentorship:</strong> Focuses on task-related skills.</td>
+              </tr>
+              <tr>
+                <td><strong>Risk Tolerance:</strong> Tolerates calculated risks.</td>
+                <td><strong>Risk Tolerance:</strong> Minimizes risks for stability.</td>
+              </tr>
+            </table>
+
+            <h4>Leadership Styles:</h4>
+            <ul>
+              <li><strong>1. Autocratic Leadership:</strong> Description: Leader makes decisions unilaterally. Characteristics: Authoritarian, directive, strict control.</li>
+              <li><strong>2. Democratic Leadership:</strong> Description: Decision-making involves the group. Characteristics: Inclusive, participative, collaborative.</li>
+              <li><strong>3. Laissez-Faire Leadership:</strong> Description: Allows team members to make decisions. Characteristics: Hands-off, minimal interference, trust in team.</li>
+              <li><strong>4. Transactional Leadership:</strong> Description: Focus on structure, rewards, and penalties. Characteristics: Contingent rewards, management by exception.</li>
+              <li><strong>5. Transformational Leadership:</strong> Description: Inspires and motivates followers. Characteristics: Visionary, charismatic, fosters innovation.</li>
+              <li><strong>6. Servant Leadership:</strong> Description: Focus on serving and supporting others. Characteristics: Empathy, humility, commitment to the growth of others.</li>
+              <li><strong>7. Charismatic Leadership:</strong> Description: Inspires through charm and persuasion. Characteristics: Visionary, persuasive, dynamic.</li>
+              <li><strong>8. Situational Leadership:</strong> Description: Adapts leadership style based on the situation. Characteristics: Flexibility, responsiveness, situational assessment.</li>
+              <li><strong>9. Transactional Leadership:</strong> Description: Exchange of rewards for performance. Characteristics: Clear expectations, rewards, corrective actions.</li>
+            </ul>
+
+            <h4>School-Based Management (SBM):</h4>
+            <p>An approach to school governance that decentralizes decision-making to the school level.</p>
+            <p><strong>Key Components:</strong><br>
+            • <em>Participatory Decision-Making:</em> Involves all stakeholders in the decision-making process.<br>
+            • <em>Autonomy and Flexibility:</em> Schools have more control over resources, budget, and policies.<br>
+            • <em>Accountability:</em> Increased responsibility for school performance and outcomes.</p>
+            <p><strong>Objectives:</strong><br>
+            • <em>Empowerment:</em> Empower schools to make decisions based on their unique needs.<br>
+            • <em>Improving Quality:</em> Enhance the quality of education through localized decision-making.<br>
+            • <em>Community Engagement:</em> Foster stronger ties between schools and communities.</p>
+          </div>
+
+          <!-- 12. NCBS-SH & PPSSH -->
+          <div id="sec-standards" class="verbatim-block">
+            <h3>National Competency-Based Standards for School Heads (NCBS-SH)</h3>
+            <p><strong>DepEd Order No. 32, s. 2010.</strong></p>
+            <ul>
+              <li><strong>Domain 1: School Leadership</strong><br>
+                <em>Description:</em> Demonstrates effective leadership in guiding the school towards its vision and mission.<br>
+                <em>Key Competencies:</em> Visionary Leadership; School Governance and Operations; Ethical and Effective Leadership
+              </li>
+              <li><strong>Domain 2: Instructional Leadership</strong><br>
+                <em>Description:</em> Focuses on improving teaching and learning processes within the school.<br>
+                <em>Key Competencies:</em> Curriculum Management; Instructional Supervision; Assessment and Evaluation
+              </li>
+              <li><strong>Domain 3: Creating a Student-Centered Learning Climate</strong><br>
+                <em>Description:</em> Promotes an environment that supports the holistic development of students.<br>
+                <em>Key Competencies:</em> Student Welfare and Discipline; Student-Centered Learning Environment; Inclusive Education
+              </li>
+              <li><strong>Domain 4: HR Management and Professional Development</strong><br>
+                <em>Description:</em> Manages human resources and fosters continuous professional development.<br>
+                <em>Key Competencies:</em> Human Resource Management; Professional Development
+              </li>
+              <li><strong>Domain 5: Parents Involvement and Community Partnership</strong><br>
+                <em>Description:</em> Builds strong relationships with parents and engages the community in school activities.<br>
+                <em>Key Competencies:</em> Parental Involvement; Community Partnership
+              </li>
+              <li><strong>Domain 6: School Management and Operation</strong><br>
+                <em>Description:</em> Ensures efficient and effective school operations.<br>
+                <em>Key Competencies:</em> Financial Management; School Facilities and Environment
+              </li>
+              <li><strong>Domain 7: Personal and Professional Attributes and Interpersonal Effectiveness</strong><br>
+                <em>Description:</em> Demonstrates personal and professional qualities essential for effective school leadership.<br>
+                <em>Key Competencies:</em> Professional Ethics; Interpersonal Skills
+              </li>
+            </ul>
+
+            <h4 style="margin-top:1.5rem;">Philippine Professional Standards for School Heads (PPSSH)</h4>
+            <p><strong>DepEd Order No. 24, s. 2020</strong></p>
+            <ul>
+              <li><strong>Domain 1: Leading Strategically</strong><br>
+                <em>Description:</em> Demonstrates effective leadership in setting the direction and ensuring the accomplishment of the school's vision and goals.<br>
+                <em>Key Components:</em> Visioning and Planning; Decision-Making; Results-Based Leadership
+              </li>
+              <li><strong>Domain 2: Managing School Operations and Resources</strong><br>
+                <em>Description:</em> Ensures efficient and effective school operations and management of resources.<br>
+                <em>Key Components:</em> Operational Management; Resource Management
+              </li>
+              <li><strong>Domain 3: Focusing on Teaching and Learning</strong><br>
+                <em>Description:</em> Prioritizes the improvement of teaching and learning processes within the school.<br>
+                <em>Key Components:</em> Curriculum and Pedagogical Leadership; Monitoring and Evaluation
+              </li>
+              <li><strong>Domain 4: Developing Self and Others</strong><br>
+                <em>Description:</em> Invests in personal and professional development and facilitates the growth of others.<br>
+                <em>Key Components:</em> Personal and Professional Development; Building Professional Learning Communities
+              </li>
+              <li><strong>Domain 5: Building Connections</strong><br>
+                <em>Description:</em> Establishes strong connections with stakeholders and builds a positive school culture.<br>
+                <em>Key Components:</em> Stakeholder Engagement; School Culture and Environment
+              </li>
+            </ul>
+          </div>
+        `,
         quiz: [
           {
-            stem: "In Taoist philosophy, what core principle refers to purposeful non-action, effortless spontaneity, and living in complete harmony with nature?",
-            choices: ["Wu Wei", "Xiao", "Dharma", "Satori"],
-            ans: 0,
-            rationale: "Wu Wei is the Taoist concept of natural spontaneity, effortless action, and non-resistance in harmony with the Tao."
-          },
-          {
-            stem: "In ancient Greece, what was the state-mandated education system in Sparta that began at age seven and prioritized military discipline and warrior physical training?",
-            choices: ["Gymnasium", "Agoge", "Academy", "Lyceum"],
+            stem: "Which branch of philosophy is primarily concerned with the nature of reality and existence?",
+            choices: ["Epistemology", "Metaphysics", "Axiology", "Logic"],
             ans: 1,
-            rationale: "The Spartan Agoge was the rigorous military and physical training program designed to produce disciplined soldiers."
+            rationale: "Metaphysics is the branch of philosophy that studies the fundamental nature of reality and existence."
           },
           {
-            stem: "A teacher believes that foreign educational methods and imported Western textbooks are inherently superior to local Philippine indigenous knowledge. What anthropological mindset is demonstrated?",
-            choices: ["Ethnocentrism", "Cultural Relativism", "Xenocentrism", "Enculturation"],
+            stem: "In Taoism (Daoism) founded by Lao Tzu, what core belief emphasizes non-action or natural spontaneity?",
+            choices: ["Ren", "Dharma", "Wu Wei", "Xiao"],
             ans: 2,
-            rationale: "Xenocentrism is the conviction that the products, styles, or ideas of another culture are superior to one's own."
+            rationale: "Wu Wei is the Taoist core concept of non-action, effortless action, and natural spontaneity in harmony with nature."
           },
           {
-            stem: "An immigrant student slowly adopts the language and lifestyle of a new country, eventually abandoning their native language, customs, and original cultural identity entirely. What process has occurred?",
-            choices: ["Cultural Diffusion", "Acculturation", "Enculturation", "Assimilation"],
-            ans: 3,
-            rationale: "Assimilation entails total cultural absorption into the dominant group, leading to the loss of original distinct cultural traits."
+            stem: "What was the Spartan education system that began at age 7, focusing on physical fitness, military training, and instilling discipline?",
+            choices: ["Gymnasium", "Agoge", "Analects", "Zazen"],
+            ans: 1,
+            rationale: "The Agoge was the Spartan state-mandated training system designed to produce strong, disciplined warriors."
           },
           {
-            stem: "Under DepEd Order No. 24, s. 2020 (PPSSH), which domain outlines the school head's responsibility in setting the vision, decision-making, and strategic planning for school improvement?",
-            choices: ["Domain 1: Leading Strategically", "Domain 2: Managing Operations", "Domain 3: Focusing on Teaching", "Domain 5: Building Connections"],
+            stem: "What mode of cultural transmission involves the complete integration of an individual or group into the dominant culture, often resulting in the loss or abandonment of their original cultural identity?",
+            choices: ["Enculturation", "Acculturation", "Assimilation", "Cultural Diffusion"],
+            ans: 2,
+            rationale: "Assimilation entails the complete adoption of dominant cultural norms, leading to the disappearance of distinctive original cultural traits."
+          },
+          {
+            stem: "Under DepEd Order No. 24, s. 2020 (PPSSH), what is Domain 1 of the Philippine Professional Standards for School Heads?",
+            choices: ["Leading Strategically", "Managing School Operations and Resources", "Focusing on Teaching and Learning", "Building Connections"],
             ans: 0,
-            rationale: "Domain 1 of the PPSSH is 'Leading Strategically', which covers visioning, planning, decision-making, and results-based leadership."
+            rationale: "Domain 1 of the PPSSH is Leading Strategically, which covers visioning, planning, decision-making, and results-based leadership."
           }
         ]
       },
       {
         id: 2,
-        title: "The Professional Teacher",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "THE PROFESSIONAL TEACHER",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 2 Overview</h3><p>Please provide the text file for Subject 2 to populate this module.</p></div>`,
         quiz: [{ stem: "Under RA 7836, what is required to legally practice teaching in the Philippines?", choices: ["Civil Service Sub-Professional", "PRC Professional Teacher License", "Honor Graduate Eligibility", "Barangay Clearance"], ans: 1, rationale: "RA 7836 mandates passing the licensure examination and holding a valid PRC license." }]
       },
       {
         id: 3,
-        title: "The Teacher and the School Curriculum",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "THE TEACHER AND THE SCHOOL CURRICULUM",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 3 Overview</h3><p>Please provide the text file for Subject 3 to populate this module.</p></div>`,
         quiz: [{ stem: "Which curriculum includes unintended values and unwritten norms?", choices: ["Hidden Curriculum", "Written Curriculum", "Assessed Curriculum", "Taught Curriculum"], ans: 0, rationale: "Hidden curriculum refers to unwritten behaviors, values, and norms absorbed in school." }]
       },
       {
         id: 4,
-        title: "Methods and Strategies of Teaching",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "METHODS AND STRATEGIES OF TEACHING",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 4 Overview</h3><p>Please provide the text file for Subject 4 to populate this module.</p></div>`,
         quiz: [{ stem: "Starting from specific instances to infer a general rule is called:", choices: ["Inductive Method", "Deductive Method", "Direct Instruction", "Rote Drill"], ans: 0, rationale: "Inductive reasoning moves from specific observations to a general rule." }]
       },
       {
         id: 5,
-        title: "Technology for Teaching and Learning",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "TECHNOLOGY FOR TEACHING AND LEARNING",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 5 Overview</h3><p>Please provide the text file for Subject 5 to populate this module.</p></div>`,
         quiz: [{ stem: "In SAMR, what level creates tasks previously inconceivable without tech?", choices: ["Redefinition", "Modification", "Augmentation", "Substitution"], ans: 0, rationale: "Redefinition enables completely new learning experiences." }]
       },
       {
         id: 6,
-        title: "Child and Adolescent Learners and Learning Principles",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "CHILD AND ADOLESCENT LEARNERS AND LEARNING PRINCIPLES",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 6 Overview</h3><p>Please provide the text file for Subject 6 to populate this module.</p></div>`,
         quiz: [{ stem: "Conservation concepts are mastered in Piaget's:", choices: ["Concrete Operational Stage", "Sensorimotor Stage", "Preoperational Stage", "Formal Operational Stage"], ans: 0, rationale: "Concrete operational learners master reversibility and conservation." }]
       },
       {
         id: 7,
-        title: "Facilitating Learner-Centered Teaching",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "FACILITATING LEARNER-CENTERED TEACHING",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 7 Overview</h3><p>Please provide the text file for Subject 7 to populate this module.</p></div>`,
         quiz: [{ stem: "Evaluating and regulating one's own thinking processes is:", choices: ["Metacognition", "Behaviorism", "Constructivism", "Operant Conditioning"], ans: 0, rationale: "Metacognition is thinking about one's own thinking." }]
       },
       {
         id: 8,
-        title: "Assessment of Learning 1 and 2",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "ASSESSMENT OF LEARNING 1 AND 2",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 8 Overview</h3><p>Please provide the text file for Subject 8 to populate this module.</p></div>`,
         quiz: [{ stem: "Assessment conducted during instruction to monitor student progress is:", choices: ["Formative Assessment", "Summative Assessment", "Diagnostic Assessment", "Placement Assessment"], ans: 0, rationale: "Formative assessment provides ongoing feedback to improve learning." }]
       },
       {
         id: 9,
-        title: "Field Study and Teaching Internship",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "FIELD STUDY AND TEACHING INTERNSHIP",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 9 Overview</h3><p>Please provide the text file for Subject 9 to populate this module.</p></div>`,
         quiz: [{ stem: "What is the primary aim of classroom action research?", choices: ["Solve immediate local teaching-learning problems", "Publish international articles", "Rank teachers", "Evaluate principals"], ans: 0, rationale: "Action research resolves immediate practical challenges in the classroom." }]
       },
       {
         id: 10,
-        title: "Foundation of Special and Inclusive Education",
-        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        title: "FOUNDATION OF SPECIAL AND INCLUSIVE EDUCATION",
+        rawHTML: `<div class="verbatim-block"><h3>Subject 10 Overview</h3><p>Please provide the text file for Subject 10 to populate this module.</p></div>`,
         quiz: [{ stem: "The tailored plan outlining goals for a child with special needs is:", choices: ["IEP (Individualized Education Plan)", "TOS", "DLL", "SIP"], ans: 0, rationale: "An IEP is a legally customized plan for a student with special needs." }]
       }
     ];
@@ -641,7 +1094,7 @@
             <div class="card-num">${sub.id}</div>
             <div>
               <div class="subject-title">${sub.title}</div>
-              <div class="subject-desc">Click to review High-Yield Notes & solve Quiz</div>
+              <div class="subject-desc">Click to review complete notes & solve quiz</div>
             </div>
           </div>
           <span style="color:var(--crimson); font-size:0.85rem; font-weight:700;">Open →</span>
@@ -656,14 +1109,7 @@
       document.getElementById("contentView").style.display = "block";
 
       document.getElementById("contentSubjectTitle").textContent = `${activeSubject.id}. ${activeSubject.title}`;
-      
-      const sectionsContainer = document.getElementById("contentSectionsContainer");
-      sectionsContainer.innerHTML = activeSubject.sections.map(sec => `
-        <div class="section-card">
-          <h3>${sec.title}</h3>
-          <div>${sec.content}</div>
-        </div>
-      `).join('');
+      document.getElementById("verbatimContentArea").innerHTML = activeSubject.rawHTML;
 
       document.getElementById("startSubjectQuizBtn").onclick = () => startSubjectQuiz();
       window.scrollTo({ top: 0, behavior: 'smooth' });

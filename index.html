@@ -3,112 +3,158 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EchoLET - Classroom Reviewer</title>
+  <title>EchoLET - Classroom Portal (Teacher Echo)</title>
   
   <!-- Pencil Icon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
-  <meta name="theme-color" content="#7A0019" />
+  <meta name="theme-color" content="#5B0013" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <link rel="manifest" href='data:application/manifest+json,{"name":"EchoLET Classroom","short_name":"EchoLET","start_url":".","display":"standalone","background_color":"%237A0019","theme_color":"%237A0019","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%23D4AF37%27><path d=%27M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z%27/></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}' />
+  <link rel="manifest" href='data:application/manifest+json,{"name":"EchoLET Classroom","short_name":"EchoLET","start_url":".","display":"standalone","background_color":"%235B0013","theme_color":"%235B0013","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%23D4AF37%27><path d=%27M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z%27/></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}' />
 
   <style>
     :root {
+      --crimson-deep: #4A000E;
       --crimson: #7A0019;
       --crimson-dark: #580012;
       --gold: #D4AF37;
       --gold-light: #FFF8E1;
       --gold-dark: #B8860B;
-      --bg: #F8F9FA;
+      --gold-border: rgba(212, 175, 55, 0.4);
+      --bg: #F4F6F9;
       --surface: #FFFFFF;
       --text-main: #1F1F1F;
       --text-muted: #5F6368;
       --border: #DADCE0;
-      --radius: 8px;
+      --radius: 10px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Google Sans", Roboto, Arial, sans-serif; }
     body { background-color: var(--bg); color: var(--text-main); padding-bottom: 4rem; line-height: 1.6; }
 
-    /* Header */
+    /* Top Bar */
     header {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1.5rem; display: flex; justify-content: space-between;
-      align-items: center; position: sticky; top: 0; z-index: 100;
+      background: var(--surface);
+      border-bottom: 2px solid var(--gold-border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(74, 0, 14, 0.08);
     }
     .header-left { display: flex; align-items: center; gap: 12px; }
     .pencil-logo {
-      width: 36px; height: 36px; background: var(--crimson); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      width: 38px; height: 38px; background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-deep) 100%);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid var(--gold); box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .pencil-logo svg { width: 20px; height: 20px; fill: var(--gold); }
-    .app-title { font-size: 1.2rem; font-weight: 500; color: var(--crimson); }
-    .app-title span { color: var(--gold-dark); font-weight: 700; }
+    .pencil-logo svg { width: 22px; height: 22px; fill: var(--gold); }
+    .app-title { font-size: 1.25rem; font-weight: 600; color: var(--crimson); letter-spacing: -0.5px; }
+    .app-title span { color: var(--gold-dark); font-weight: 800; }
 
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .student-badge {
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .user-pill {
       display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600;
-      color: var(--crimson); background: var(--gold-light); padding: 0.35rem 0.75rem;
-      border-radius: 20px; border: 1px solid var(--gold);
+      padding: 0.35rem 0.85rem; border-radius: 20px;
     }
-    .install-btn {
-      background: var(--gold); color: var(--crimson-dark); font-weight: 700;
-      border: 1px solid var(--gold-dark); padding: 0.4rem 0.8rem; border-radius: 20px;
-      cursor: pointer; font-size: 0.8rem;
-    }
+    .user-pill.teacher { background: var(--crimson); color: var(--gold); border: 1px solid var(--gold); }
+    .user-pill.student { background: var(--gold-light); color: var(--crimson-dark); border: 1px solid var(--gold); }
 
-    /* Tabs */
+    .switch-role-btn {
+      background: none; border: 1px solid var(--border); color: var(--text-muted);
+      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem; cursor: pointer;
+    }
+    .switch-role-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+    /* Navigation Tabs */
     .classroom-tabs {
       display: flex; justify-content: center; background: var(--surface);
-      border-bottom: 1px solid var(--border); gap: 2rem;
+      border-bottom: 1px solid var(--border); gap: 1.5rem;
     }
     .tab-btn {
-      padding: 0.85rem 1.2rem; background: none; border: none; font-size: 0.95rem;
+      padding: 0.9rem 1.3rem; background: none; border: none; font-size: 0.95rem;
       font-weight: 600; color: var(--text-muted); cursor: pointer; position: relative;
     }
     .tab-btn.active { color: var(--crimson); }
     .tab-btn.active::after {
       content: ""; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: var(--crimson);
+      height: 3px; background: var(--crimson); border-radius: 3px 3px 0 0;
     }
 
-    main { max-width: 900px; margin: 1.5rem auto; padding: 0 1rem; }
+    main { max-width: 920px; margin: 1.5rem auto; padding: 0 1rem; }
 
-    /* Banner */
+    /* Classroom Banner with Gold Crest */
     .classroom-banner {
-      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);
-      color: white; padding: 2rem; border-radius: var(--radius); margin-bottom: 1.5rem;
-      border-bottom: 4px solid var(--gold); position: relative;
+      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-deep) 100%);
+      color: white; padding: 2.2rem; border-radius: var(--radius); margin-bottom: 1.5rem;
+      border: 2px solid var(--gold); position: relative; box-shadow: 0 4px 15px rgba(74, 0, 14, 0.15);
     }
-    .classroom-banner h1 { font-size: 1.6rem; color: var(--gold); margin-bottom: 0.2rem; }
-    .classroom-banner p { font-size: 0.95rem; color: #fce8e6; }
-    .student-greeting { margin-top: 0.8rem; font-size: 0.9rem; color: #fff; font-weight: 500; }
+    .classroom-banner h1 { font-size: 1.7rem; color: var(--gold); margin-bottom: 0.2rem; }
+    .classroom-banner p { font-size: 0.95rem; color: #FCE8E6; }
+    
+    .class-code-badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 1rem;
+      background: rgba(0, 0, 0, 0.35); padding: 0.45rem 0.95rem; border-radius: 6px;
+      border: 1px dashed var(--gold); font-size: 0.88rem; color: #FFF;
+    }
+    .class-code-badge strong { color: var(--gold); letter-spacing: 1px; font-size: 0.98rem; }
+    .copy-btn {
+      background: var(--gold); border: none; color: var(--crimson-deep); font-weight: 700;
+      font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer;
+    }
 
-    /* Subject Cards */
+    /* Cards */
     .subject-card {
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.15rem 1.4rem; margin-bottom: 0.9rem; display: flex; align-items: center;
+      padding: 1.25rem 1.4rem; margin-bottom: 1rem; display: flex; align-items: center;
       justify-content: space-between; cursor: pointer; transition: all 0.2s;
     }
-    .subject-card:hover { border-color: var(--crimson); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .subject-card:hover { border-color: var(--crimson); box-shadow: 0 3px 10px rgba(122, 0, 25, 0.08); }
     .card-left { display: flex; align-items: center; gap: 1rem; }
     .card-num {
-      width: 36px; height: 36px; border-radius: 50%; background: var(--gold-light);
-      color: var(--crimson-dark); font-weight: 800; display: flex; align-items: center;
-      justify-content: center; font-size: 0.9rem; border: 1px solid var(--gold); flex-shrink: 0;
+      width: 40px; height: 40px; border-radius: 50%; background: var(--gold-light);
+      color: var(--crimson); font-weight: 800; display: flex; align-items: center;
+      justify-content: center; font-size: 0.95rem; border: 1.5px solid var(--gold); flex-shrink: 0;
     }
-    .subject-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
-    .subject-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .subject-title { font-size: 0.98rem; font-weight: 700; color: var(--text-main); }
+    .subject-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* Verbatim Content Viewer */
+    /* Teacher Portal Cards & Tables */
+    .teacher-dashboard {
+      background: var(--surface); border: 1.5px solid var(--gold); border-radius: var(--radius);
+      padding: 1.8rem; margin-bottom: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;
+      margin: 1.2rem 0 1.8rem 0;
+    }
+    .stat-box {
+      background: var(--gold-light); border: 1px solid var(--gold); border-radius: 8px;
+      padding: 1rem; text-align: center;
+    }
+    .stat-number { font-size: 1.8rem; font-weight: 800; color: var(--crimson); }
+    .stat-label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+
+    .records-table {
+      width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.88rem;
+    }
+    .records-table th, .records-table td {
+      border: 1px solid var(--border); padding: 0.75rem 0.9rem; text-align: left;
+    }
+    .records-table th { background: var(--crimson); color: white; font-weight: 600; }
+    .status-pass { color: #137333; font-weight: 700; }
+    .status-fail { color: var(--crimson); font-weight: 700; }
+
+    /* Verbatim Study Content */
     .content-view {
       display: none; background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 2rem;
     }
-    .content-header {
-      border-bottom: 2px solid var(--gold-light); padding-bottom: 1rem; margin-bottom: 1.5rem;
-    }
-    .content-header h2 { color: var(--crimson); font-size: 1.35rem; line-height: 1.3; }
+    .content-header { border-bottom: 2px solid var(--gold-light); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    .content-header h2 { color: var(--crimson); font-size: 1.35rem; }
 
     .toc-box {
       background: var(--gold-light); border: 1px solid var(--gold); border-radius: 8px;
@@ -119,9 +165,9 @@
     .toc-link {
       background: white; border: 1px solid var(--border); padding: 0.35rem 0.65rem;
       border-radius: 20px; font-size: 0.8rem; color: var(--crimson); text-decoration: none;
-      font-weight: 600; transition: all 0.15s;
+      font-weight: 600;
     }
-    .toc-link:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+    .toc-link:hover { background: var(--crimson); color: white; }
 
     .verbatim-block {
       background: #FFFFFF; border: 1px solid #E5E7EB; border-left: 5px solid var(--crimson);
@@ -130,7 +176,7 @@
     .verbatim-block h3 { color: var(--crimson); margin-bottom: 0.7rem; font-size: 1.15rem; }
     .verbatim-block h4 { color: var(--gold-dark); margin: 0.9rem 0 0.3rem 0; font-size: 1rem; }
     .verbatim-block h5 { color: var(--crimson-dark); margin: 0.7rem 0 0.2rem 0; font-size: 0.92rem; }
-    .verbatim-block p { font-size: 0.92rem; margin-bottom: 0.6rem; color: var(--text-main); }
+    .verbatim-block p { font-size: 0.92rem; margin-bottom: 0.6rem; }
     .verbatim-block ul { padding-left: 1.3rem; font-size: 0.92rem; margin-bottom: 0.8rem; }
     .verbatim-block li { margin-bottom: 0.35rem; }
 
@@ -156,9 +202,7 @@
       width: 100%; height: 8px; background: #e5e7eb; border-radius: 999px;
       overflow: hidden; margin-bottom: 1.2rem;
     }
-    .progress-bar {
-      height: 100%; width: 0%; background: var(--crimson); transition: width 0.3s ease;
-    }
+    .progress-bar { height: 100%; width: 0%; background: var(--crimson); transition: width 0.3s ease; }
     .stem { font-size: 1.12rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.5; }
     .choices { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
     .choice-btn {
@@ -173,40 +217,46 @@
       display: none; background: var(--gold-light); border-left: 4px solid var(--gold);
       padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.92rem;
     }
+
     .btn-action {
       background: var(--crimson); color: white; border: none; padding: 0.75rem 1.5rem;
-      border-radius: 4px; font-weight: 600; cursor: pointer;
+      border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;
     }
     .btn-action:hover { background: var(--crimson-dark); }
+    .btn-gold {
+      background: var(--gold); color: var(--crimson-deep); border: 1px solid var(--gold-dark);
+      padding: 0.65rem 1.2rem; border-radius: 6px; font-weight: 700; cursor: pointer;
+    }
+    .btn-gold:hover { background: var(--gold-dark); color: white; }
 
-    /* Registration Modal */
+    /* Modal */
     .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65);
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
       display: flex; align-items: center; justify-content: center; z-index: 999; padding: 1rem;
     }
     .modal-card {
-      background: white; border-radius: 12px; max-width: 440px; width: 100%;
-      padding: 2rem; border-top: 6px solid var(--crimson); box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: white; border-radius: 12px; max-width: 460px; width: 100%;
+      padding: 2.2rem; border-top: 6px solid var(--crimson); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     .input-field {
       width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;
       margin-top: 0.35rem; margin-bottom: 1rem; font-size: 0.95rem;
     }
-
-    /* Grades Table */
-    .grades-table {
-      width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius);
-      overflow: hidden; border: 1px solid var(--border); margin-top: 1rem;
+    .role-tabs {
+      display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.2rem;
     }
-    .grades-table th, .grades-table td { padding: 0.9rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-    .grades-table th { background: var(--gold-light); color: var(--crimson-dark); font-weight: 700; }
+    .role-tab {
+      flex: 1; padding: 0.6rem; text-align: center; background: none; border: none;
+      font-weight: 700; color: var(--text-muted); cursor: pointer;
+    }
+    .role-tab.active { color: var(--crimson); border-bottom: 3px solid var(--crimson); }
 
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Top Bar -->
   <header>
     <div class="header-left">
       <div class="pencil-logo">
@@ -216,41 +266,93 @@
     </div>
     
     <div class="header-right">
-      <div id="studentBadge" class="student-badge hidden">
-        <span>👤</span> <span id="studentDisplay">Student</span>
-      </div>
-      <button id="installAppBtn" class="install-btn">📱 Download App</button>
+      <div id="userBadge" class="user-pill student">👤 Student</div>
+      <button class="switch-role-btn" onclick="openAuthModal()">Switch / Login</button>
     </div>
   </header>
 
   <!-- Classroom Tabs -->
   <div class="classroom-tabs">
-    <button class="tab-btn active" onclick="switchTab('subjects')">Classwork / 10 Subjects</button>
-    <button class="tab-btn" onclick="switchTab('grades')">Gradebook & Records</button>
+    <button id="tabSubjectsBtn" class="tab-btn active" onclick="switchTab('subjects')">Classwork / Modules</button>
+    <button id="tabTeacherBtn" class="tab-btn hidden" onclick="switchTab('teacher')">👑 Teacher Dashboard</button>
+    <button id="tabGradesBtn" class="tab-btn" onclick="switchTab('grades')">Student Gradebook</button>
   </div>
 
   <main>
     
-    <!-- Banner -->
+    <!-- Banner with Class Code -->
     <div class="classroom-banner">
-      <h1>Professional Education (ProfEd) Reviewer</h1>
-      <p>Course Instructor: Teacher Echo &bull; Complete Reference Curriculum</p>
-      <div id="studentGreeting" class="student-greeting">Welcome! Click any subject to review content and solve the quiz.</div>
+      <h1>Licensure Examination for Teachers (LET)</h1>
+      <p>Course Instructor: <strong>Teacher Echo</strong> &bull; Professional Education</p>
+      
+      <div class="class-code-badge">
+        <span>🔑 Official Class Code:</span>
+        <strong id="displayClassCode">ECHO-LPT-75</strong>
+        <button class="copy-btn" onclick="copyClassCode()">COPY</button>
+      </div>
     </div>
 
-    <!-- 1. SUBJECTS LIST TAB -->
+    <!-- 1. SUBJECTS / CLASSWORK TAB -->
     <section id="subjectsTab">
       <div id="subjectsContainer"></div>
     </section>
 
-    <!-- 2. VERBATIM STUDY CONTENT VIEW -->
+    <!-- 2. TEACHER DASHBOARD (TEACHER ECHO ONLY) -->
+    <section id="teacherTab" class="hidden">
+      <div class="teacher-dashboard">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 style="color:var(--crimson); font-size:1.4rem;">👑 Teacher Echo's Admin Portal</h2>
+            <p style="color:var(--text-muted); font-size:0.88rem;">Monitor student registrations, scores, and turned-in 65-item drills.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-gold" onclick="importStudentPacketPrompt()">📥 Import Submission</button>
+            <button class="btn-action" onclick="exportRecordsToCSV()">📊 Export CSV</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div id="statTotalStudents" class="stat-number">0</div>
+            <div class="stat-label">Enrolled Students</div>
+          </div>
+          <div class="stat-box">
+            <div id="statTotalSubmissions" class="stat-number">0</div>
+            <div class="stat-label">Turned-In Drills</div>
+          </div>
+          <div class="stat-box">
+            <div id="statPassRate" class="stat-number">0%</div>
+            <div class="stat-label">Passing Rate (75%+)</div>
+          </div>
+        </div>
+
+        <h3 style="color:var(--crimson); font-size:1.1rem; margin-bottom:0.6rem;">📋 Student Gradebook & Master Record</h3>
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Major</th>
+              <th>Subject Completed</th>
+              <th>Score (65 Items)</th>
+              <th>PRC Status</th>
+              <th>Date Turned In</th>
+            </tr>
+          </thead>
+          <tbody id="teacherRecordsList">
+            <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No student submissions recorded yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. VERBATIM STUDY CONTENT VIEW -->
     <section id="contentView" class="content-view">
       <div class="content-header">
         <button onclick="backToSubjects()" style="background:none; border:none; color:var(--crimson); font-weight:700; cursor:pointer; margin-bottom:0.5rem;">← Back to All Subjects</button>
         <h2 id="contentSubjectTitle">Subject Title</h2>
       </div>
 
-      <!-- Quick Jump Menu for long reading -->
       <div class="toc-box">
         <h4>📑 Quick Jump Table of Contents:</h4>
         <div class="toc-links">
@@ -269,7 +371,6 @@
         </div>
       </div>
 
-      <!-- VERBATIM TEXT CONTAINER -->
       <div id="verbatimContentArea"></div>
 
       <div style="display:flex; justify-content:flex-end; margin-top:2rem;">
@@ -277,7 +378,7 @@
       </div>
     </section>
 
-    <!-- 3. INTERACTIVE MULTIMEDIA QUIZ VIEW -->
+    <!-- 4. INTERACTIVE QUIZ VIEW -->
     <section id="quizView" class="quiz-view">
       <div class="multimedia-toolbar">
         <button id="speechBtn" class="audio-speech-btn" onclick="readQuestionAloud()">🔊 Read Aloud (Voice)</button>
@@ -302,450 +403,154 @@
       </div>
     </section>
 
-    <!-- 4. GRADES / GRADEBOOK TAB -->
+    <!-- 5. STUDENT GRADES TAB -->
     <section id="gradesTab" class="hidden">
-      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:0.4rem;">Your Professional Education Gradebook</h2>
-      <p style="color:var(--text-muted); font-size:0.88rem;">Each subject requires a 75% score to meet the PRC benchmark.</p>
-      <table class="grades-table">
+      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:0.4rem;">Your Turned-In Assignments</h2>
+      <p style="color:var(--text-muted); font-size:0.88rem;">Each score is recorded and visible to Teacher Echo.</p>
+      <table class="records-table">
         <thead>
           <tr>
             <th>Subject Domain</th>
-            <th>Score</th>
-            <th>Status</th>
+            <th>Your Score</th>
+            <th>PRC Status (75% Benchmark)</th>
             <th>Date Completed</th>
+            <th>Action</th>
           </tr>
         </thead>
-        <tbody id="gradesList">
-          <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No subject drills recorded yet.</td></tr>
+        <tbody id="studentGradesList">
+          <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No subject drills completed yet.</td></tr>
         </tbody>
       </table>
     </section>
 
   </main>
 
-  <!-- STUDENT REGISTRATION MODAL -->
-  <div id="registrationModal" class="modal-backdrop">
+  <!-- REGISTRATION / AUTH MODAL (TEACHER VS STUDENT SEPARATION) -->
+  <div id="authModal" class="modal-backdrop">
     <div class="modal-card">
-      <h2 style="color:var(--crimson);">Welcome to EchoLET! ✏️</h2>
-      <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">
-        Enroll with your name and email to access Teacher Echo's review modules and track your grades.
-      </p>
+      <div class="role-tabs">
+        <button id="roleStudentTab" class="role-tab active" onclick="switchRoleForm('student')">Student Registration</button>
+        <button id="roleTeacherTab" class="role-tab" onclick="switchRoleForm('teacher')">👑 Teacher Echo Login</button>
+      </div>
 
-      <label style="font-size:0.85rem; font-weight:600;">Full Name:</label>
-      <input type="text" id="regName" class="input-field" placeholder="e.g. Juan Dela Cruz" required />
+      <!-- STUDENT FORM -->
+      <div id="studentForm">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+          Enter the official Class Code given by Teacher Echo to enroll and turn in your quiz scores.
+        </p>
 
-      <label style="font-size:0.85rem; font-weight:600;">Email Address:</label>
-      <input type="email" id="regEmail" class="input-field" placeholder="e.g. juan@gmail.com" required />
+        <label style="font-size:0.85rem; font-weight:700;">Class Code (Required):</label>
+        <input type="text" id="studentClassCodeInput" class="input-field" placeholder="Enter Class Code (e.g. ECHO-LPT-75)" required />
 
-      <label style="font-size:0.85rem; font-weight:600;">Specialization / Major:</label>
-      <select id="regMajor" class="input-field">
-        <option value="Elementary (BEEd)">Bachelor of Elementary Education (BEEd)</option>
-        <option value="Secondary (BSEd)">Bachelor of Secondary Education (BSEd)</option>
-      </select>
+        <label style="font-size:0.85rem; font-weight:700;">Full Name:</label>
+        <input type="text" id="regName" class="input-field" placeholder="e.g. Juan Dela Cruz" required />
 
-      <button class="btn-action" style="width:100%;" onclick="registerStudent()">Enroll in Class</button>
+        <label style="font-size:0.85rem; font-weight:700;">Email Address:</label>
+        <input type="email" id="regEmail" class="input-field" placeholder="e.g. juan@gmail.com" required />
+
+        <label style="font-size:0.85rem; font-weight:700;">Specialization / Major:</label>
+        <select id="regMajor" class="input-field">
+          <option value="Elementary (BEEd)">Bachelor of Elementary Education (BEEd)</option>
+          <option value="Secondary - English">Secondary - English (BSEd)</option>
+          <option value="Secondary - Social Studies">Secondary - Social Studies</option>
+          <option value="Secondary - Mathematics">Secondary - Mathematics</option>
+          <option value="Secondary - Science">Secondary - Science</option>
+        </select>
+
+        <button class="btn-action" style="width:100%;" onclick="registerStudent()">Enroll in Teacher Echo's Class</button>
+      </div>
+
+      <!-- TEACHER FORM -->
+      <div id="teacherForm" class="hidden">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+          Welcome Teacher Echo! Enter your Teacher Admin PIN to view your students' scores, export class records, and monitor submissions.
+        </p>
+
+        <label style="font-size:0.85rem; font-weight:700;">Teacher PIN / Passcode:</label>
+        <input type="password" id="teacherPinInput" class="input-field" placeholder="Default PIN: TEACHER-ECHO" />
+
+        <button class="btn-gold" style="width:100%;" onclick="loginTeacher()">Enter Teacher Portal</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // -------------------------------------------------------------------
-    // 65 PRACTICE QUESTIONS (SUBJECT 1) EXACTLY MATCHED TO ANSWER KEY
-    // -------------------------------------------------------------------
+    // ----------------------------------------------------
+    // CONSTANTS & 65-ITEM QUESTION BANK (MATCHED TO KEY)
+    // ----------------------------------------------------
+    const CLASS_CODE = "ECHO-LPT-75";
+    const TEACHER_PIN = "TEACHER-ECHO";
+
     const subject1Quiz = [
-      {
-        stem: "1. Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?",
-        choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"],
-        ans: 1, // B
-        rationale: "Psychological abuse involves coercive tactics, intimidation, and inducing fear in an individual to assert dominance and control."
-      },
-      {
-        stem: "2. What does SDG 15 – 30 mean?",
-        choices: ["Sustainable Development Goals after the MDG of 2015", "Sustaining and Developing Gross National Product", "Specific Development Goals for developing nations", "Sustaining Development Led by Giant Nations"],
-        ans: 0, // A
-        rationale: "The Sustainable Development Goals (SDGs) run from 2016 to 2030, succeeding the Millennium Development Goals (MDGs 2000–2015)."
-      },
-      {
-        stem: "3. Which is TRUE of a school and community partnership?",
-        choices: ["Community helps school", "School is a recipient of assistance from community", "Both school and community benefit", "Both school and community lose"],
-        ans: 2, // C
-        rationale: "School-community partnerships are reciprocal two-way relationships where both institutions mutually benefit from shared resources and service."
-      },
-      {
-        stem: "4. Which program is a proof of school and community partnership where every month of May education stakeholders contribute their time, talent and treasure to ensure that school facilities are set in time for the school opening?",
-        choices: ["Parents and Teachers Association Assembly", "School Governing Council Annual Assembly", "Brigada Eskwela", "Palarong Pambansa"],
-        ans: 2, // C
-        rationale: "Brigada Eskwela (National Schools Maintenance Week) mobilizes communities, parents, and partners every May to prepare public school facilities."
-      },
-      {
-        stem: "5. 'It takes a village to educate a child'. Which does this statement imply?",
-        choices: ["PTA is more than enough partnership", "Institutionalize school – community partnership", "School can be substitute for absentee parents", "Children need more models"],
-        ans: 1, // B
-        rationale: "This African proverb highlights that holistic child development requires institutionalized collaboration among schools, families, and communities."
-      },
-      {
-        stem: "6. As a teacher, you are a facilitator of learning. What is expected of you?",
-        choices: ["Do not fail anyone", "Make teaching – learning interactive and exciting", "Use video clips", "Allow them to use their cellphones in the classroom"],
-        ans: 1, // B
-        rationale: "A learning facilitator actively creates engaging, student-centered, and interactive environments that motivate learners to construct meaning."
-      },
-      {
-        stem: "7. Who is the most interested in improving the present status of an organization?",
-        choices: ["The authoritarian leader", "The laissez faire type of leader", "The transformational leader", "The servant leader"],
-        ans: 2, // C
-        rationale: "Transformational leaders inspire systemic innovation, challenge the status quo, and drive organizational change toward a shared future vision."
-      },
-      {
-        stem: "8. Is SBM, if implemented the right way, an effective way to strengthen school and community partnership?",
-        choices: ["Yes", "No", "Depends on size of school", "Depends on school location"],
-        ans: 0, // A
-        rationale: "Yes; School-Based Management (SBM) decentralizes governance and directly involves local stakeholders in school decisions and accountability."
-      },
-      {
-        stem: "9. Which is an advantage of SBM?",
-        choices: ["Fast resolution of problems in school because school head decides", "Sense of ownership of stakeholders", "In accordance with decentralization law", "Total independence of schools"],
-        ans: 1, // B
-        rationale: "By participating directly in planning and budgeting, teachers, parents, and community partners gain a genuine sense of ownership over school success."
-      },
-      {
-        stem: "10. For SBM to succeed, which must be present?",
-        choices: ["Effective school support system", "Leader with a strong personality", "Docile community", "Low expectation"],
-        ans: 0, // A
-        rationale: "SBM requires robust technical, administrative, and institutional support systems from division offices, stakeholders, and school heads."
-      },
-      {
-        stem: "11. Which is TRUE of school culture?",
-        choices: ["Passed on like a hereditary trait", "Created by the school head and other stakeholders", "Has significant effect on student performance", "Cannot be altered"],
-        ans: 2, // C
-        rationale: "Research consistently shows that positive school culture (values, beliefs, traditions) directly and significantly enhances student performance."
-      },
-      {
-        stem: "12. Which is the most effective way of making policies?",
-        choices: ["School head to involve stakeholders", "Students not to participate since policies are for them", "Only parents of students enrolled are involved", "School policies are permanent to build the culture of excellence"],
-        ans: 0, // A
-        rationale: "Participatory decision-making that includes faculty, parents, community members, and learners creates practical, respected policies."
-      },
-      {
-        stem: "13. Which competency/ies is/are practiced by a school head who demonstrates strategic thinking and innovation?\nI. Charting the strategic direction of the school\nII. Making informed decisions\nIII. Leading change and innovation",
-        choices: ["I and II", "I only", "II and III", "I, II and III"],
-        ans: 3, // D
-        rationale: "Strategic leadership encompasses setting vision and direction, making evidence-based decisions, and spearheading innovations."
-      },
-      {
-        stem: "14. Which does the school head do as instructional leader?",
-        choices: ["Leads in curriculum implementation and improvement", "Manages education alliances and networks", "Manages school resources and systems", "Makes informed decisions"],
-        ans: 0, // A
-        rationale: "Instructional leadership specifically focuses on curriculum management, classroom supervision, pedagogy, and learning evaluation."
-      },
-      {
-        stem: "15. To which domain in School Heads’ Competency Framework is supervising and evaluating teachers’ performance aligned?",
-        choices: ["Strategic thinking and innovation", "Instructional leadership", "Personal excellence", "Stakeholder’s engagement"],
-        ans: 1, // B
-        rationale: "Instructional supervision and teacher performance appraisal fall directly under Domain 2: Instructional Leadership."
-      },
-      {
-        stem: "16. How can a school create a student–centered learning climate?\nI. Set high social and academic expectations\nII. Sensitive to children’s needs\nIII. Create inclusive school environment",
-        choices: ["I only", "I, II, III", "II only", "I and II"],
-        ans: 1, // B
-        rationale: "A holistic student-centered climate sets high standards, respects individual emotional and academic needs, and ensures total inclusivity."
-      },
-      {
-        stem: "17. Teacher Q regards the student as a spiritual entity and as part of the larger spiritual universe. To what philosophy does teacher Q subscribe?",
-        choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"],
-        ans: 0, // A
-        rationale: "Idealism views reality as spiritual or mental, emphasizing spiritual development and eternal moral truths."
-      },
-      {
-        stem: "18. Who among the following believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?",
-        choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"],
-        ans: 1, // B
-        rationale: "Essentialism emphasizes traditional basic skills (3 Rs), rigorous academic discipline, homework, and respect for authority."
-      },
-      {
-        stem: "19. Teacher U emphasizes to her students the importance of deep personal reflection on one’s commitments and choices. Teacher U subscribes to which Philosophy?",
-        choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"],
-        ans: 1, // B
-        rationale: "Existentialism focuses on individual freedom, personal authenticity, self-determination, and taking responsibility for one's choices."
-      },
-      {
-        stem: "20. Teacher X is often times frustrated. The students in her class hardly volunteer to recite and to do other learning-related tasks. This is a proof of the Filipino’s:",
-        choices: ["Sense of humor", "Lack of resourcefulness", "Lack of reflection", "Passivity and lack of initiative"],
-        ans: 3, // D
-        rationale: "In the study of Filipino strengths and weaknesses, waiting to be told and reluctance to volunteer reflect passivity and lack of initiative."
-      },
-      {
-        stem: "21. The tendency to emphasize so much on school beautification to the detriment of pupil’s performance illustrated the:",
-        choices: ["Filipino’s sense of humor", "Filipino’s lack of reflection", "Filipino’s love for 'Porma' at the expense of substance", "Filipino’s lack of seriousness"],
-        ans: 2, // C
-        rationale: "Over-prioritizing aesthetics or superficial appearances over core academic mastery exemplifies valuing 'porma' over substance."
-      },
-      {
-        stem: "22. Which of the following statements is NOT TRUE of an ideal social principle?",
-        choices: ["Restructure society to create a union of communities", "Advocate direct life-relations between men and men", "De-emphasize centralization of power", "Advocate an ethics of manipulation"],
-        ans: 3, // D
-        rationale: "An ideal social principle values human dignity, collaboration, and ethical relation; it firmly rejects manipulation."
-      },
-      {
-        stem: "23. In a vocational school, students are taught skills and knowledge that have practical applications. Which source of knowledge aligns with this pragmatic approach?",
-        choices: ["The nature of reality and existence.", "The mind and mental processes.", "The practical consequences and utility of knowledge.", "Inquiry into the nature of the divine."],
-        ans: 2, // C
-        rationale: "Pragmatism asserts that knowledge is true and meaningful if it has practical utility and verifiable real-world consequences."
-      },
-      {
-        stem: "24. Epistemology is concerned with:",
-        choices: ["The nature of value.", "The study of being and existence.", "Examination of knowledge and the nature of belief.", "Analysis of government principles."],
-        ans: 2, // C
-        rationale: "Epistemology is the philosophical study of the nature, acquisition, validity, and limits of knowledge."
-      },
-      {
-        stem: "25. Which among the following is the primary concern of Cosmology?",
-        choices: ["Inquiry into the nature of beauty and art.", "Examination of the nature of the universe.", "Study of valid reasoning and argumentation.", "Exploration of concepts of right and wrong."],
-        ans: 1, // B
-        rationale: "Cosmology (a sub-branch of Metaphysics) examines the origin, nature, and structure of the universe."
-      },
-      {
-        stem: "26. Empirical Observation involves ______.",
-        choices: ["Immediate knowledge without conscious reasoning.", "Knowledge acquired through deductive reasoning.", "Direct observation using the senses.", "Recollection of past experiences."],
-        ans: 2, // C
-        rationale: "Empirical observation relies directly on gathering information through sensory experiences (seeing, hearing, touching, etc.)."
-      },
-      {
-        stem: "27. Which among the following questions does Ontology seek to answer?",
-        choices: ["What exists? What is the nature of being?", "What is the origin and structure of the universe?", "What defines humanity? How do societies develop?", "What is the nature of God? What is the relationship between God and the world?"],
-        ans: 0, // A
-        rationale: "Ontology is the branch of metaphysics exploring the nature of being, existence, and reality itself."
-      },
-      {
-        stem: "28. Which branch of Metaphysics focuses on the examination of the nature of the universe?",
-        choices: ["Ontology", "Cosmology", "Theology", "Anthropology"],
-        ans: 1, // B
-        rationale: "Cosmology specifically investigates the origin, evolution, and structure of the physical universe."
-      },
-      {
-        stem: "29. Which is NOT included in the DepEd Primer on School Community Partnership?",
-        choices: ["School used as an evacuation center", "School used as a polling place", "School used for PTA meetings", "School used for medical mission"],
-        ans: 2, // C
-        rationale: "In the DepEd Primer under 'School to Community Services', official community uses include evacuation centers, polling precincts, and medical missions; PTA meetings are internal school events."
-      },
-      {
-        stem: "30. All statements are descriptive of school policies EXCEPT that ______.",
-        choices: ["they are supportive of the learning process", "they guide all sectors towards the attainment of school goals", "they ensure smooth flow of school operations", "they suffocate school climate"],
-        ans: 3, // D
-        rationale: "School policies are designed to support learning and promote safety, not to stifle or suffocate the school climate."
-      },
-      {
-        stem: "31. Which of the following periods focused on the rediscovery of classical philosophy, literature and art?",
-        choices: ["Athenian period", "Medieval period", "Reformation period", "Renaissance period"],
-        ans: 3, // D
-        rationale: "The Renaissance (14th–17th centuries) was marked by humanism and the rebirth and rediscovery of classical Greco-Roman literature, art, and philosophy."
-      },
-      {
-        stem: "32. How can a school head exercise school management and operations?\nI. Managing School Operations\nII. Use of Technology in School Management\nIII. Financial Resources Matters",
-        choices: ["I, II and III", "I and III", "II and III", "I, and II"],
-        ans: 0, // A
-        rationale: "School operations encompass daily organizational management, educational technology integration, and sound fiscal administration."
-      },
-      {
-        stem: "33. The legal basis for the implementation of the National Competency-Based Standards for School Heads is",
-        choices: ["Philippine Constitution", "DepEd order 8, s2015", "DepEd order 32, s2010", "DepEd order 04, s2012"],
-        ans: 2, // C
-        rationale: "DepEd Order No. 32, s. 2010 formally adopted the National Competency-Based Standards for School Heads (NCBS-SH)."
-      },
-      {
-        stem: "34. The success of SBM primarily depends on",
-        choices: ["basic resources", "school heads", "local government", "the Department of Education"],
-        ans: 1, // B
-        rationale: "While community collaboration is essential, leadership by the school head as prime mover and facilitator is critical for successful SBM."
-      },
-      {
-        stem: "35. Transformational leaders are described as the following EXCEPT",
-        choices: ["charismatic", "inspirational", "collaborator", "powerful"],
-        ans: 3, // D
-        rationale: "Transformational leaders rely on vision, charisma, and collaboration rather than displaying authoritarian power."
-      },
-      {
-        stem: "36. A teacher in the city calls a shy student 'promdi'. Which does 'promdi' imply? Those who come from the province",
-        choices: ["may be belittled", "deserves respect", "are as civilized as the city-bred", "are achievers"],
-        ans: 0, // A
-        rationale: "The derogatory slang 'promdi' (from the province) carries prejudiced connotations used to belittle provincial students."
-      },
-      {
-        stem: "37. Who is considered the first teacher of Ancient China and the key figure in Confucianism?",
-        choices: ["Lao Tzu.", "Siddhartha Gautama.", "Confucius.", "Guru Nanak."],
-        ans: 2, // C
-        rationale: "Confucius (Kung Fu Tzu) is traditionally venerated as Ancient China's first great teacher and moral philosopher."
-      },
-      {
-        stem: "38. How is Karma understood in Hinduism?",
-        choices: ["Liberation from the cycle of rebirth.", "Ritualistic meditation.", "Law of cause and effect where actions determine future consequences.", "The ultimate cosmic spirit."],
-        ans: 2, // C
-        rationale: "In Hinduism, Karma is the universal law of cause and effect wherein one's intentional deeds shape future outcomes and rebirths."
-      },
-      {
-        stem: "39. According to Buddhism, what does the concept of Impermanence (Anicca) suggest?",
-        choices: ["Everything is permanent and unchanging.", "Nothing is permanent.", "Only spiritual truths are impermanent.", "Impermanence is irrelevant in Buddhism."],
-        ans: 1, // B
-        rationale: "Anicca teaches that all conditioned existence is transient, inconstant, and impermanent."
-      },
-      {
-        stem: "40. Which philosophy emphasizes the idea that school exists for the society?",
-        choices: ["Reconstructionism", "Idealism", "Perennialism", "Realism"],
-        ans: 0, // A
-        rationale: "Social Reconstructionism views education as the primary tool to restructure society and eliminate social injustices."
-      },
-      {
-        stem: "41. Teacher Maria sees to it that her classroom is clean and orderly so her pupils will less likely disarrange seats and litter on the floor. On which thought is her action based?",
-        choices: ["Behaviorism", "Existentialism", "Progressivism", "Reconstructionism"],
-        ans: 0, // A
-        rationale: "Behaviorism posits that environmental arrangements and stimuli directly shape, condition, and modify student behavior."
-      },
-      {
-        stem: "42. As a member of the curriculum committee, your chief concern is to give the child freedom to choose what to learn and believe, as you allow them to set their own identities and standards. What philosophy will you consider?",
-        choices: ["Existentialism", "Fatalism", "Idealism", "Pragmatism"],
-        ans: 0, // A
-        rationale: "Existentialist education centers on learner autonomy, personal choice, self-discovery, and authentic identity formation."
-      },
-      {
-        stem: "43. Teacher S lets students construct their own learning through active interplay and engagement in class. He primarily considers the student’s interest in lesson planning. To which philosophy does Teacher S adhere?",
-        choices: ["Essentialism", "Perennialism", "Progressivism", "Reconstructionism"],
-        ans: 2, // C
-        rationale: "Progressivism (led by John Dewey) emphasizes student interests, experiential learning, and active inquiry."
-      },
-      {
-        stem: "44. The shooting incidents in school campuses abroad have made schools rethink the curriculum. Which changes are being introduced in schools to counteract campus violence?\nI. Inclusion of socio-emotional teaching\nII. The emphasis on the concept of competition against self and not against others\nIII. Focus on academic achievement and productivity",
-        choices: ["I and II", "I and III", "II and III", "I, II, III"],
-        ans: 0, // A
-        rationale: "Promoting socio-emotional learning (I) and self-mastery over toxic rivalry (II) foster supportive, non-violent environments."
-      },
-      {
-        stem: "45. To ensure high standards of teachers' personal and professional development, which measure must be implemented?\nI. A school head plans the professional development of his/her teachers.\nII. Every teacher formulates his/her own professional development plan\nIII. The implementation of what is learned in training must be monitored.",
-        choices: ["I and III", "II only", "I only", "II and III"],
-        ans: 3, // D
-        rationale: "Teacher self-direction through individualized plans (II) combined with sustained post-training monitoring (III) ensures effective development."
-      },
-      {
-        stem: "46. The wide acceptance of 'bottom up' management style has influenced schools to practice which management practice?",
-        choices: ["Prescription of what ought to be done from the central office", "Exclusion of politicians from the pool of guest speakers during graduation exercises", "Involvement of students, parents, teachers and community in school planning", "Allowing schools to do what they think is best"],
-        ans: 2, // C
-        rationale: "Bottom-up management empowers frontline stakeholders (parents, teachers, learners, community) to actively participate in school planning."
-      },
-      {
-        stem: "47. A stakeholder in curriculum development, Mr. C, a district supervisor and a member of the school board has one of the following primary roles:",
-        choices: ["Support and participate in the parent-school organization activities", "Authorize school expenditures for curriculum development, implementation and evaluation", "Enact legislation to effect curriculum improvement.", "Recommend changes in the curriculum."],
-        ans: 3, // D
-        rationale: "As an instructional leader and supervisor, the district supervisor observes classroom implementation and recommends grounded curricular improvements."
-      },
-      {
-        stem: "48. In Sociological Foundations of Education, which characteristic of culture involves adapting to environmental, social, and economic changes?",
-        choices: ["Integrated", "Adaptive", "Dynamic", "Symbolic"],
-        ans: 1, // B
-        rationale: "Culture is adaptive; it evolves practical mechanisms to adjust to changing physical, environmental, and social conditions."
-      },
-      {
-        stem: "49. What is the primary function of the economy as a social institution in Sociological Foundations of Education?",
-        choices: ["Providing moral guidance.", "Generating jobs and livelihoods.", "Making collective decisions for society.", "Transmitting cultural values."],
-        ans: 1, // B
-        rationale: "The economy organizes production, distributes resources, and generates employment and livelihoods for citizens."
-      },
-      {
-        stem: "50. Which social institution involves systems of beliefs, rituals, and practices related to religion?",
-        choices: ["Family", "School", "Government", "Church"],
-        ans: 3, // D
-        rationale: "The church (religious institution) provides ethical frameworks, existential meaning, and ritualized spiritual practices."
-      },
-      {
-        stem: "51. How do folkways differ from mores?",
-        choices: ["Folkways are highly scripted ceremonies, while mores are behavior patterns.", "Folkways are organized and repetitive behavior patterns, while mores have a moralistic value.", "Folkways are formalized norms, while mores are customary behavior patterns.", "Folkways are specific sequences of actions, while mores are enacted by government authorities."],
-        ans: 1, // B
-        rationale: "Folkways are everyday customary conventions; mores carry deep moral significance where violations incur severe societal condemnation."
-      },
-      {
-        stem: "52. According to Conflict Theory, what is the primary driver of social change?",
-        choices: ["Cooperation between different groups.", "Inequality and power struggles.", "Shared meanings and symbols.", "Rational calculations of rewards and costs."],
-        ans: 1, // B
-        rationale: "Conflict Theory asserts that social progression and reform emerge from struggles over scarce resources and power imbalances."
-      },
-      {
-        stem: "53. What is the primary focus of Consensus Theory in social science theories?",
-        choices: ["Challenging grand narratives and universal truths.", "Shared values and norms that create social order.", "Examining gender-based inequalities and oppression.", "Advocating for gender equality and social justice."],
-        ans: 1, // B
-        rationale: "Consensus Theory emphasizes that societal stability is maintained through shared core values and collaborative social consensus."
-      },
-      {
-        stem: "54. How does Enculturation shape individual identity and social behavior?",
-        choices: ["Through assimilation into the dominant culture.", "By adopting cultural norms from other societies.", "Learning and acquiring one's own culture through informal means.", "The spread of cultural elements through trade."],
-        ans: 2, // C
-        rationale: "Enculturation is the fundamental lifelong process of learning one's native culture through family and primary community socialization."
-      },
-      {
-        stem: "55. Which among the following characterizes partnership between school and community?",
-        choices: ["Competition between educational institutions.", "Collaborative efforts to enhance students' well-being and educational experiences.", "Isolation of schools from the local community.", "Strict separation of resources between schools and communities."],
-        ans: 1, // B
-        rationale: "Effective partnerships unite schools and local communities to support students' holistic development and learning."
-      },
-      {
-        stem: "56. What is the overall atmosphere or 'feel' of a school defined as?",
-        choices: ["School Leadership.", "School Climate.", "Organizational Leadership.", "School Culture."],
-        ans: 1, // B
-        rationale: "School climate describes the prevailing emotional and physical atmosphere, relationships, and interpersonal safety within a school."
-      },
-      {
-        stem: "57. How does a Leader differ from a Manager?",
-        choices: ["A Leader focuses on tasks and goals.", "A leader sets vision and aligns people.", "A Leader influences through authority.", "A Manager inspires through vision."],
-        ans: 1, // B
-        rationale: "Leaders set overarching vision and align people, while managers coordinate concrete tasks, resources, and operational processes."
-      },
-      {
-        stem: "58. What is a key component of School-Based Management (SBM)?",
-        choices: ["Centralized decision-making.", "Accountability.", "Limited autonomy for schools.", "Reduced community engagement."],
-        ans: 1, // B
-        rationale: "SBM pairs decentralized decision-making autonomy with direct accountability for institutional performance and student learning."
-      },
-      {
-        stem: "59. Which domain of NCBS-SH focuses on guiding the school towards its vision and mission?",
-        choices: ["Domain 1: School Leadership.", "Domain 2: Instructional Leadership.", "Domain 3: Creating a Student-Centered Learning Climate.", "Domain 4: HR Management and Professional Development."],
-        ans: 0, // A
-        rationale: "Domain 1 of NCBS-SH (School Leadership) centers on articulating a clear institutional direction, vision, and mission."
-      },
-      {
-        stem: "60. The school is facing challenges in maintaining a positive learning environment. What domain and key competency in NCBS-SH should the school head focus on to address this issue?",
-        choices: ["Domain 3: Creating a Student-Centered Learning Climate - Student Welfare and Discipline.", "Domain 1: School Leadership - Ethical and Effective Leadership.", "Domain 5: Parents Involvement and Community Partnership - Community Partnership.", "Domain 6: School Management and Operation - Financial Management."],
-        ans: 0, // A
-        rationale: "Promoting student welfare, restorative discipline, and a safe learning atmosphere is part of Domain 3 (Student-Centered Learning Climate)."
-      },
-      {
-        stem: "61. The school head wants to enhance the professional development of the teaching staff. Which domain and key competency in NCBS-SH align with this goal?",
-        choices: ["Domain 2: Instructional Leadership - Instructional Supervision.", "Domain 4: HR Management and Professional Development - Professional Development.", "Domain 5: Parents Involvement and Community Partnership - Parental Involvement.", "Domain 7: Personal and Professional Attributes - Professional Ethics."],
-        ans: 1, // B
-        rationale: "Domain 4 explicitly governs Human Resource Management and continuous Professional Development for teachers and staff."
-      },
-      {
-        stem: "62. A school head wants to strengthen the school's connections with the community. Which domain and key component in PPSSH align with this goal?",
-        choices: ["Domain 5: Building Connections - Stakeholder Engagement.", "Domain 1: Leading Strategically - Results-Based Leadership.", "Domain 3: Focusing on Teaching and Learning - Monitoring and Evaluation.", "Domain 4: Developing Self and Others - Personal and Professional Development."],
-        ans: 0, // A
-        rationale: "Domain 5 of the PPSSH (DepEd Order 24, s. 2020) is 'Building Connections', with 'Stakeholder Engagement' as a core component."
-      },
-      {
-        stem: "63. To which domain in School Heads' Competency Framework is supervising and evaluating teachers' performance aligned?",
-        choices: ["Personal excellence", "Strategic thinking and innovation", "Instructional leadership", "Stakeholder's engagement"],
-        ans: 2, // C
-        rationale: "Direct observation, clinical supervision, and evaluation of classroom teaching belong to Instructional Leadership."
-      },
-      {
-        stem: "64. Which is the essence of SBM?",
-        choices: ["Principal empowerment", "Reduced authority of school head", "School empowerment", "Absolute freedom of education stakeholders"],
-        ans: 2, // C
-        rationale: "The fundamental philosophy of SBM is school empowerment—giving the school community autonomy to solve localized learning problems."
-      },
-      {
-        stem: "65. Which does a transformational teacher leader do?\nI. Helps others with their self-development\nII. Challenges team members to help them grow\nIII. Direct colleagues to get things done while she does not lift a finger\nIV. Set teaching-learning standards by himself/herself",
-        choices: ["II", "II and IV", "I and III", "I and II"],
-        ans: 3, // D
-        rationale: "Transformational leaders focus on individualized support and mentorship (I) while intellectually stimulating and challenging colleagues to grow (II)."
-      }
+      { stem: "1. Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, rationale: "Psychological abuse involves threats, intimidation, and inducing fear in an individual to assert control." },
+      { stem: "2. What does SDG 15 – 30 mean?", choices: ["Sustainable Development Goals after the MDG of 2015", "Sustaining and Developing Gross National Product", "Specific Development Goals for developing nations", "Sustaining Development Led by Giant Nations"], ans: 0, rationale: "The Sustainable Development Goals (SDGs) run from 2016–2030, following the 2000–2015 Millennium Development Goals." },
+      { stem: "3. Which is TRUE of a school and community partnership?", choices: ["Community helps school", "School is a recipient of assistance from community", "Both school and community benefit", "Both school and community lose"], ans: 2, rationale: "School-community partnerships are mutually beneficial collaborations that enrich both institutions." },
+      { stem: "4. Which program is a proof of school and community partnership where every month of May education stakeholders contribute their time, talent and treasure to ensure that school facilities are set in time for the school opening?", choices: ["Parents and Teachers Association Assembly", "School Governing Council Annual Assembly", "Brigada Eskwela", "Palarong Pambansa"], ans: 2, rationale: "Brigada Eskwela unites stakeholders every May to clean and prepare public school facilities before classes start." },
+      { stem: "5. 'It takes a village to educate a child'. Which does this statement imply?", choices: ["PTA is more than enough partnership", "Institutionalize school – community partnership", "School can be substitute for absentee parents", "Children need more models"], ans: 1, rationale: "This proverb emphasizes the necessity of institutionalized, widespread community-school collaboration." },
+      { stem: "6. As a teacher, you are a facilitator of learning. What is expected of you?", choices: ["Do not fail anyone", "Make teaching – learning interactive and exciting", "Use video clips", "Allow them to use their cellphones in the classroom"], ans: 1, rationale: "A facilitator creates engaging, interactive, and active learning environments for students." },
+      { stem: "7. Who is the most interested in improving the present status of an organization?", choices: ["The authoritarian leader", "The laissez faire type of leader", "The transformational leader", "The servant leader"], ans: 2, rationale: "Transformational leaders challenge the status quo and inspire members to innovate and transform the organization." },
+      { stem: "8. Is SBM, if implemented the right way, an effective way to strengthen school and community partnership?", choices: ["Yes", "No", "Depends on size of school", "Depends on school location"], ans: 0, rationale: "Yes, School-Based Management decentralizes governance and directly involves local community stakeholders." },
+      { stem: "9. Which is an advantage of SBM?", choices: ["Fast resolution of problems in school because school head decides", "Sense of ownership of stakeholders", "In accordance with decentralization law", "Total independence of schools"], ans: 1, rationale: "Direct involvement in school governance gives parents, teachers, and communities a deep sense of ownership." },
+      { stem: "10. For SBM to succeed, which must be present?", choices: ["Effective school support system", "Leader with a strong personality", "Docile community", "Low expectation"], ans: 0, rationale: "SBM requires robust, effective support systems from institutional leaders and stakeholders." },
+      { stem: "11. Which is TRUE of school culture?", choices: ["Passed on like a hereditary trait", "Created by the school head and other stakeholders", "Has significant effect on student performance", "Cannot be altered"], ans: 2, rationale: "A school's culture (shared values, rituals, and climate) directly affects student achievement and performance." },
+      { stem: "12. Which is the most effective way of making policies?", choices: ["School head to involve stakeholders", "Students not to participate since policies are for them", "Only parents of students enrolled are involved", "School policies are permanent to build the culture of excellence"], ans: 0, rationale: "Involving all affected stakeholders yields effective, respected, and lasting school policies." },
+      { stem: "13. Which competency/ies is/are practiced by a school head who demonstrates strategic thinking and innovation?\nI. Charting the strategic direction of the school\nII. Making informed decisions\nIII. Leading change and innovation", choices: ["I and II", "I only", "II and III", "I, II and III"], ans: 3, rationale: "Strategic thinking covers direction-setting, data-informed decisions, and leading change (I, II, and III)." },
+      { stem: "14. Which does the school head do as instructional leader?", choices: ["Leads in curriculum implementation and improvement", "Manages education alliances and networks", "Manages school resources and systems", "Makes informed decisions"], ans: 0, rationale: "Instructional leadership centers on pedagogical guidance, curriculum implementation, and learning improvement." },
+      { stem: "15. To which domain in School Heads’ Competency Framework is supervising and evaluating teachers’ performance aligned?", choices: ["Strategic thinking and innovation", "Instructional leadership", "Personal excellence", "Stakeholder’s engagement"], ans: 1, rationale: "Teacher instructional supervision and evaluation belong directly to Domain 2: Instructional Leadership." },
+      { stem: "16. How can a school create a student–centered learning climate?\nI. Set high social and academic expectations\nII. Sensitive to children’s needs\nIII. Create inclusive school environment", choices: ["I only", "I, II, III", "II only", "I and II"], ans: 1, rationale: "High expectations, child sensitivity, and inclusivity together create a student-centered climate (I, II, and III)." },
+      { stem: "17. Teacher Q regards the student as a spiritual entity and as part of the larger spiritual universe. To what philosophy does teacher Q subscribe?", choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"], ans: 0, rationale: "Idealism views the universe as spiritual and values the individual soul and moral ideas." },
+      { stem: "18. Who among the following believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?", choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"], ans: 1, rationale: "Essentialism prioritizes academic rigor, 3Rs mastery, homework, and teacher authority." },
+      { stem: "19. Teacher U emphasizes to her students the importance of deep personal reflection on one’s commitments and choices. Teacher U subscribes to which Philosophy?", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, rationale: "Existentialism values self-definition, personal freedom, and individual responsibility for one's choices." },
+      { stem: "20. Teacher X is often times frustrated. The students in her class hardly volunteer to recite and to do other learning-related tasks. This is a proof of the Filipino’s:", choices: ["Sense of humor", "Lack of resourcefulness", "Lack of reflection", "Passivity and lack of initiative"], ans: 3, rationale: "Reluctance to volunteer and waiting for directives reflect the Filipino weakness of passivity and lack of initiative." },
+      { stem: "21. The tendency to emphasize so much on school beautification to the detriment of pupil’s performance illustrated the:", choices: ["Filipino’s sense of humor", "Filipino’s lack of reflection", "Filipino’s love for 'Porma' at the expense of substance", "Filipino’s lack of seriousness"], ans: 2, rationale: "Prioritizing physical appearance over actual academic learning illustrates valuing 'porma' over substance." },
+      { stem: "22. Which of the following statements is NOT TRUE of an ideal social principle?", choices: ["Restructure society to create a union of communities", "Advocate direct life-relations between men and men", "De-emphasize centralization of power", "Advocate an ethics of manipulation"], ans: 3, rationale: "An ideal social principle fosters genuine human community and firmly rejects manipulation." },
+      { stem: "23. In a vocational school, students are taught skills and knowledge that have practical applications. Which source of knowledge aligns with this pragmatic approach?", choices: ["The nature of reality and existence.", "The mind and mental processes.", "The practical consequences and utility of knowledge.", "Inquiry into the nature of the divine."], ans: 2, rationale: "Pragmatism determines the validity of knowledge by its practical utility and observable consequences." },
+      { stem: "24. Epistemology is concerned with:", choices: ["The nature of value.", "The study of being and existence.", "Examination of knowledge and the nature of belief.", "Analysis of government principles."], ans: 2, rationale: "Epistemology studies the nature, origins, criteria, and limits of knowledge and belief." },
+      { stem: "25. Which among the following is the primary concern of Cosmology?", choices: ["Inquiry into the nature of beauty and art.", "Examination of the nature of the universe.", "Study of valid reasoning and argumentation.", "Exploration of concepts of right and wrong."], ans: 1, rationale: "Cosmology examines the origin, nature, and structure of the physical universe." },
+      { stem: "26. Empirical Observation involves ______.", choices: ["Immediate knowledge without conscious reasoning.", "Knowledge acquired through deductive reasoning.", "Direct observation using the senses.", "Recollection of past experiences."], ans: 2, rationale: "Empirical observation is information gathered directly through the five senses." },
+      { stem: "27. Which among the following questions does Ontology seek to answer?", choices: ["What exists? What is the nature of being?", "What is the origin and structure of the universe?", "What defines humanity? How do societies develop?", "What is the nature of God? What is the relationship between God and the world?"], ans: 0, rationale: "Ontology studies being and existence: 'What exists? What is the nature of being?'" },
+      { stem: "28. Which branch of Metaphysics focuses on the examination of the nature of the universe?", choices: ["Ontology", "Cosmology", "Theology", "Anthropology"], ans: 1, rationale: "Cosmology is the sub-branch of metaphysics that investigates the nature of the universe." },
+      { stem: "29. Which is NOT included in the DepEd Primer on School Community Partnership?", choices: ["School used as an evacuation center", "School used as a polling place", "School used for PTA meetings", "School used for medical mission"], ans: 2, rationale: "In community partnerships, schools serve as evacuation centers, polling places, and medical venues. PTA meetings are internal school functions." },
+      { stem: "30. All statements are descriptive of school policies EXCEPT that ______.", choices: ["they are supportive of the learning process", "they guide all sectors towards the attainment of school goals", "they ensure smooth flow of school operations", "they suffocate school climate"], ans: 3, rationale: "Policies support school operations; they do not suffocate school climate." },
+      { stem: "31. Which of the following periods focused on the rediscovery of classical philosophy, literature and art?", choices: ["Athenian period", "Medieval period", "Reformation period", "Renaissance period"], ans: 3, rationale: "The Renaissance was characterized by the revival and rediscovery of classical Greco-Roman art, literature, and philosophy." },
+      { stem: "32. How can a school head exercise school management and operations?\nI. Managing School Operations\nII. Use of Technology in School Management\nIII. Financial Resources Matters", choices: ["I, II and III", "I and III", "II and III", "I, and II"], ans: 0, rationale: "Managing operations, integrating administrative tech, and fiscal management are all vital (I, II, and III)." },
+      { stem: "33. The legal basis for the implementation of the National Competency-Based Standards for School Heads is", choices: ["Philippine Constitution", "DepEd order 8, s2015", "DepEd order 32, s2010", "DepEd order 04, s2012"], ans: 2, rationale: "DepEd Order No. 32, s. 2010 established the NCBS-SH framework." },
+      { stem: "34. The success of SBM primarily depends on", choices: ["basic resources", "school heads", "local government", "the Department of Education"], ans: 1, rationale: "The school head is the primary instructional and organizational leader driving SBM." },
+      { stem: "35. Transformational leaders are described as the following EXCEPT", choices: ["charismatic", "inspirational", "collaborator", "powerful"], ans: 3, rationale: "Transformational leaders rely on inspiration, vision, and collaboration rather than authoritarian power." },
+      { stem: "36. A teacher in the city calls a shy student 'promdi'. Which does 'promdi' imply? Those who come from the province", choices: ["may be belittled", "deserves respect", "are as civilized as the city-bred", "are achievers"], ans: 0, rationale: "'Promdi' is a derogatory label used to belittle individuals from rural provinces." },
+      { stem: "37. Who is considered the first teacher of Ancient China and the key figure in Confucianism?", choices: ["Lao Tzu.", "Siddhartha Gautama.", "Confucius.", "Guru Nanak."], ans: 2, rationale: "Confucius is revered as the first great teacher and philosopher of Ancient China." },
+      { stem: "38. How is Karma understood in Hinduism?", choices: ["Liberation from the cycle of rebirth.", "Ritualistic meditation.", "Law of cause and effect where actions determine future consequences.", "The ultimate cosmic spirit."], ans: 2, rationale: "Karma is the moral law of cause and effect governing actions and their rebirth consequences." },
+      { stem: "39. According to Buddhism, what does the concept of Impermanence (Anicca) suggest?", choices: ["Everything is permanent and unchanging.", "Nothing is permanent.", "Only spiritual truths are impermanent.", "Impermanence is irrelevant in Buddhism."], ans: 1, rationale: "Anicca teaches that all conditioned existence is impermanent and constantly changing." },
+      { stem: "40. Which philosophy emphasizes the idea that school exists for the society?", choices: ["Reconstructionism", "Idealism", "Perennialism", "Realism"], ans: 0, rationale: "Social Reconstructionism views schools as vehicles to reform and rebuild society." },
+      { stem: "41. Teacher Maria sees to it that her classroom is clean and orderly so her pupils will less likely disarrange seats and litter on the floor. On which thought is her action based?", choices: ["Behaviorism", "Existentialism", "Progressivism", "Reconstructionism"], ans: 0, rationale: "Behaviorism posits that environmental conditions and physical stimuli directly influence behavior." },
+      { stem: "42. As a member of the curriculum committee, your chief concern is to give the child freedom to choose what to learn and believe, as you allow them to set their own identities and standards. What philosophy will you consider?", choices: ["Existentialism", "Fatalism", "Idealism", "Pragmatism"], ans: 0, rationale: "Existentialism highlights individual freedom, personal responsibility, and self-chosen identity." },
+      { stem: "43. Teacher S lets students construct their own learning through active interplay and engagement in class. He primarily considers the student’s interest in lesson planning. To which philosophy does Teacher S adhere?", choices: ["Essentialism", "Perennialism", "Progressivism", "Reconstructionism"], ans: 2, rationale: "Progressivism (John Dewey) builds education upon student interests and active experiential learning." },
+      { stem: "44. The shooting incidents in school campuses abroad have made schools rethink the curriculum. Which changes are being introduced in schools to counteract campus violence?\nI. Inclusion of socio-emotional teaching\nII. The emphasis on the concept of competition against self and not against others\nIII. Focus on academic achievement and productivity", choices: ["I and II", "I and III", "II and III", "I, II, III"], ans: 0, rationale: "Socio-emotional learning (I) and self-mastery over cutthroat competition (II) counteract violence." },
+      { stem: "45. To ensure high standards of teachers' personal and professional development, which measure must be implemented?\nI. A school head plans the professional development of his/her teachers.\nII. Every teacher formulates his/her own professional development plan\nIII. The implementation of what is learned in training must be monitored.", choices: ["I and III", "II only", "I only", "II and III"], ans: 3, rationale: "Individualized development plans (II) and active post-training monitoring (III) ensure genuine teacher growth." },
+      { stem: "46. The wide acceptance of 'bottom up' management style has influenced schools to practice which management practice?", choices: ["Prescription of what ought to be done from the central office", "Exclusion of politicians from the pool of guest speakers during graduation exercises", "Involvement of students, parents, teachers and community in school planning", "Allowing schools to do what they think is best"], ans: 2, rationale: "Bottom-up management actively involves local stakeholders in school governance and strategic planning." },
+      { stem: "47. A stakeholder in curriculum development, Mr. C, a district supervisor and a member of the school board has one of the following primary roles:", choices: ["Support and participate in the parent-school organization activities", "Authorize school expenditures for curriculum development, implementation and evaluation", "Enact legislation to effect curriculum improvement.", "Recommend changes in the curriculum."], ans: 3, rationale: "Supervisors evaluate curricular implementation in schools and recommend evidence-based improvements." },
+      { stem: "48. In Sociological Foundations of Education, which characteristic of culture involves adapting to environmental, social, and economic changes?", choices: ["Integrated", "Adaptive", "Dynamic", "Symbolic"], ans: 1, rationale: "Culture is adaptive as it evolves mechanisms to adjust to changing socio-environmental realities." },
+      { stem: "49. What is the primary function of the economy as a social institution in Sociological Foundations of Education?", choices: ["Providing moral guidance.", "Generating jobs and livelihoods.", "Making collective decisions for society.", "Transmitting cultural values."], ans: 1, rationale: "The economy organizes production and provides employment, goods, and livelihoods for society." },
+      { stem: "50. Which social institution involves systems of beliefs, rituals, and practices related to religion?", choices: ["Family", "School", "Government", "Church"], ans: 3, rationale: "The church/religion provides shared spiritual beliefs, rituals, and ethical principles." },
+      { stem: "51. How do folkways differ from mores?", choices: ["Folkways are highly scripted ceremonies, while mores are behavior patterns.", "Folkways are organized and repetitive behavior patterns, while mores have a moralistic value.", "Folkways are formalized norms, while mores are customary behavior patterns.", "Folkways are specific sequences of actions, while mores are enacted by government authorities."], ans: 1, rationale: "Folkways are customary conventions; mores carry strict moral significance and societal weight." },
+      { stem: "52. According to Conflict Theory, what is the primary driver of social change?", choices: ["Cooperation between different groups.", "Inequality and power struggles.", "Shared meanings and symbols.", "Rational calculations of rewards and costs."], ans: 1, rationale: "Conflict theory posits that social transformation arises from struggles over resources and power." },
+      { stem: "53. What is the primary focus of Consensus Theory in social science theories?", choices: ["Challenging grand narratives and universal truths.", "Shared values and norms that create social order.", "Examining gender-based inequalities and oppression.", "Advocating for gender equality and social justice."], ans: 1, rationale: "Consensus theory views society as an integrated system maintained through shared norms and values." },
+      { stem: "54. How does Enculturation shape individual identity and social behavior?", choices: ["Through assimilation into the dominant culture.", "By adopting cultural norms from other societies.", "Learning and acquiring one's own culture through informal means.", "The spread of cultural elements through trade."], ans: 2, rationale: "Enculturation is the lifelong acquisition of one's own native culture through family and primary community." },
+      { stem: "55. Which among the following characterizes partnership between school and community?", choices: ["Competition between educational institutions.", "Collaborative efforts to enhance students' well-being and educational experiences.", "Isolation of schools from the local community.", "Strict separation of resources between schools and communities."], ans: 1, rationale: "Effective partnerships unite school and community for the holistic development of students." },
+      { stem: "56. What is the overall atmosphere or 'feel' of a school defined as?", choices: ["School Leadership.", "School Climate.", "Organizational Leadership.", "School Culture."], ans: 1, rationale: "School climate describes the interpersonal, emotional, and physical environment and 'feel' of the school." },
+      { stem: "57. How does a Leader differ from a Manager?", choices: ["A Leader focuses on tasks and goals.", "A leader sets vision and aligns people.", "A Leader influences through authority.", "A Manager inspires through vision."], ans: 1, rationale: "Leaders set vision and align people, while managers coordinate operational tasks and resources." },
+      { stem: "58. What is a key component of School-Based Management (SBM)?", choices: ["Centralized decision-making.", "Accountability.", "Limited autonomy for schools.", "Reduced community engagement."], ans: 1, rationale: "SBM decentralizes authority to schools while demanding high accountability for educational outcomes." },
+      { stem: "59. Which domain of NCBS-SH focuses on guiding the school towards its vision and mission?", choices: ["Domain 1: School Leadership.", "Domain 2: Instructional Leadership.", "Domain 3: Creating a Student-Centered Learning Climate.", "Domain 4: HR Management and Professional Development."], ans: 0, rationale: "Domain 1: School Leadership centers on vision, mission, and strategic school direction." },
+      { stem: "60. The school is facing challenges in maintaining a positive learning environment. What domain and key competency in NCBS-SH should the school head focus on to address this issue?", choices: ["Domain 3: Creating a Student-Centered Learning Climate - Student Welfare and Discipline.", "Domain 1: School Leadership - Ethical and Effective Leadership.", "Domain 5: Parents Involvement and Community Partnership - Community Partnership.", "Domain 6: School Management and Operation - Financial Management."], ans: 0, rationale: "Student welfare, supportive discipline, and environment fall under Domain 3: Student-Centered Learning Climate." },
+      { stem: "61. The school head wants to enhance the professional development of the teaching staff. Which domain and key competency in NCBS-SH align with this goal?", choices: ["Domain 2: Instructional Leadership - Instructional Supervision.", "Domain 4: HR Management and Professional Development - Professional Development.", "Domain 5: Parents Involvement and Community Partnership - Parental Involvement.", "Domain 7: Personal and Professional Attributes - Professional Ethics."], ans: 1, rationale: "Domain 4 explicitly governs HR management and continuous teacher professional development." },
+      { stem: "62. A school head wants to strengthen the school's connections with the community. Which domain and key component in PPSSH align with this goal?", choices: ["Domain 5: Building Connections - Stakeholder Engagement.", "Domain 1: Leading Strategically - Results-Based Leadership.", "Domain 3: Focusing on Teaching and Learning - Monitoring and Evaluation.", "Domain 4: Developing Self and Others - Personal and Professional Development."], ans: 0, rationale: "Domain 5 of PPSSH (DO 24 s. 2020) is Building Connections, focusing on stakeholder engagement." },
+      { stem: "63. To which domain in School Heads' Competency Framework is supervising and evaluating teachers' performance aligned?", choices: ["Personal excellence", "Strategic thinking and innovation", "Instructional leadership", "Stakeholder's engagement"], ans: 2, rationale: "Supervising, mentoring, and appraising classroom teaching is the heart of Instructional Leadership." },
+      { stem: "64. Which is the essence of SBM?", choices: ["Principal empowerment", "Reduced authority of school head", "School empowerment", "Absolute freedom of education stakeholders"], ans: 2, rationale: "The essence of SBM is school empowerment—giving schools autonomy to address local needs." },
+      { stem: "65. Which does a transformational teacher leader do?\nI. Helps others with their self-development\nII. Challenges team members to help them grow\nIII. Direct colleagues to get things done while she does not lift a finger\nIV. Set teaching-learning standards by himself/herself", choices: ["II", "II and IV", "I and III", "I and II"], ans: 3, rationale: "Transformational leaders assist others with personal growth (I) and challenge colleagues to excel (II)." }
     ];
 
     // ----------------------------------------------------
-    // SUBJECT 1 COMPLETE REPOSITORY
+    // SUBJECT 1 VERBATIM CURRICULUM
     // ----------------------------------------------------
     const profEdData = [
       {
@@ -1013,88 +818,252 @@
           </div>
         `
       },
-      // Placeholders for subjects 2 to 10
-      { id: 2, title: "THE PROFESSIONAL TEACHER", rawHTML: `<div class="verbatim-block"><h3>Subject 2</h3><p>Paste notes for Subject 2 here.</p></div>`, quiz: [] },
-      { id: 3, title: "THE TEACHER AND THE SCHOOL CURRICULUM", rawHTML: `<div class="verbatim-block"><h3>Subject 3</h3><p>Paste notes for Subject 3 here.</p></div>`, quiz: [] },
-      { id: 4, title: "METHODS AND STRATEGIES OF TEACHING", rawHTML: `<div class="verbatim-block"><h3>Subject 4</h3><p>Paste notes for Subject 4 here.</p></div>`, quiz: [] },
-      { id: 5, title: "TECHNOLOGY FOR TEACHING AND LEARNING", rawHTML: `<div class="verbatim-block"><h3>Subject 5</h3><p>Paste notes for Subject 5 here.</p></div>`, quiz: [] },
-      { id: 6, title: "CHILD AND ADOLESCENT LEARNERS AND LEARNING PRINCIPLES", rawHTML: `<div class="verbatim-block"><h3>Subject 6</h3><p>Paste notes for Subject 6 here.</p></div>`, quiz: [] },
-      { id: 7, title: "FACILITATING LEARNER-CENTERED TEACHING", rawHTML: `<div class="verbatim-block"><h3>Subject 7</h3><p>Paste notes for Subject 7 here.</p></div>`, quiz: [] },
-      { id: 8, title: "ASSESSMENT OF LEARNING 1 AND 2", rawHTML: `<div class="verbatim-block"><h3>Subject 8</h3><p>Paste notes for Subject 8 here.</p></div>`, quiz: [] },
-      { id: 9, title: "FIELD STUDY AND TEACHING INTERNSHIP", rawHTML: `<div class="verbatim-block"><h3>Subject 9</h3><p>Paste notes for Subject 9 here.</p></div>`, quiz: [] },
-      { id: 10, title: "FOUNDATION OF SPECIAL AND INCLUSIVE EDUCATION", rawHTML: `<div class="verbatim-block"><h3>Subject 10</h3><p>Paste notes for Subject 10 here.</p></div>`, quiz: [] }
+      // Placeholders for Subjects 2 to 10
+      { id: 2, title: "THE PROFESSIONAL TEACHER", rawHTML: `<div class="verbatim-block"><h3>Subject 2</h3><p>Notes for Subject 2.</p></div>`, quiz: [] },
+      { id: 3, title: "THE TEACHER AND THE SCHOOL CURRICULUM", rawHTML: `<div class="verbatim-block"><h3>Subject 3</h3><p>Notes for Subject 3.</p></div>`, quiz: [] },
+      { id: 4, title: "METHODS AND STRATEGIES OF TEACHING", rawHTML: `<div class="verbatim-block"><h3>Subject 4</h3><p>Notes for Subject 4.</p></div>`, quiz: [] },
+      { id: 5, title: "TECHNOLOGY FOR TEACHING AND LEARNING", rawHTML: `<div class="verbatim-block"><h3>Subject 5</h3><p>Notes for Subject 5.</p></div>`, quiz: [] },
+      { id: 6, title: "CHILD AND ADOLESCENT LEARNERS AND LEARNING PRINCIPLES", rawHTML: `<div class="verbatim-block"><h3>Subject 6</h3><p>Notes for Subject 6.</p></div>`, quiz: [] },
+      { id: 7, title: "FACILITATING LEARNER-CENTERED TEACHING", rawHTML: `<div class="verbatim-block"><h3>Subject 7</h3><p>Notes for Subject 7.</p></div>`, quiz: [] },
+      { id: 8, title: "ASSESSMENT OF LEARNING 1 AND 2", rawHTML: `<div class="verbatim-block"><h3>Subject 8</h3><p>Notes for Subject 8.</p></div>`, quiz: [] },
+      { id: 9, title: "FIELD STUDY AND TEACHING INTERNSHIP", rawHTML: `<div class="verbatim-block"><h3>Subject 9</h3><p>Notes for Subject 9.</p></div>`, quiz: [] },
+      { id: 10, title: "FOUNDATION OF SPECIAL AND INCLUSIVE EDUCATION", rawHTML: `<div class="verbatim-block"><h3>Subject 10</h3><p>Notes for Subject 10.</p></div>`, quiz: [] }
     ];
 
     // ----------------------------------------------------
-    // MULTIMEDIA AUDIO & SPEECH SYNTHESIS
+    // TEACHER & STUDENT AUTH & ROLE ENGINE
     // ----------------------------------------------------
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playSound(type) {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      if (type === 'correct') {
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.12);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.45);
-      } else {
-        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-      }
-    }
-
-    function readQuestionAloud() {
-      if (!('speechSynthesis' in window)) return alert("Speech synthesis is not supported on this device.");
-      window.speechSynthesis.cancel();
-      const q = activeSubject.quiz[quizIndex];
-      const textToRead = `${q.stem}. Option A: ${q.choices[0]}. Option B: ${q.choices[1]}. Option C: ${q.choices[2]}. Option D: ${q.choices[3]}.`;
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.rate = 0.95;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    // ----------------------------------------------------
-    // REGISTRATION & USER TRACKING
-    // ----------------------------------------------------
+    let currentRole = "student"; // "student" or "teacher"
     let currentUser = null;
 
-    function checkRegistration() {
-      const saved = localStorage.getItem("echolet_student");
-      if (saved) {
-        currentUser = JSON.parse(saved);
-        document.getElementById("registrationModal").classList.add("hidden");
-        document.getElementById("studentBadge").classList.remove("hidden");
-        document.getElementById("studentDisplay").textContent = currentUser.name.split(' ')[0];
-        document.getElementById("studentGreeting").textContent = `Welcome, Teacher ${currentUser.name}! Choose a subject to review.`;
-        renderGrades();
-      } else {
-        document.getElementById("registrationModal").classList.remove("hidden");
-      }
+    function openAuthModal() {
+      document.getElementById("authModal").classList.remove("hidden");
+    }
+
+    function switchRoleForm(role) {
+      document.getElementById("roleStudentTab").classList.toggle("active", role === "student");
+      document.getElementById("roleTeacherTab").classList.toggle("active", role === "teacher");
+      document.getElementById("studentForm").classList.toggle("hidden", role !== "student");
+      document.getElementById("teacherForm").classList.toggle("hidden", role !== "teacher");
     }
 
     function registerStudent() {
+      const code = document.getElementById("studentClassCodeInput").value.trim().toUpperCase();
       const name = document.getElementById("regName").value.trim();
       const email = document.getElementById("regEmail").value.trim();
       const major = document.getElementById("regMajor").value;
 
-      if (!name || !email) return alert("Please fill in your name and email.");
-      currentUser = { name, email, major };
-      localStorage.setItem("echolet_student", JSON.stringify(currentUser));
-      checkRegistration();
+      if (code !== CLASS_CODE) {
+        alert("❌ Invalid Class Code! Please enter Teacher Echo's official class code: " + CLASS_CODE);
+        return;
+      }
+      if (!name || !email) {
+        alert("Please enter both your name and email.");
+        return;
+      }
+
+      currentUser = { role: "student", name, email, major, registeredAt: new Date().toLocaleDateString() };
+      localStorage.setItem("echolet_user", JSON.stringify(currentUser));
+
+      // Save to global roster for Teacher Echo
+      const roster = JSON.parse(localStorage.getItem("echolet_roster") || "[]");
+      if (!roster.some(s => s.email === email)) {
+        roster.push(currentUser);
+        localStorage.setItem("echolet_roster", JSON.stringify(roster));
+      }
+
+      document.getElementById("authModal").classList.add("hidden");
+      applyUserRole();
+      alert(`🎉 Welcome to class, ${name}! You are registered under Teacher Echo.`);
+    }
+
+    function loginTeacher() {
+      const pin = document.getElementById("teacherPinInput").value.trim();
+      if (pin !== TEACHER_PIN) {
+        alert("❌ Incorrect Teacher PIN. (Default: TEACHER-ECHO)");
+        return;
+      }
+
+      currentUser = { role: "teacher", name: "Teacher Echo" };
+      localStorage.setItem("echolet_user", JSON.stringify(currentUser));
+      document.getElementById("authModal").classList.add("hidden");
+      applyUserRole();
+      switchTab('teacher');
+      alert("👑 Welcome to your Teacher Dashboard, Teacher Echo!");
+    }
+
+    function applyUserRole() {
+      const saved = localStorage.getItem("echolet_user");
+      if (saved) currentUser = JSON.parse(saved);
+      else {
+        openAuthModal();
+        return;
+      }
+
+      const badge = document.getElementById("userBadge");
+      const teacherTabBtn = document.getElementById("tabTeacherBtn");
+
+      if (currentUser.role === "teacher") {
+        currentRole = "teacher";
+        badge.className = "user-pill teacher";
+        badge.textContent = "👑 Teacher Echo (Admin)";
+        teacherTabBtn.classList.remove("hidden");
+        renderTeacherDashboard();
+      } else {
+        currentRole = "student";
+        badge.className = "user-pill student";
+        badge.textContent = `👤 ${currentUser.name.split(' ')[0]}`;
+        teacherTabBtn.classList.add("hidden");
+        renderStudentGrades();
+      }
+    }
+
+    function copyClassCode() {
+      navigator.clipboard.writeText(CLASS_CODE).then(() => {
+        alert(`Copied Class Code: ${CLASS_CODE}\nShare this with your students so they can enroll!`);
+      });
     }
 
     // ----------------------------------------------------
-    // SUBJECT & QUIZ NAVIGATION
+    // TEACHER DASHBOARD LOGIC
+    // ----------------------------------------------------
+    function renderTeacherDashboard() {
+      const roster = JSON.parse(localStorage.getItem("echolet_roster") || "[]");
+      const submissions = JSON.parse(localStorage.getItem("echolet_master_submissions") || "[]");
+
+      document.getElementById("statTotalStudents").textContent = roster.length;
+      document.getElementById("statTotalSubmissions").textContent = submissions.length;
+
+      const passedCount = submissions.filter(s => s.pct >= 75).length;
+      const rate = submissions.length > 0 ? Math.round((passedCount / submissions.length) * 100) : 0;
+      document.getElementById("statPassRate").textContent = `${rate}%`;
+
+      const tbody = document.getElementById("teacherRecordsList");
+      if (submissions.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No student submissions recorded yet. Share class code <strong>${CLASS_CODE}</strong> with your students!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = submissions.map(s => `
+        <tr>
+          <td><strong>${s.studentName}</strong></td>
+          <td>${s.studentEmail}</td>
+          <td>${s.studentMajor}</td>
+          <td>${s.subjectTitle}</td>
+          <td>${s.score}/${s.total} (${s.pct}%)</td>
+          <td class="${s.pct >= 75 ? 'status-pass' : 'status-fail'}">${s.pct >= 75 ? 'PASSED (75%+)' : 'BELOW 75%'}</td>
+          <td>${s.date}</td>
+        </tr>
+      `).join('');
+    }
+
+    function exportRecordsToCSV() {
+      const submissions = JSON.parse(localStorage.getItem("echolet_master_submissions") || "[]");
+      if (submissions.length === 0) return alert("No submissions to export yet.");
+
+      let csv = "Student Name,Email,Major,Subject,Score,Total,Percentage,Status,Date Completed\n";
+      submissions.forEach(s => {
+        csv += `"${s.studentName}","${s.studentEmail}","${s.studentMajor}","${s.subjectTitle}",${s.score},${s.total},${s.pct}%,"${s.pct >= 75 ? 'PASSED' : 'BELOW 75'}","${s.date}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `EchoLET_ClassRecords_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    function importStudentPacketPrompt() {
+      const code = prompt("📥 Paste the Student's Turn-In Code below:");
+      if (!code) return;
+      try {
+        const decoded = JSON.parse(atob(code));
+        const submissions = JSON.parse(localStorage.getItem("echolet_master_submissions") || "[]");
+        submissions.unshift(decoded);
+        localStorage.setItem("echolet_master_submissions", JSON.stringify(submissions));
+
+        const roster = JSON.parse(localStorage.getItem("echolet_roster") || "[]");
+        if (!roster.some(s => s.email === decoded.studentEmail)) {
+          roster.push({ name: decoded.studentName, email: decoded.studentEmail, major: decoded.studentMajor });
+          localStorage.setItem("echolet_roster", JSON.stringify(roster));
+        }
+
+        renderTeacherDashboard();
+        alert(`✅ Successfully imported quiz submission for: ${decoded.studentName}!`);
+      } catch (err) {
+        alert("❌ Invalid Turn-In Code.");
+      }
+    }
+
+    // ----------------------------------------------------
+    // STUDENT QUIZ SUBMISSION & TURN-IN
+    // ----------------------------------------------------
+    function submitQuizResult() {
+      const total = activeSubject.quiz.length;
+      const pct = Math.round((quizScore / total) * 100);
+
+      const packet = {
+        studentName: currentUser ? currentUser.name : "Anonymous Student",
+        studentEmail: currentUser ? currentUser.email : "no-email@echolet.edu",
+        studentMajor: currentUser ? currentUser.major : "General Curriculum",
+        subjectTitle: activeSubject.title,
+        score: quizScore,
+        total: total,
+        pct: pct,
+        date: new Date().toLocaleDateString()
+      };
+
+      // Save locally to student gradebook
+      const studentGrades = JSON.parse(localStorage.getItem("echolet_student_grades") || "[]");
+      studentGrades.unshift(packet);
+      localStorage.setItem("echolet_student_grades", JSON.stringify(studentGrades));
+
+      // Save to Teacher Master record (local/shared storage)
+      const master = JSON.parse(localStorage.getItem("echolet_master_submissions") || "[]");
+      master.unshift(packet);
+      localStorage.setItem("echolet_master_submissions", JSON.stringify(master));
+
+      // Generate a Shareable Turn-in Code
+      const turnInToken = btoa(JSON.stringify(packet));
+
+      alert(`🎉 WORK TURNED IN TO TEACHER ECHO!\n\nStudent: ${packet.studentName}\nScore: ${quizScore}/${total} (${pct}%)\nPRC Benchmark: ${pct >= 75 ? 'PASSED (75%+)' : 'BELOW 75%'}\n\nYour work is officially recorded.`);
+      
+      backToSubjects();
+      switchTab('grades');
+      renderStudentGrades();
+    }
+
+    function renderStudentGrades() {
+      const studentGrades = JSON.parse(localStorage.getItem("echolet_student_grades") || "[]");
+      const tbody = document.getElementById("studentGradesList");
+
+      if (studentGrades.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No drills completed yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = studentGrades.map((g, idx) => {
+        const token = btoa(JSON.stringify(g));
+        return `
+          <tr>
+            <td><strong>${g.subjectTitle}</strong></td>
+            <td>${g.score}/${g.total} (${g.pct}%)</td>
+            <td class="${g.pct >= 75 ? 'status-pass' : 'status-fail'}">${g.pct >= 75 ? 'PASSED (75%+)' : 'BELOW 75%'}</td>
+            <td>${g.date}</td>
+            <td><button class="copy-btn" onclick="copyTurnInToken('${token}')">Copy Receipt</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function copyTurnInToken(token) {
+      navigator.clipboard.writeText(token).then(() => {
+        alert("Turn-In receipt token copied! You can send this token to Teacher Echo anytime.");
+      });
+    }
+
+    // ----------------------------------------------------
+    // SUBJECTS LIST & QUIZ CONTROLLER
     // ----------------------------------------------------
     let activeSubject = null;
     let quizIndex = 0;
@@ -1119,6 +1088,8 @@
     function openSubject(id) {
       activeSubject = profEdData.find(s => s.id === id);
       document.getElementById("subjectsTab").classList.add("hidden");
+      document.getElementById("teacherTab").classList.add("hidden");
+      document.getElementById("gradesTab").classList.add("hidden");
       document.getElementById("quizView").style.display = "none";
       document.getElementById("contentView").style.display = "block";
 
@@ -1172,12 +1143,12 @@
 
       if (idx === q.ans) {
         btn.classList.add("correct");
-        playSound("correct");
+        playSound('correct');
         quizScore++;
       } else {
         btn.classList.add("wrong");
         buttons[q.ans].classList.add("correct");
-        playSound("wrong");
+        playSound('wrong');
       }
 
       document.getElementById("rationaleText").textContent = q.rationale;
@@ -1195,27 +1166,6 @@
       }
     }
 
-    function submitQuizResult() {
-      const total = activeSubject.quiz.length;
-      const pct = Math.round((quizScore / total) * 100);
-      const passed = pct >= 75;
-
-      const record = {
-        subject: `${activeSubject.id}. ${activeSubject.title}`,
-        score: `${quizScore}/${total} (${pct}%)`,
-        status: passed ? "PASSED (75%+)" : "BELOW 75%",
-        date: new Date().toLocaleDateString()
-      };
-
-      const history = JSON.parse(localStorage.getItem("echolet_grades") || "[]");
-      history.unshift(record);
-      localStorage.setItem("echolet_grades", JSON.stringify(history));
-
-      alert(`🎉 Subject Quiz Completed!\nSubject: ${activeSubject.title}\nScore: ${record.score}\nPRC Benchmark: ${record.status}`);
-      backToSubjects();
-      renderGrades();
-    }
-
     function backToSubjects() {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       document.getElementById("contentView").style.display = "none";
@@ -1223,37 +1173,66 @@
       document.getElementById("subjectsTab").classList.remove("hidden");
     }
 
-    function renderGrades() {
-      const history = JSON.parse(localStorage.getItem("echolet_grades") || "[]");
-      const list = document.getElementById("gradesList");
-
-      if (history.length === 0) {
-        list.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No subject drills recorded yet.</td></tr>';
-        return;
-      }
-
-      list.innerHTML = history.map(h => `
-        <tr>
-          <td><strong>${h.subject}</strong></td>
-          <td>${h.score}</td>
-          <td style="color:${h.status.includes('PASSED') ? '#137333' : '#7A0019'}; font-weight:700;">${h.status}</td>
-          <td>${h.date}</td>
-        </tr>
-      `).join('');
-    }
-
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      
+      document.getElementById("subjectsTab").classList.toggle('hidden', tab !== 'subjects');
+      document.getElementById("teacherTab").classList.toggle('hidden', tab !== 'teacher');
+      document.getElementById("gradesTab").classList.toggle('hidden', tab !== 'grades');
 
-      document.getElementById('subjectsTab').classList.toggle('hidden', tab !== 'subjects');
-      document.getElementById('gradesTab').classList.toggle('hidden', tab !== 'grades');
+      if (tab === 'subjects') document.getElementById("tabSubjectsBtn").classList.add('active');
+      if (tab === 'teacher') {
+        document.getElementById("tabTeacherBtn").classList.add('active');
+        renderTeacherDashboard();
+      }
+      if (tab === 'grades') {
+        document.getElementById("tabGradesBtn").classList.add('active');
+        renderStudentGrades();
+      }
       backToSubjects();
     }
 
-    // Initialize
+    // ----------------------------------------------------
+    // MULTIMEDIA AUDIO & READ ALOUD
+    // ----------------------------------------------------
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'correct') {
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.45);
+      } else {
+        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      }
+    }
+
+    function readQuestionAloud() {
+      if (!('speechSynthesis' in window)) return alert("Speech is not supported on this browser.");
+      window.speechSynthesis.cancel();
+      const q = activeSubject.quiz[quizIndex];
+      const textToRead = `${q.stem}. Option A: ${q.choices[0]}. Option B: ${q.choices[1]}. Option C: ${q.choices[2]}. Option D: ${q.choices[3]}.`;
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Initialize App
     renderSubjectsList();
-    checkRegistration();
+    applyUserRole();
   </script>
 </body>
 </html>

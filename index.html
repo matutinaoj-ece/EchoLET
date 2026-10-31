@@ -3,654 +3,571 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EchoLET - Board Exam Reviewer</title>
+  <title>EchoLET - Classroom Reviewer</title>
+  
+  <!-- Pencil Icon as Favicon & Apple Touch Icon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
+  <meta name="theme-color" content="#7A0019" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Embedded Web App Manifest for Instant Download/Install -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"EchoLET Classroom","short_name":"EchoLET","start_url":".","display":"standalone","background_color":"%237A0019","theme_color":"%237A0019","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%23D4AF37%27><path d=%27M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z%27/></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}' />
+
   <style>
     :root {
-      --primary: #10b981;
-      --primary-dark: #059669;
-      --primary-light: #ecfdf5;
-      --secondary: #3b82f6;
-      --slate-900: #0f172a;
-      --slate-700: #334155;
-      --slate-500: #64748b;
-      --slate-100: #f1f5f9;
-      --slate-50: #f8fafc;
-      --card-bg: #ffffff;
-      --danger: #ef4444;
-      --success: #10b981;
-      --radius: 14px;
-      --transition: all 0.25s ease;
+      --crimson: #7A0019;
+      --crimson-dark: #580012;
+      --crimson-light: #990020;
+      --gold: #D4AF37;
+      --gold-light: #FFF8E1;
+      --gold-dark: #AA820A;
+      --bg: #F8F9FA;
+      --surface: #FFFFFF;
+      --text-main: #1F1F1F;
+      --text-muted: #5F6368;
+      --border: #DADCE0;
+      --radius: 8px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: "Google Sans", Roboto, Arial, sans-serif;
     }
 
     body {
-      background-color: var(--slate-50);
-      color: var(--slate-900);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      line-height: 1.6;
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding-bottom: 3rem;
     }
 
-    /* Navigation */
+    /* Google Classroom Header */
     header {
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
     }
 
-    .brand {
+    .header-left {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--slate-900);
+      gap: 12px;
     }
 
-    .brand span {
-      color: var(--primary);
+    .pencil-logo {
+      width: 34px;
+      height: 34px;
+      background: var(--crimson);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    .badge-lpt {
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
+    .pencil-logo svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--gold);
+    }
+
+    .app-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--crimson);
+    }
+
+    .app-title span {
+      color: var(--gold-dark);
+      font-weight: 700;
+    }
+
+    .install-btn {
+      background: var(--gold);
+      color: var(--crimson-dark);
+      font-weight: 700;
+      border: 1px solid var(--gold-dark);
+      padding: 0.45rem 0.9rem;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .install-btn:hover {
+      background: var(--gold-dark);
+      color: #fff;
+    }
+
+    /* Classroom Tabs */
+    .classroom-tabs {
+      display: flex;
+      justify-content: center;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      gap: 2rem;
+    }
+
+    .tab-btn {
+      padding: 0.85rem 1rem;
+      background: none;
+      border: none;
+      font-size: 0.95rem;
       font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
     }
 
-    /* Container */
+    .tab-btn.active {
+      color: var(--crimson);
+    }
+
+    .tab-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--crimson);
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* Main Container */
     main {
-      flex: 1;
-      max-width: 760px;
-      width: 100%;
-      margin: 2rem auto;
+      max-width: 860px;
+      margin: 1.5rem auto;
       padding: 0 1rem;
     }
 
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 2.2rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e2e8f0;
-    }
-
-    /* Welcome / Hero Screen */
-    .hero-title {
-      font-size: 1.85rem;
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 0.8rem;
-    }
-
-    .hero-desc {
-      color: var(--slate-700);
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .objectives {
-      background: var(--slate-50);
-      border-left: 4px solid var(--primary);
-      padding: 1.2rem;
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 1.8rem;
-    }
-
-    .objectives h4 {
-      font-size: 0.95rem;
-      margin-bottom: 0.5rem;
-      color: var(--slate-900);
-    }
-
-    .objectives ul {
-      list-style-position: inside;
-      font-size: 0.9rem;
-      color: var(--slate-700);
-    }
-
-    .objectives li {
-      margin-bottom: 0.35rem;
-    }
-
-    .select-group {
-      margin-bottom: 1.8rem;
-    }
-
-    .select-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    select {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      font-size: 1rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      outline: none;
-      background: white;
-    }
-
-    /* Button */
-    .btn {
-      display: inline-block;
-      width: 100%;
-      padding: 0.95rem;
-      background: var(--primary);
+    /* Classroom Banner */
+    .classroom-banner {
+      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);
       color: white;
-      text-align: center;
+      padding: 2.2rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid var(--gold);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .classroom-banner h1 {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+
+    .classroom-banner p {
+      font-size: 0.95rem;
+      color: #fce8e6;
+    }
+
+    .banner-badge {
+      position: absolute;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
       font-weight: 700;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
+    }
+
+    /* Classroom Cards / Stream */
+    .class-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: box-shadow 0.2s, border-color 0.2s;
       cursor: pointer;
-      transition: var(--transition);
     }
 
-    .btn:hover {
-      background: var(--primary-dark);
+    .class-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-color: var(--crimson);
     }
 
-    /* Quiz Screen */
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--crimson);
+    }
+
+    .card-text h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .card-text p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .due-tag {
+      font-size: 0.8rem;
+      color: var(--crimson);
+      font-weight: 600;
+    }
+
+    /* Modal / Quiz View (Simulating Opening an Assignment) */
+    .quiz-view {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+    }
+
     .quiz-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.2rem;
-      font-size: 0.88rem;
+    }
+
+    .stem {
+      font-size: 1.15rem;
       font-weight: 600;
-      color: var(--slate-500);
-    }
-
-    .progress-bar-container {
-      width: 100%;
-      height: 8px;
-      background: var(--slate-100);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 1.8rem;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--primary);
-      transition: width 0.3s ease;
-    }
-
-    .question-category {
-      display: inline-block;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--secondary);
-      background: #eff6ff;
-      padding: 0.25rem 0.75rem;
-      border-radius: 999px;
-      margin-bottom: 0.8rem;
-    }
-
-    .question-stem {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--slate-900);
+      color: var(--text-main);
       margin-bottom: 1.5rem;
     }
 
-    .options-grid {
+    .choices {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       margin-bottom: 1.5rem;
     }
 
-    .option-btn {
-      display: flex;
-      align-items: center;
-      width: 100%;
+    .choice-btn {
+      padding: 0.9rem 1.2rem;
+      border: 1.5px solid var(--border);
+      background: white;
+      border-radius: var(--radius);
       text-align: left;
-      padding: 1rem 1.2rem;
-      font-size: 0.98rem;
-      background: white;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: var(--transition);
-      color: var(--slate-900);
+      transition: all 0.2s;
     }
 
-    .option-btn:hover:not(:disabled) {
-      border-color: var(--primary);
-      background: var(--primary-light);
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--gold-dark);
+      background: var(--gold-light);
     }
 
-    .option-btn.correct {
-      background: #dcfce7 !important;
-      border-color: var(--success) !important;
-      color: #14532d;
+    .choice-btn.correct {
+      background: #e6f4ea !important;
+      border-color: #137333 !important;
+      color: #137333;
       font-weight: 600;
     }
 
-    .option-btn.wrong {
-      background: #fee2e2 !important;
-      border-color: var(--danger) !important;
-      color: #7f1d1d;
+    .choice-btn.wrong {
+      background: #fce8e6 !important;
+      border-color: var(--crimson) !important;
+      color: var(--crimson);
     }
 
-    /* Rationalization Box */
-    .rationalization-box {
+    .rationalization {
       display: none;
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      padding: 1.2rem;
-      border-radius: 10px;
+      background: var(--gold-light);
+      border-left: 4px solid var(--gold);
+      padding: 1rem;
+      border-radius: 4px;
       margin-bottom: 1.5rem;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .rationalization-box h4 {
-      font-size: 0.95rem;
-      color: var(--slate-900);
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .rationalization-box p {
       font-size: 0.9rem;
-      color: var(--slate-700);
     }
 
-    /* Results Screen */
-    .score-circle {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 1.5rem auto;
-      font-size: 2rem;
-      font-weight: 800;
-    }
-
-    .score-circle span {
-      font-size: 0.8rem;
+    .primary-btn {
+      background: var(--crimson);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
       font-weight: 600;
-      color: var(--slate-500);
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .result-verdict {
-      text-align: center;
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-    }
-
-    .result-desc {
-      text-align: center;
-      color: var(--slate-700);
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.85rem;
-      color: var(--slate-500);
-      border-top: 1px solid #e2e8f0;
-      background: white;
+    .primary-btn:hover {
+      background: var(--crimson-dark);
     }
 
     .hidden {
-      display: none;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      display: none !important;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Google Classroom Top Bar -->
   <header>
-    <div class="brand">
-      📚 Echo<span>LET</span>
-      <span class="badge-lpt">Road to LPT</span>
+    <div class="header-left">
+      <div class="pencil-logo">
+        <!-- Pencil SVG -->
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      </div>
+      <div class="app-title">Echo<span>LET</span> Classroom</div>
     </div>
-    <div id="quizTimer" class="hidden" style="font-weight: 700; color: var(--slate-700);">⏱️ 00:00</div>
+    
+    <!-- Install App Button -->
+    <button id="installAppBtn" class="install-btn">
+      <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+      Download App
+    </button>
   </header>
 
-  <!-- Main View -->
+  <!-- Navigation Tabs -->
+  <div class="classroom-tabs">
+    <button class="tab-btn active" onclick="switchTab('stream')">Stream</button>
+    <button class="tab-btn" onclick="switchTab('classwork')">Classwork</button>
+  </div>
+
   <main>
     
-    <!-- 1. START / ONBOARDING SCREEN -->
-    <section id="startScreen" class="card">
-      <h1 class="hero-title">Philippine Licensure Examination for Teachers Reviewer</h1>
-      <p class="hero-desc">
-        A modern, lightweight question bank and quiz application tailored for examinees of the Philippine LET.
-        Emphasizing active recall and iterative testing to help you master competencies in GenEd and ProfEd.
-      </p>
+    <!-- BANNER -->
+    <div class="classroom-banner">
+      <h1>LET Review Mastery 2026-2027</h1>
+      <p>Instructor: Echo &bull; Licensure Examination for Teachers</p>
+      <div class="banner-badge">Target: 75%+ Rating</div>
+    </div>
 
-      <div class="objectives">
-        <h4>🎯 Core Objectives</h4>
-        <ul>
-          <li>Provide free, accessible high-yield review drills nationwide.</li>
-          <li>Diagnose knowledge gaps across key pedagogical and general competencies.</li>
-          <li>Build test endurance through simulated, timed board questions.</li>
-        </ul>
+    <!-- TAB 1: STREAM -->
+    <section id="streamTab">
+      <div class="class-card" onclick="startModule('profed')">
+        <div class="card-left">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </div>
+          <div class="card-text">
+            <h3>ProfEd Drill 01: Child & Adolescent Pedagogy</h3>
+            <p>Posted today &bull; 100 Points</p>
+          </div>
+        </div>
+        <div class="due-tag">Active Recall Drill</div>
       </div>
 
-      <div class="select-group">
-        <label for="categorySelect">Select Review Focus:</label>
-        <select id="categorySelect">
-          <option value="all">Mixed (GenEd & ProfEd)</option>
-          <option value="GenEd">General Education (GenEd)</option>
-          <option value="ProfEd">Professional Education (ProfEd)</option>
-        </select>
+      <div class="class-card" onclick="startModule('gened')">
+        <div class="card-left">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </div>
+          <div class="card-text">
+            <h3>GenEd Drill 01: Philippine History & Literature</h3>
+            <p>Posted today &bull; 100 Points</p>
+          </div>
+        </div>
+        <div class="due-tag">High-Yield Questions</div>
       </div>
-
-      <button id="startBtn" class="btn">Start Review Drill</button>
     </section>
 
-    <!-- 2. QUIZ DRILL SCREEN -->
-    <section id="quizScreen" class="card hidden">
+    <!-- TAB 2: CLASSWORK -->
+    <section id="classworkTab" class="hidden">
+      <h2 style="font-size:1.2rem; color:var(--crimson); margin-bottom:1rem; font-weight:600;">📑 All Modules</h2>
+      <div class="class-card" onclick="startModule('profed')">
+        <div class="card-left">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+          <div class="card-text">
+            <h3>Assessment of Learning & Ethics</h3>
+            <p>Module 1 &bull; ProfEd Competencies</p>
+          </div>
+        </div>
+        <button class="primary-btn" style="padding:0.4rem 0.8rem; font-size:0.85rem;">Solve</button>
+      </div>
+    </section>
+
+    <!-- QUIZ / ASSIGNMENT VIEW -->
+    <section id="quizView" class="quiz-view">
       <div class="quiz-header">
-        <span id="questionProgress">Question 1 of 5</span>
-        <span id="scoreTracker">Score: 0</span>
+        <div>
+          <h2 id="quizTopic" style="color:var(--crimson); font-size:1.15rem;">Assignment Question</h2>
+          <span id="quizCounter" style="font-size:0.85rem; color:var(--text-muted);">Question 1 of 3</span>
+        </div>
+        <button onclick="closeQuiz()" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">✕</button>
       </div>
 
-      <div class="progress-bar-container">
-        <div id="progressBar" class="progress-bar"></div>
+      <div id="stem" class="stem">Question goes here...</div>
+      <div id="choices" class="choices"></div>
+
+      <div id="rationalization" class="rationalization">
+        <strong style="color:var(--crimson);">Teacher Echo's Rationalization:</strong>
+        <p id="rationaleText" style="margin-top:0.3rem;"></p>
       </div>
 
-      <div id="questionCategory" class="question-category">ProfEd</div>
-      <div id="questionStem" class="question-stem">Loading question...</div>
-
-      <div id="optionsContainer" class="options-grid">
-        <!-- Buttons injected by JS -->
+      <div style="display:flex; justify-content:flex-end;">
+        <button id="nextBtn" class="primary-btn hidden" onclick="nextQuestion()">Next Question →</button>
       </div>
-
-      <!-- Rationalization Panel -->
-      <div id="rationalizationBox" class="rationalization-box">
-        <h4>💡 Item Rationalization</h4>
-        <p id="rationalizationText"></p>
-      </div>
-
-      <button id="nextBtn" class="btn hidden">Next Question →</button>
-    </section>
-
-    <!-- 3. RESULTS & DIAGNOSTICS SCREEN -->
-    <section id="resultScreen" class="card hidden">
-      <h2 style="text-align: center; margin-bottom: 0.5rem;">Diagnostic Summary</h2>
-      
-      <div class="score-circle">
-        <div id="percentageText">0%</div>
-        <span id="rawScoreText">0 / 0</span>
-      </div>
-
-      <div id="resultVerdict" class="result-verdict">Passed (PRC Standard)</div>
-      <p id="resultDesc" class="result-desc"></p>
-
-      <button id="restartBtn" class="btn">Take Another Drill</button>
     </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer>
-    EchoLET &bull; Designed by <strong>Echo</strong> for future Licensed Professional Teachers.
-  </footer>
-
   <script>
-    // ----------------------------------------------------
-    // CURATED HIGH-YIELD LET QUESTION BANK (Sample Data)
-    // ----------------------------------------------------
-    const questionBank = [
-      {
-        category: "ProfEd",
-        stem: "According to Jean Piaget's cognitive development theory, in which stage can a child logically think about concrete events and master the law of conservation?",
-        options: [
-          "Sensorimotor Stage",
-          "Preoperational Stage",
-          "Concrete Operational Stage",
-          "Formal Operational Stage"
-        ],
-        answer: 2,
-        rationalization: "Concrete Operational Stage (approx. ages 7 to 11) is when children begin logical reasoning with concrete objects and master reversibility and conservation."
-      },
-      {
-        category: "GenEd",
-        stem: "Which figure of speech is demonstrated in the line: 'The wild winds whispered through the silent, dark forest'?",
-        options: [
-          "Metaphor",
-          "Personification",
-          "Hyperbole",
-          "Irony"
-        ],
-        answer: 1,
-        rationalization: "Personification endows human attributes, behaviors, or emotions (e.g., 'whispered') to non-human or inanimate objects like the wind."
-      },
-      {
-        category: "ProfEd",
-        stem: "Teacher Mario administers a pre-test before starting a new unit to identify the specific strengths and learning deficiencies of his students. What form of assessment is this?",
-        options: [
-          "Summative Assessment",
-          "Diagnostic Assessment",
-          "Formative Assessment",
-          "Placement Assessment"
-        ],
-        answer: 1,
-        rationalization: "Diagnostic assessment is administered prior to instruction to detect students' specific learning gaps and misconceptions so appropriate remediation can be planned."
-      },
-      {
-        category: "GenEd",
-        stem: "Under whose presidential administration was Republic Act No. 1425 (The Rizal Law) enacted into law?",
-        options: [
-          "Ferdinand Marcos",
-          "Elpidio Quirino",
-          "Ramon Magsaysay",
-          "Diosdado Macapagal"
-        ],
-        answer: 2,
-        rationalization: "R.A. 1425 (Rizal Law) was sponsored by Sen. Claro M. Recto and signed into law by President Ramon Magsaysay on June 12, 1956."
-      },
-      {
-        category: "ProfEd",
-        stem: "Under Article VIII of the Code of Ethics for Professional Teachers, what is the professional responsibility of a teacher when reporting a grievance against a superior?",
-        options: [
-          "Airing grievances on social media for public awareness",
-          "Submitting an anonymous letter to the media",
-          "Following due process and recognized official administrative channels",
-          "Staging an immediate walkout with fellow faculty"
-        ],
-        answer: 2,
-        rationalization: "The Code of Ethics explicitly dictates that teachers must follow official administrative channels and observe due process when raising grievances against colleagues and superiors."
-      }
-    ];
-
-    // ----------------------------------------------------
-    // APP STATE & ELEMENTS
-    // ----------------------------------------------------
-    let activeQuestions = [];
-    let currentIndex = 0;
-    let score = 0;
-    let timerInterval = null;
-    let secondsElapsed = 0;
-
-    const startScreen = document.getElementById("startScreen");
-    const quizScreen = document.getElementById("quizScreen");
-    const resultScreen = document.getElementById("resultScreen");
-
-    const categorySelect = document.getElementById("categorySelect");
-    const startBtn = document.getElementById("startBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const restartBtn = document.getElementById("restartBtn");
-
-    const questionProgress = document.getElementById("questionProgress");
-    const scoreTracker = document.getElementById("scoreTracker");
-    const progressBar = document.getElementById("progressBar");
-    const questionCategory = document.getElementById("questionCategory");
-    const questionStem = document.getElementById("questionStem");
-    const optionsContainer = document.getElementById("optionsContainer");
-    const rationalizationBox = document.getElementById("rationalizationBox");
-    const rationalizationText = document.getElementById("rationalizationText");
-    const quizTimer = document.getElementById("quizTimer");
-
-    // ----------------------------------------------------
-    // FUNCTIONS
-    // ----------------------------------------------------
-    function startTimer() {
-      secondsElapsed = 0;
-      quizTimer.classList.remove("hidden");
-      timerInterval = setInterval(() => {
-        secondsElapsed++;
-        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-        const secs = String(secondsElapsed % 60).padStart(2, '0');
-        quizTimer.textContent = `⏱️ ${mins}:${secs}`;
-      }, 1000);
+    // Progressive Web App (PWA) Offline Service Worker
+    if ('serviceWorker' in navigator) {
+      const swCode = `self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));`;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
     }
 
-    function stopTimer() {
-      clearInterval(timerInterval);
-    }
+    // App Install Prompt
+    let deferredPrompt;
+    const installBtn = document.getElementById('installAppBtn');
 
-    function startQuiz() {
-      const selectedCat = categorySelect.value;
-      if (selectedCat === "all") {
-        activeQuestions = [...questionBank];
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'flex';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') installBtn.style.display = 'none';
+        deferredPrompt = null;
       } else {
-        activeQuestions = questionBank.filter(q => q.category === selectedCat);
+        alert("To install EchoLET:\n• On Android/Chrome: Tap the 3 dots (⋮) > 'Install app' or 'Add to Home screen'.\n• On iPhone/Safari: Tap Share (⎙) > 'Add to Home Screen'.");
       }
+    });
 
-      // Shuffle questions
-      activeQuestions.sort(() => Math.random() - 0.5);
+    // Sample High-Yield LET Questions
+    const questions = {
+      profed: [
+        {
+          stem: "A teacher observes that a Grade 3 pupil can solve single-digit addition independently, but requires guided scaffolding to solve two-digit addition. This scenario best illustrates Vygotsky's:",
+          choices: ["Zone of Proximal Development (ZPD)", "Sensorimotor Coordination", "Equilibration Process", "Law of Exercise"],
+          ans: 0,
+          rationale: "The Zone of Proximal Development (ZPD) is the distance between what a learner can do independently and what they can achieve with guidance and scaffolding."
+        },
+        {
+          stem: "Under Article XI of the Code of Ethics for Professional Teachers, a teacher shall place premium upon self-respect and self-discipline as the principle of personal behavior in all relationships with:",
+          choices: ["The school head only", "Students only", "Others and in all situations", "Colleagues during official hours"],
+          ans: 2,
+          rationale: "Article XI states that a teacher must place premium upon self-respect and self-discipline at all times, with others and in all situations."
+        }
+      ],
+      gened: [
+        {
+          stem: "What historical act made the study of the life, works, and writings of Jose Rizal, particularly his novels Noli Me Tangere and El Filibusterismo, mandatory in all Philippine schools?",
+          choices: ["R.A. 7722", "R.A. 1425", "R.A. 7836", "R.A. 10533"],
+          ans: 1,
+          rationale: "Republic Act No. 1425 (Rizal Law) was signed by President Ramon Magsaysay on June 12, 1956, mandating the study of Rizal's life and works."
+        }
+      ]
+    };
 
-      currentIndex = 0;
-      score = 0;
-      scoreTracker.textContent = `Score: ${score}`;
+    let currentSet = [];
+    let currentIndex = 0;
 
-      startScreen.classList.add("hidden");
-      resultScreen.classList.add("hidden");
-      quizScreen.classList.remove("hidden");
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
 
-      startTimer();
-      renderQuestion();
+      document.getElementById('streamTab').classList.toggle('hidden', tab !== 'stream');
+      document.getElementById('classworkTab').classList.toggle('hidden', tab !== 'classwork');
+      document.getElementById('quizView').style.display = 'none';
     }
 
-    function renderQuestion() {
-      const current = activeQuestions[currentIndex];
+    function startModule(type) {
+      currentSet = questions[type];
+      currentIndex = 0;
+      document.getElementById('streamTab').classList.add('hidden');
+      document.getElementById('classworkTab').classList.add('hidden');
+      document.getElementById('quizView').style.display = 'block';
+      loadQuestion();
+    }
 
-      questionProgress.textContent = `Question ${currentIndex + 1} of ${activeQuestions.length}`;
-      progressBar.style.width = `${((currentIndex) / activeQuestions.length) * 100}%`;
-      questionCategory.textContent = current.category;
-      questionStem.textContent = current.stem;
+    function loadQuestion() {
+      const q = currentSet[currentIndex];
+      document.getElementById('quizCounter').textContent = `Question ${currentIndex + 1} of ${currentSet.length}`;
+      document.getElementById('stem').textContent = q.stem;
+      document.getElementById('rationalization').style.display = 'none';
+      document.getElementById('nextBtn').classList.add('hidden');
 
-      optionsContainer.innerHTML = "";
-      rationalizationBox.style.display = "none";
-      nextBtn.classList.add("hidden");
+      const choicesBox = document.getElementById('choices');
+      choicesBox.innerHTML = '';
 
-      current.options.forEach((option, index) => {
-        const btn = document.createElement("button");
-        btn.classList.add("option-btn");
-        btn.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
-        btn.onclick = () => handleAnswer(index, btn);
-        optionsContainer.appendChild(btn);
+      q.choices.forEach((choice, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = `${String.fromCharCode(65 + idx)}. ${choice}`;
+        btn.onclick = () => selectChoice(idx, btn);
+        choicesBox.appendChild(btn);
       });
     }
 
-    function handleAnswer(selectedIndex, selectedBtn) {
-      const current = activeQuestions[currentIndex];
-      const buttons = optionsContainer.querySelectorAll(".option-btn");
+    function selectChoice(idx, btn) {
+      const q = currentSet[currentIndex];
+      const buttons = document.querySelectorAll('.choice-btn');
+      buttons.forEach(b => b.disabled = true);
 
-      // Disable all choices after answer
-      buttons.forEach(btn => btn.disabled = true);
-
-      if (selectedIndex === current.answer) {
-        selectedBtn.classList.add("correct");
-        score++;
-        scoreTracker.textContent = `Score: ${score}`;
+      if (idx === q.ans) {
+        btn.classList.add('correct');
       } else {
-        selectedBtn.classList.add("wrong");
-        // Highlight the correct answer
-        buttons[current.answer].classList.add("correct");
+        btn.classList.add('wrong');
+        buttons[q.ans].classList.add('correct');
       }
 
-      // Reveal rationalization
-      rationalizationText.textContent = current.rationalization;
-      rationalizationBox.style.display = "block";
-
-      nextBtn.classList.remove("hidden");
+      document.getElementById('rationaleText').textContent = q.rationale;
+      document.getElementById('rationalization').style.display = 'block';
+      document.getElementById('nextBtn').classList.remove('hidden');
     }
 
     function nextQuestion() {
       currentIndex++;
-      if (currentIndex < activeQuestions.length) {
-        renderQuestion();
+      if (currentIndex < currentSet.length) {
+        loadQuestion();
       } else {
-        showResults();
+        alert("🎉 Congratulations! You have finished this Classroom drill.");
+        closeQuiz();
       }
     }
 
-    function showResults() {
-      stopTimer();
-      quizScreen.classList.add("hidden");
-      resultScreen.classList.remove("hidden");
-
-      const total = activeQuestions.length;
-      const percentage = Math.round((score / total) * 100);
-
-      document.getElementById("percentageText").textContent = `${percentage}%`;
-      document.getElementById("rawScoreText").textContent = `${score} / ${total}`;
-
-      const verdictEl = document.getElementById("resultVerdict");
-      const descEl = document.getElementById("resultDesc");
-
-      // PRC Board Exam passing threshold is 75%
-      if (percentage >= 75) {
-        verdictEl.textContent = "🎉 Passed (PRC Benchmark Reached!)";
-        verdictEl.style.color = "var(--success)";
-        descEl.textContent = "Excellent work! You demonstrated mastery above the 75% national passing standard for the LET.";
-      } else {
-        verdictEl.textContent = "📖 Below 75% Passing Threshold";
-        verdictEl.style.color = "var(--danger)";
-        descEl.textContent = "Don't be discouraged! Review the rationalizations, reinforce your weak competencies, and try another drill.";
-      }
+    function closeQuiz() {
+      document.getElementById('quizView').style.display = 'none';
+      document.getElementById('streamTab').classList.remove('hidden');
     }
-
-    // Event Listeners
-    startBtn.addEventListener("click", startQuiz);
-    nextBtn.addEventListener("click", nextQuestion);
-    restartBtn.addEventListener("click", () => {
-      resultScreen.classList.add("hidden");
-      startScreen.classList.remove("hidden");
-      quizTimer.classList.add("hidden");
-    });
   </script>
 </body>
 </html>

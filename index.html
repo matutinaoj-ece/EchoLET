@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EchoLET - Board Exam Reviewer</title>
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-light: #ecfdf5;
+      --secondary: #3b82f6;
+      --slate-900: #0f172a;
+      --slate-700: #334155;
+      --slate-500: #64748b;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --card-bg: #ffffff;
+      --danger: #ef4444;
+      --success: #10b981;
+      --radius: 14px;
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--slate-50);
+      color: var(--slate-900);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .badge-lpt {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    /* Container */
+    main {
+      flex: 1;
+      max-width: 760px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2.2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Welcome / Hero Screen */
+    .hero-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-desc {
+      color: var(--slate-700);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .objectives {
+      background: var(--slate-50);
+      border-left: 4px solid var(--primary);
+      padding: 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.8rem;
+    }
+
+    .objectives h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: var(--slate-900);
+    }
+
+    .objectives ul {
+      list-style-position: inside;
+      font-size: 0.9rem;
+      color: var(--slate-700);
+    }
+
+    .objectives li {
+      margin-bottom: 0.35rem;
+    }
+
+    .select-group {
+      margin-bottom: 1.8rem;
+    }
+
+    .select-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      background: white;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 0.95rem;
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Quiz Screen */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--slate-500);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: var(--slate-100);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.8rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .question-category {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--secondary);
+      background: #eff6ff;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.8rem;
+    }
+
+    .question-stem {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 1.5rem;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 1rem 1.2rem;
+      font-size: 0.98rem;
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--slate-900);
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-btn.correct {
+      background: #dcfce7 !important;
+      border-color: var(--success) !important;
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: var(--danger) !important;
+      color: #7f1d1d;
+    }
+
+    /* Rationalization Box */
+    .rationalization-box {
+      display: none;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 1.2rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .rationalization-box h4 {
+      font-size: 0.95rem;
+      color: var(--slate-900);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .rationalization-box p {
+      font-size: 0.9rem;
+      color: var(--slate-700);
+    }
+
+    /* Results Screen */
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem auto;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .score-circle span {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--slate-500);
+    }
+
+    .result-verdict {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-desc {
+      text-align: center;
+      color: var(--slate-700);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--slate-500);
+      border-top: 1px solid #e2e8f0;
+      background: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      📚 Echo<span>LET</span>
+      <span class="badge-lpt">Road to LPT</span>
+    </div>
+    <div id="quizTimer" class="hidden" style="font-weight: 700; color: var(--slate-700);">⏱️ 00:00</div>
+  </header>
+
+  <!-- Main View -->
+  <main>
+    
+    <!-- 1. START / ONBOARDING SCREEN -->
+    <section id="startScreen" class="card">
+      <h1 class="hero-title">Philippine Licensure Examination for Teachers Reviewer</h1>
+      <p class="hero-desc">
+        A modern, lightweight question bank and quiz application tailored for examinees of the Philippine LET.
+        Emphasizing active recall and iterative testing to help you master competencies in GenEd and ProfEd.
+      </p>
+
+      <div class="objectives">
+        <h4>🎯 Core Objectives</h4>
+        <ul>
+          <li>Provide free, accessible high-yield review drills nationwide.</li>
+          <li>Diagnose knowledge gaps across key pedagogical and general competencies.</li>
+          <li>Build test endurance through simulated, timed board questions.</li>
+        </ul>
+      </div>
+
+      <div class="select-group">
+        <label for="categorySelect">Select Review Focus:</label>
+        <select id="categorySelect">
+          <option value="all">Mixed (GenEd & ProfEd)</option>
+          <option value="GenEd">General Education (GenEd)</option>
+          <option value="ProfEd">Professional Education (ProfEd)</option>
+        </select>
+      </div>
+
+      <button id="startBtn" class="btn">Start Review Drill</button>
+    </section>
+
+    <!-- 2. QUIZ DRILL SCREEN -->
+    <section id="quizScreen" class="card hidden">
+      <div class="quiz-header">
+        <span id="questionProgress">Question 1 of 5</span>
+        <span id="scoreTracker">Score: 0</span>
+      </div>
+
+      <div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <div id="questionCategory" class="question-category">ProfEd</div>
+      <div id="questionStem" class="question-stem">Loading question...</div>
+
+      <div id="optionsContainer" class="options-grid">
+        <!-- Buttons injected by JS -->
+      </div>
+
+      <!-- Rationalization Panel -->
+      <div id="rationalizationBox" class="rationalization-box">
+        <h4>💡 Item Rationalization</h4>
+        <p id="rationalizationText"></p>
+      </div>
+
+      <button id="nextBtn" class="btn hidden">Next Question →</button>
+    </section>
+
+    <!-- 3. RESULTS & DIAGNOSTICS SCREEN -->
+    <section id="resultScreen" class="card hidden">
+      <h2 style="text-align: center; margin-bottom: 0.5rem;">Diagnostic Summary</h2>
+      
+      <div class="score-circle">
+        <div id="percentageText">0%</div>
+        <span id="rawScoreText">0 / 0</span>
+      </div>
+
+      <div id="resultVerdict" class="result-verdict">Passed (PRC Standard)</div>
+      <p id="resultDesc" class="result-desc"></p>
+
+      <button id="restartBtn" class="btn">Take Another Drill</button>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    EchoLET &bull; Designed by <strong>Echo</strong> for future Licensed Professional Teachers.
+  </footer>
+
+  <script>
+    // ----------------------------------------------------
+    // CURATED HIGH-YIELD LET QUESTION BANK (Sample Data)
+    // ----------------------------------------------------
+    const questionBank = [
+      {
+        category: "ProfEd",
+        stem: "According to Jean Piaget's cognitive development theory, in which stage can a child logically think about concrete events and master the law of conservation?",
+        options: [
+          "Sensorimotor Stage",
+          "Preoperational Stage",
+          "Concrete Operational Stage",
+          "Formal Operational Stage"
+        ],
+        answer: 2,
+        rationalization: "Concrete Operational Stage (approx. ages 7 to 11) is when children begin logical reasoning with concrete objects and master reversibility and conservation."
+      },
+      {
+        category: "GenEd",
+        stem: "Which figure of speech is demonstrated in the line: 'The wild winds whispered through the silent, dark forest'?",
+        options: [
+          "Metaphor",
+          "Personification",
+          "Hyperbole",
+          "Irony"
+        ],
+        answer: 1,
+        rationalization: "Personification endows human attributes, behaviors, or emotions (e.g., 'whispered') to non-human or inanimate objects like the wind."
+      },
+      {
+        category: "ProfEd",
+        stem: "Teacher Mario administers a pre-test before starting a new unit to identify the specific strengths and learning deficiencies of his students. What form of assessment is this?",
+        options: [
+          "Summative Assessment",
+          "Diagnostic Assessment",
+          "Formative Assessment",
+          "Placement Assessment"
+        ],
+        answer: 1,
+        rationalization: "Diagnostic assessment is administered prior to instruction to detect students' specific learning gaps and misconceptions so appropriate remediation can be planned."
+      },
+      {
+        category: "GenEd",
+        stem: "Under whose presidential administration was Republic Act No. 1425 (The Rizal Law) enacted into law?",
+        options: [
+          "Ferdinand Marcos",
+          "Elpidio Quirino",
+          "Ramon Magsaysay",
+          "Diosdado Macapagal"
+        ],
+        answer: 2,
+        rationalization: "R.A. 1425 (Rizal Law) was sponsored by Sen. Claro M. Recto and signed into law by President Ramon Magsaysay on June 12, 1956."
+      },
+      {
+        category: "ProfEd",
+        stem: "Under Article VIII of the Code of Ethics for Professional Teachers, what is the professional responsibility of a teacher when reporting a grievance against a superior?",
+        options: [
+          "Airing grievances on social media for public awareness",
+          "Submitting an anonymous letter to the media",
+          "Following due process and recognized official administrative channels",
+          "Staging an immediate walkout with fellow faculty"
+        ],
+        answer: 2,
+        rationalization: "The Code of Ethics explicitly dictates that teachers must follow official administrative channels and observe due process when raising grievances against colleagues and superiors."
+      }
+    ];
+
+    // ----------------------------------------------------
+    // APP STATE & ELEMENTS
+    // ----------------------------------------------------
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let timerInterval = null;
+    let secondsElapsed = 0;
+
+    const startScreen = document.getElementById("startScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
+
+    const categorySelect = document.getElementById("categorySelect");
+    const startBtn = document.getElementById("startBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const questionProgress = document.getElementById("questionProgress");
+    const scoreTracker = document.getElementById("scoreTracker");
+    const progressBar = document.getElementById("progressBar");
+    const questionCategory = document.getElementById("questionCategory");
+    const questionStem = document.getElementById("questionStem");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const rationalizationBox = document.getElementById("rationalizationBox");
+    const rationalizationText = document.getElementById("rationalizationText");
+    const quizTimer = document.getElementById("quizTimer");
+
+    // ----------------------------------------------------
+    // FUNCTIONS
+    // ----------------------------------------------------
+    function startTimer() {
+      secondsElapsed = 0;
+      quizTimer.classList.remove("hidden");
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        quizTimer.textContent = `⏱️ ${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function startQuiz() {
+      const selectedCat = categorySelect.value;
+      if (selectedCat === "all") {
+        activeQuestions = [...questionBank];
+      } else {
+        activeQuestions = questionBank.filter(q => q.category === selectedCat);
+      }
+
+      // Shuffle questions
+      activeQuestions.sort(() => Math.random() - 0.5);
+
+      currentIndex = 0;
+      score = 0;
+      scoreTracker.textContent = `Score: ${score}`;
+
+      startScreen.classList.add("hidden");
+      resultScreen.classList.add("hidden");
+      quizScreen.classList.remove("hidden");
+
+      startTimer();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const current = activeQuestions[currentIndex];
+
+      questionProgress.textContent = `Question ${currentIndex + 1} of ${activeQuestions.length}`;
+      progressBar.style.width = `${((currentIndex) / activeQuestions.length) * 100}%`;
+      questionCategory.textContent = current.category;
+      questionStem.textContent = current.stem;
+
+      optionsContainer.innerHTML = "";
+      rationalizationBox.style.display = "none";
+      nextBtn.classList.add("hidden");
+
+      current.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.classList.add("option-btn");
+        btn.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+        btn.onclick = () => handleAnswer(index, btn);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selectedIndex, selectedBtn) {
+      const current = activeQuestions[currentIndex];
+      const buttons = optionsContainer.querySelectorAll(".option-btn");
+
+      // Disable all choices after answer
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedIndex === current.answer) {
+        selectedBtn.classList.add("correct");
+        score++;
+        scoreTracker.textContent = `Score: ${score}`;
+      } else {
+        selectedBtn.classList.add("wrong");
+        // Highlight the correct answer
+        buttons[current.answer].classList.add("correct");
+      }
+
+      // Reveal rationalization
+      rationalizationText.textContent = current.rationalization;
+      rationalizationBox.style.display = "block";
+
+      nextBtn.classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < activeQuestions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      stopTimer();
+      quizScreen.classList.add("hidden");
+      resultScreen.classList.remove("hidden");
+
+      const total = activeQuestions.length;
+      const percentage = Math.round((score / total) * 100);
+
+      document.getElementById("percentageText").textContent = `${percentage}%`;
+      document.getElementById("rawScoreText").textContent = `${score} / ${total}`;
+
+      const verdictEl = document.getElementById("resultVerdict");
+      const descEl = document.getElementById("resultDesc");
+
+      // PRC Board Exam passing threshold is 75%
+      if (percentage >= 75) {
+        verdictEl.textContent = "🎉 Passed (PRC Benchmark Reached!)";
+        verdictEl.style.color = "var(--success)";
+        descEl.textContent = "Excellent work! You demonstrated mastery above the 75% national passing standard for the LET.";
+      } else {
+        verdictEl.textContent = "📖 Below 75% Passing Threshold";
+        verdictEl.style.color = "var(--danger)";
+        descEl.textContent = "Don't be discouraged! Review the rationalizations, reinforce your weak competencies, and try another drill.";
+      }
+    }
+
+    // Event Listeners
+    startBtn.addEventListener("click", startQuiz);
+    nextBtn.addEventListener("click", nextQuestion);
+    restartBtn.addEventListener("click", () => {
+      resultScreen.classList.add("hidden");
+      startScreen.classList.remove("hidden");
+      quizTimer.classList.add("hidden");
+    });
+  </script>
+</body>
+</html>

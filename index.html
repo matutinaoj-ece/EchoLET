@@ -5,23 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EchoLET - Classroom Reviewer</title>
   
-  <!-- Pencil Icon as Favicon & Apple Touch Icon -->
+  <!-- Pencil Icon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
   <meta name="theme-color" content="#7A0019" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <!-- Embedded Web App Manifest for Instant Download/Install -->
+  <!-- Embedded Web App Manifest for Direct Download -->
   <link rel="manifest" href='data:application/manifest+json,{"name":"EchoLET Classroom","short_name":"EchoLET","start_url":".","display":"standalone","background_color":"%237A0019","theme_color":"%237A0019","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%23D4AF37%27><path d=%27M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z%27/></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}' />
 
   <style>
     :root {
       --crimson: #7A0019;
       --crimson-dark: #580012;
-      --crimson-light: #990020;
       --gold: #D4AF37;
       --gold-light: #FFF8E1;
-      --gold-dark: #AA820A;
+      --gold-dark: #B8860B;
       --bg: #F8F9FA;
       --surface: #FFFFFF;
       --text-main: #1F1F1F;
@@ -63,8 +61,8 @@
     }
 
     .pencil-logo {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       background: var(--crimson);
       border-radius: 50%;
       display: flex;
@@ -80,7 +78,7 @@
     }
 
     .app-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 500;
       color: var(--crimson);
     }
@@ -90,27 +88,37 @@
       font-weight: 700;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .student-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--crimson);
+      background: var(--gold-light);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--gold);
+    }
+
     .install-btn {
       background: var(--gold);
       color: var(--crimson-dark);
       font-weight: 700;
       border: 1px solid var(--gold-dark);
-      padding: 0.45rem 0.9rem;
+      padding: 0.4rem 0.8rem;
       border-radius: 20px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      transition: all 0.2s;
+      font-size: 0.8rem;
     }
 
-    .install-btn:hover {
-      background: var(--gold-dark);
-      color: #fff;
-    }
-
-    /* Classroom Tabs */
+    /* Tabs */
     .classroom-tabs {
       display: flex;
       justify-content: center;
@@ -120,7 +128,7 @@
     }
 
     .tab-btn {
-      padding: 0.85rem 1rem;
+      padding: 0.85rem 1.2rem;
       background: none;
       border: none;
       font-size: 0.95rem;
@@ -142,32 +150,27 @@
       right: 0;
       height: 3px;
       background: var(--crimson);
-      border-radius: 3px 3px 0 0;
     }
 
-    /* Main Container */
     main {
       max-width: 860px;
       margin: 1.5rem auto;
       padding: 0 1rem;
     }
 
-    /* Classroom Banner */
+    /* Banner */
     .classroom-banner {
       background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);
       color: white;
       padding: 2.2rem;
       border-radius: var(--radius);
       margin-bottom: 1.5rem;
-      position: relative;
-      overflow: hidden;
       border-bottom: 4px solid var(--gold);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      position: relative;
     }
 
     .classroom-banner h1 {
-      font-size: 1.8rem;
-      font-weight: 500;
+      font-size: 1.7rem;
       color: var(--gold);
       margin-bottom: 0.2rem;
     }
@@ -177,20 +180,14 @@
       color: #fce8e6;
     }
 
-    .banner-badge {
-      position: absolute;
-      right: 1.5rem;
-      bottom: 1.5rem;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      padding: 0.35rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 700;
+    .student-greeting {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #fff;
+      font-weight: 500;
     }
 
-    /* Classroom Cards / Stream */
+    /* Cards */
     .class-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -200,13 +197,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: box-shadow 0.2s, border-color 0.2s;
       cursor: pointer;
+      transition: all 0.2s;
     }
 
     .class-card:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       border-color: var(--crimson);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .card-left {
@@ -216,8 +213,8 @@
     }
 
     .card-icon {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: var(--gold-light);
       display: flex;
@@ -231,24 +228,7 @@
       fill: var(--crimson);
     }
 
-    .card-text h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .card-text p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .due-tag {
-      font-size: 0.8rem;
-      color: var(--crimson);
-      font-weight: 600;
-    }
-
-    /* Modal / Quiz View (Simulating Opening an Assignment) */
+    /* Quiz Panel */
     .quiz-view {
       display: none;
       background: var(--surface);
@@ -257,19 +237,35 @@
       padding: 2rem;
     }
 
-    .quiz-header {
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-      margin-bottom: 1.5rem;
+    .multimedia-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .audio-speech-btn {
+      background: var(--gold-light);
+      color: var(--crimson-dark);
+      border: 1px solid var(--gold);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .audio-speech-btn:hover {
+      background: var(--gold);
+      color: white;
     }
 
     .stem {
       font-size: 1.15rem;
       font-weight: 600;
-      color: var(--text-main);
       margin-bottom: 1.5rem;
     }
 
@@ -281,7 +277,7 @@
     }
 
     .choice-btn {
-      padding: 0.9rem 1.2rem;
+      padding: 0.95rem 1.2rem;
       border: 1.5px solid var(--border);
       background: white;
       border-radius: var(--radius);
@@ -316,10 +312,9 @@
       padding: 1rem;
       border-radius: 4px;
       margin-bottom: 1.5rem;
-      font-size: 0.9rem;
     }
 
-    .primary-btn {
+    .btn-action {
       background: var(--crimson);
       color: white;
       border: none;
@@ -327,50 +322,108 @@
       border-radius: 4px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
-    .primary-btn:hover {
+    .btn-action:hover {
       background: var(--crimson-dark);
     }
 
-    .hidden {
-      display: none !important;
+    /* Registration Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem;
     }
+
+    .modal-card {
+      background: white;
+      border-radius: 12px;
+      max-width: 440px;
+      width: 100%;
+      padding: 2rem;
+      border-top: 6px solid var(--crimson);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .modal-card h2 {
+      color: var(--crimson);
+      font-size: 1.35rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-top: 0.35rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    /* Grades Table */
+    .grades-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .grades-table th, .grades-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .grades-table th {
+      background: var(--gold-light);
+      color: var(--crimson-dark);
+      font-weight: 700;
+    }
+
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Google Classroom Top Bar -->
+  <!-- Google Classroom Header -->
   <header>
     <div class="header-left">
       <div class="pencil-logo">
-        <!-- Pencil SVG -->
         <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
       </div>
       <div class="app-title">Echo<span>LET</span> Classroom</div>
     </div>
     
-    <!-- Install App Button -->
-    <button id="installAppBtn" class="install-btn">
-      <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-      Download App
-    </button>
+    <div class="header-right">
+      <div id="studentBadge" class="student-badge hidden">
+        <span>👤</span> <span id="studentDisplay">Student</span>
+      </div>
+      <button id="installAppBtn" class="install-btn">📱 Download App</button>
+    </div>
   </header>
 
-  <!-- Navigation Tabs -->
+  <!-- Classroom Tabs -->
   <div class="classroom-tabs">
     <button class="tab-btn active" onclick="switchTab('stream')">Stream</button>
     <button class="tab-btn" onclick="switchTab('classwork')">Classwork</button>
+    <button class="tab-btn" onclick="switchTab('grades')">Grades & Records</button>
   </div>
 
   <main>
     
-    <!-- BANNER -->
+    <!-- Banner -->
     <div class="classroom-banner">
-      <h1>LET Review Mastery 2026-2027</h1>
-      <p>Instructor: Echo &bull; Licensure Examination for Teachers</p>
-      <div class="banner-badge">Target: 75%+ Rating</div>
+      <h1>Licensure Examination for Teachers</h1>
+      <p>Course Instructor: Teacher Echo &bull; Batch 2026-2027</p>
+      <div id="studentGreeting" class="student-greeting">Welcome! Please register to start.</div>
     </div>
 
     <!-- TAB 1: STREAM -->
@@ -380,12 +433,12 @@
           <div class="card-icon">
             <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
           </div>
-          <div class="card-text">
-            <h3>ProfEd Drill 01: Child & Adolescent Pedagogy</h3>
-            <p>Posted today &bull; 100 Points</p>
+          <div>
+            <h3>Drill 1: Professional Education & Child Development</h3>
+            <p>Interactive Audio Quiz &bull; 100 Points</p>
           </div>
         </div>
-        <div class="due-tag">Active Recall Drill</div>
+        <span style="color:var(--crimson); font-weight:700; font-size:0.85rem;">Solve Drill →</span>
       </div>
 
       <div class="class-card" onclick="startModule('gened')">
@@ -393,128 +446,218 @@
           <div class="card-icon">
             <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
           </div>
-          <div class="card-text">
-            <h3>GenEd Drill 01: Philippine History & Literature</h3>
-            <p>Posted today &bull; 100 Points</p>
+          <div>
+            <h3>Drill 2: General Education (History & Literature)</h3>
+            <p>Interactive Audio Quiz &bull; 100 Points</p>
           </div>
         </div>
-        <div class="due-tag">High-Yield Questions</div>
+        <span style="color:var(--crimson); font-weight:700; font-size:0.85rem;">Solve Drill →</span>
       </div>
     </section>
 
     <!-- TAB 2: CLASSWORK -->
     <section id="classworkTab" class="hidden">
-      <h2 style="font-size:1.2rem; color:var(--crimson); margin-bottom:1rem; font-weight:600;">📑 All Modules</h2>
-      <div class="class-card" onclick="startModule('profed')">
-        <div class="card-left">
-          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
-          <div class="card-text">
-            <h3>Assessment of Learning & Ethics</h3>
-            <p>Module 1 &bull; ProfEd Competencies</p>
-          </div>
-        </div>
-        <button class="primary-btn" style="padding:0.4rem 0.8rem; font-size:0.85rem;">Solve</button>
-      </div>
+      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:1rem;">Assigned Modules</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem;">Complete the modules below. Your scores will automatically be recorded in your Gradebook.</p>
     </section>
 
-    <!-- QUIZ / ASSIGNMENT VIEW -->
+    <!-- TAB 3: GRADES -->
+    <section id="gradesTab" class="hidden">
+      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:1rem;">Your Gradebook & Submission Record</h2>
+      <table class="grades-table">
+        <thead>
+          <tr>
+            <th>Module Name</th>
+            <th>Score</th>
+            <th>PRC Status (75% Target)</th>
+            <th>Date Completed</th>
+          </tr>
+        </thead>
+        <tbody id="gradesList">
+          <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No drills submitted yet.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- INTERACTIVE MULTIMEDIA QUIZ VIEW -->
     <section id="quizView" class="quiz-view">
-      <div class="quiz-header">
-        <div>
-          <h2 id="quizTopic" style="color:var(--crimson); font-size:1.15rem;">Assignment Question</h2>
-          <span id="quizCounter" style="font-size:0.85rem; color:var(--text-muted);">Question 1 of 3</span>
-        </div>
-        <button onclick="closeQuiz()" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">✕</button>
+      <div class="multimedia-toolbar">
+        <button id="speechBtn" class="audio-speech-btn" onclick="readQuestionAloud()">
+          🔊 Read Aloud (Voice)
+        </button>
+        <span id="quizCounter" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Question 1</span>
       </div>
 
-      <div id="stem" class="stem">Question goes here...</div>
+      <div id="stem" class="stem">Question Stem</div>
       <div id="choices" class="choices"></div>
 
       <div id="rationalization" class="rationalization">
-        <strong style="color:var(--crimson);">Teacher Echo's Rationalization:</strong>
+        <strong style="color:var(--crimson);">💡 Item Rationalization:</strong>
         <p id="rationaleText" style="margin-top:0.3rem;"></p>
       </div>
 
-      <div style="display:flex; justify-content:flex-end;">
-        <button id="nextBtn" class="primary-btn hidden" onclick="nextQuestion()">Next Question →</button>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <button onclick="closeQuiz()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">Cancel Drill</button>
+        <button id="nextBtn" class="btn-action hidden" onclick="nextQuestion()">Next Question →</button>
       </div>
     </section>
 
   </main>
 
+  <!-- STUDENT REGISTRATION MODAL -->
+  <div id="registrationModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2>Welcome to EchoLET! ✏️</h2>
+      <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">
+        Please enroll with your name and email to access Teacher Echo's review drills and record your scores.
+      </p>
+
+      <label style="font-size:0.85rem; font-weight:600;">Full Name:</label>
+      <input type="text" id="regName" class="input-field" placeholder="e.g. Maria Santos" required />
+
+      <label style="font-size:0.85rem; font-weight:600;">Email Address:</label>
+      <input type="email" id="regEmail" class="input-field" placeholder="e.g. maria@gmail.com" required />
+
+      <label style="font-size:0.85rem; font-weight:600;">Major / Field of Study:</label>
+      <select id="regMajor" class="input-field">
+        <option value="General Curriculum (BEEd)">Elementary Education (BEEd)</option>
+        <option value="Secondary - English">Secondary - English (BSEd)</option>
+        <option value="Secondary - Social Sciences">Secondary - Social Studies</option>
+        <option value="Secondary - Mathematics">Secondary - Mathematics</option>
+        <option value="Secondary - Science">Secondary - Science</option>
+      </select>
+
+      <button class="btn-action" style="width:100%; margin-top:0.5rem;" onclick="registerStudent()">
+        Enroll in EchoLET Classroom
+      </button>
+    </div>
+  </div>
+
   <script>
-    // Progressive Web App (PWA) Offline Service Worker
-    if ('serviceWorker' in navigator) {
-      const swCode = `self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));`;
-      const blob = new Blob([swCode], { type: 'application/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    // ----------------------------------------------------
+    // 1. MULTIMEDIA SOUND EFFECTS (Web Audio API)
+    // ----------------------------------------------------
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'correct') {
+        // High, cheerful bell chime
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.12); // A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.45);
+      } else {
+        // Low buzzer tone
+        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      }
     }
 
-    // App Install Prompt
-    let deferredPrompt;
-    const installBtn = document.getElementById('installAppBtn');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'flex';
-    });
-
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') installBtn.style.display = 'none';
-        deferredPrompt = null;
-      } else {
-        alert("To install EchoLET:\n• On Android/Chrome: Tap the 3 dots (⋮) > 'Install app' or 'Add to Home screen'.\n• On iPhone/Safari: Tap Share (⎙) > 'Add to Home Screen'.");
+    // ----------------------------------------------------
+    // 2. TEXT-TO-SPEECH (MULTIMEDIA READ ALOUD)
+    // ----------------------------------------------------
+    function readQuestionAloud() {
+      if (!('speechSynthesis' in window)) {
+        alert("Text-to-Speech is not supported in this browser.");
+        return;
       }
-    });
+      window.speechSynthesis.cancel(); // Stop any ongoing speech
+      const q = currentSet[currentIndex];
+      const textToRead = `${q.stem}. Options: A, ${q.choices[0]}. B, ${q.choices[1]}. C, ${q.choices[2]}. D, ${q.choices[3]}.`;
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.rate = 0.95; // Clear teacher pacing
+      window.speechSynthesis.speak(utterance);
+    }
 
-    // Sample High-Yield LET Questions
+    // ----------------------------------------------------
+    // 3. STUDENT REGISTRATION (LocalStorage Persistence)
+    // ----------------------------------------------------
+    let currentUser = null;
+
+    function checkRegistration() {
+      const saved = localStorage.getItem("echolet_student");
+      if (saved) {
+        currentUser = JSON.parse(saved);
+        document.getElementById("registrationModal").classList.add("hidden");
+        document.getElementById("studentBadge").classList.remove("hidden");
+        document.getElementById("studentDisplay").textContent = currentUser.name.split(' ')[0];
+        document.getElementById("studentGreeting").textContent = `Welcome back, ${currentUser.name} (${currentUser.major})!`;
+        renderGrades();
+      } else {
+        document.getElementById("registrationModal").classList.remove("hidden");
+      }
+    }
+
+    function registerStudent() {
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const major = document.getElementById("regMajor").value;
+
+      if (!name || !email) {
+        alert("Please provide both your name and email.");
+        return;
+      }
+
+      currentUser = { name, email, major, registeredAt: new Date().toLocaleDateString() };
+      localStorage.setItem("echolet_student", JSON.stringify(currentUser));
+      checkRegistration();
+    }
+
+    // ----------------------------------------------------
+    // 4. QUESTIONS & QUIZ CONTROLLER
+    // ----------------------------------------------------
     const questions = {
       profed: [
         {
-          stem: "A teacher observes that a Grade 3 pupil can solve single-digit addition independently, but requires guided scaffolding to solve two-digit addition. This scenario best illustrates Vygotsky's:",
-          choices: ["Zone of Proximal Development (ZPD)", "Sensorimotor Coordination", "Equilibration Process", "Law of Exercise"],
-          ans: 0,
-          rationale: "The Zone of Proximal Development (ZPD) is the distance between what a learner can do independently and what they can achieve with guidance and scaffolding."
+          stem: "A teacher provides hints, modeling, and temporary supports to assist a learner in solving a math task until the learner achieves independence. What pedagogical strategy is being applied?",
+          choices: ["Classical Conditioning", "Scaffolding", "Drill and Practice", "Intrinsic Extinction"],
+          ans: 1,
+          rationale: "Scaffolding (derived from Jerome Bruner and Lev Vygotsky's ZPD) provides temporary supportive structures that are gradually removed as learner competence develops."
         },
         {
-          stem: "Under Article XI of the Code of Ethics for Professional Teachers, a teacher shall place premium upon self-respect and self-discipline as the principle of personal behavior in all relationships with:",
-          choices: ["The school head only", "Students only", "Others and in all situations", "Colleagues during official hours"],
-          ans: 2,
-          rationale: "Article XI states that a teacher must place premium upon self-respect and self-discipline at all times, with others and in all situations."
+          stem: "Under Article II of the Code of Ethics for Professional Teachers, the school is considered the nursery of the future citizens of the state. What is the teacher's primary commitment to the state?",
+          choices: ["Engage in partisan political campaigning", "Transmit cultural heritage and foster national pride", "Promote commercial business inside the school", "Limit education only to elite students"],
+          ans: 1,
+          rationale: "Teachers are tasked with transmitting the national heritage, instilling love of country, and preparing learners to become productive and moral citizens of the Republic."
         }
       ],
       gened: [
         {
-          stem: "What historical act made the study of the life, works, and writings of Jose Rizal, particularly his novels Noli Me Tangere and El Filibusterismo, mandatory in all Philippine schools?",
-          choices: ["R.A. 7722", "R.A. 1425", "R.A. 7836", "R.A. 10533"],
+          stem: "Which Philippine hero and writer was known by the pen names 'Plaridel' and 'Dolores Manapat', and founded the famous reformist newspaper Diariong Tagalog?",
+          choices: ["Graciano Lopez Jaena", "Marcelo H. Del Pilar", "Jose Rizal", "Mariano Ponce"],
           ans: 1,
-          rationale: "Republic Act No. 1425 (Rizal Law) was signed by President Ramon Magsaysay on June 12, 1956, mandating the study of Rizal's life and works."
+          rationale: "Marcelo H. Del Pilar wrote under the pen name 'Plaridel' and established the bilingual daily Diariong Tagalog in 1882."
         }
       ]
     };
 
     let currentSet = [];
     let currentIndex = 0;
-
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-
-      document.getElementById('streamTab').classList.toggle('hidden', tab !== 'stream');
-      document.getElementById('classworkTab').classList.toggle('hidden', tab !== 'classwork');
-      document.getElementById('quizView').style.display = 'none';
-    }
+    let score = 0;
+    let currentModuleName = "";
 
     function startModule(type) {
       currentSet = questions[type];
+      currentModuleName = type === 'profed' ? "ProfEd Child Pedagogy" : "GenEd History & Literature";
       currentIndex = 0;
+      score = 0;
+
       document.getElementById('streamTab').classList.add('hidden');
       document.getElementById('classworkTab').classList.add('hidden');
+      document.getElementById('gradesTab').classList.add('hidden');
       document.getElementById('quizView').style.display = 'block';
+
       loadQuestion();
     }
 
@@ -544,9 +687,12 @@
 
       if (idx === q.ans) {
         btn.classList.add('correct');
+        playSound('correct');
+        score++;
       } else {
         btn.classList.add('wrong');
         buttons[q.ans].classList.add('correct');
+        playSound('wrong');
       }
 
       document.getElementById('rationaleText').textContent = q.rationale;
@@ -555,19 +701,74 @@
     }
 
     function nextQuestion() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       currentIndex++;
       if (currentIndex < currentSet.length) {
         loadQuestion();
       } else {
-        alert("🎉 Congratulations! You have finished this Classroom drill.");
-        closeQuiz();
+        submitGrade();
       }
     }
 
+    function submitGrade() {
+      const pct = Math.round((score / currentSet.length) * 100);
+      const passed = pct >= 75;
+
+      const record = {
+        module: currentModuleName,
+        score: `${score} / ${currentSet.length} (${pct}%)`,
+        status: passed ? "PASSED (75%+)" : "BELOW 75%",
+        date: new Date().toLocaleDateString()
+      };
+
+      // Save grade to user profile
+      const history = JSON.parse(localStorage.getItem("echolet_grades") || "[]");
+      history.unshift(record);
+      localStorage.setItem("echolet_grades", JSON.stringify(history));
+
+      alert(`🎉 Assignment Turned In!\nStudent: ${currentUser.name}\nScore: ${record.score}\nPRC Benchmark: ${record.status}`);
+      closeQuiz();
+      renderGrades();
+      switchTab('grades');
+    }
+
+    function renderGrades() {
+      const history = JSON.parse(localStorage.getItem("echolet_grades") || "[]");
+      const list = document.getElementById("gradesList");
+
+      if (history.length === 0) {
+        list.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No drills submitted yet.</td></tr>';
+        return;
+      }
+
+      list.innerHTML = history.map(h => `
+        <tr>
+          <td><strong>${h.module}</strong></td>
+          <td>${h.score}</td>
+          <td style="color:${h.status.includes('PASSED') ? '#137333' : '#7A0019'}; font-weight:700;">${h.status}</td>
+          <td>${h.date}</td>
+        </tr>
+      `).join('');
+    }
+
     function closeQuiz() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       document.getElementById('quizView').style.display = 'none';
       document.getElementById('streamTab').classList.remove('hidden');
     }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('streamTab').classList.toggle('hidden', tab !== 'stream');
+      document.getElementById('classworkTab').classList.toggle('hidden', tab !== 'classwork');
+      document.getElementById('gradesTab').classList.toggle('hidden', tab !== 'grades');
+      document.getElementById('quizView').style.display = 'none';
+    }
+
+    // App Startup
+    checkRegistration();
   </script>
 </body>
 </html>

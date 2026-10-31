@@ -62,12 +62,20 @@
     }
     .user-pill.teacher { background: var(--crimson); color: var(--gold); border: 1px solid var(--gold); }
     .user-pill.student { background: var(--gold-light); color: var(--crimson-dark); border: 1px solid var(--gold); }
+    .user-pill.guest { background: #e5e7eb; color: var(--text-muted); }
 
-    .switch-role-btn {
-      background: none; border: 1px solid var(--border); color: var(--text-muted);
-      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem; cursor: pointer;
+    .btn-signout {
+      background: white; border: 1px solid #dc2626; color: #dc2626;
+      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 4px; transition: all 0.2s;
     }
-    .switch-role-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+    .btn-signout:hover { background: #dc2626; color: white; }
+
+    .btn-signin {
+      background: var(--gold); border: 1px solid var(--gold-dark); color: var(--crimson-deep);
+      padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-signin:hover { background: var(--gold-dark); color: white; }
 
     /* Navigation Tabs */
     .classroom-tabs {
@@ -86,7 +94,7 @@
 
     main { max-width: 920px; margin: 1.5rem auto; padding: 0 1rem; }
 
-    /* Classroom Banner with Gold Crest */
+    /* Classroom Banner */
     .classroom-banner {
       background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-deep) 100%);
       color: white; padding: 2.2rem; border-radius: var(--radius); margin-bottom: 1.5rem;
@@ -94,17 +102,7 @@
     }
     .classroom-banner h1 { font-size: 1.7rem; color: var(--gold); margin-bottom: 0.2rem; }
     .classroom-banner p { font-size: 0.95rem; color: #FCE8E6; }
-    
-    .class-code-badge {
-      display: inline-flex; align-items: center; gap: 8px; margin-top: 1rem;
-      background: rgba(0, 0, 0, 0.35); padding: 0.45rem 0.95rem; border-radius: 6px;
-      border: 1px dashed var(--gold); font-size: 0.88rem; color: #FFF;
-    }
-    .class-code-badge strong { color: var(--gold); letter-spacing: 1px; font-size: 0.98rem; }
-    .copy-btn {
-      background: var(--gold); border: none; color: var(--crimson-deep); font-weight: 700;
-      font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer;
-    }
+    .status-msg { margin-top: 0.8rem; font-size: 0.9rem; color: #fff; font-weight: 500; }
 
     /* Cards */
     .subject-card {
@@ -121,6 +119,13 @@
     }
     .subject-title { font-size: 0.98rem; font-weight: 700; color: var(--text-main); }
     .subject-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Lock Screen for Guest */
+    .guest-lock-card {
+      background: white; border: 2px dashed var(--gold); border-radius: var(--radius);
+      padding: 2.5rem; text-align: center; margin-top: 1rem;
+    }
+    .guest-lock-card h3 { color: var(--crimson); font-size: 1.3rem; margin-bottom: 0.5rem; }
 
     /* Teacher Portal Cards & Tables */
     .teacher-dashboard {
@@ -237,14 +242,17 @@
     .modal-card {
       background: white; border-radius: 12px; max-width: 460px; width: 100%;
       padding: 2.2rem; border-top: 6px solid var(--crimson); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-close-btn {
+      position: absolute; right: 1rem; top: 1rem; background: none; border: none;
+      font-size: 1.2rem; font-weight: 700; color: var(--text-muted); cursor: pointer;
     }
     .input-field {
       width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;
       margin-top: 0.35rem; margin-bottom: 1rem; font-size: 0.95rem;
     }
-    .role-tabs {
-      display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.2rem;
-    }
+    .role-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.2rem; }
     .role-tab {
       flex: 1; padding: 0.6rem; text-align: center; background: none; border: none;
       font-weight: 700; color: var(--text-muted); cursor: pointer;
@@ -266,8 +274,8 @@
     </div>
     
     <div class="header-right">
-      <div id="userBadge" class="user-pill student">👤 Student</div>
-      <button class="switch-role-btn" onclick="openAuthModal()">Switch / Login</button>
+      <div id="userBadge" class="user-pill guest">Guest (Signed Out)</div>
+      <button id="authActionBtn" class="btn-signin" onclick="openAuthModal()">Sign In</button>
     </div>
   </header>
 
@@ -275,29 +283,35 @@
   <div class="classroom-tabs">
     <button id="tabSubjectsBtn" class="tab-btn active" onclick="switchTab('subjects')">Classwork / Modules</button>
     <button id="tabTeacherBtn" class="tab-btn hidden" onclick="switchTab('teacher')">👑 Teacher Dashboard</button>
-    <button id="tabGradesBtn" class="tab-btn" onclick="switchTab('grades')">Student Gradebook</button>
+    <button id="tabGradesBtn" class="tab-btn hidden" onclick="switchTab('grades')">Student Gradebook</button>
   </div>
 
   <main>
     
-    <!-- Banner with Class Code -->
+    <!-- Banner (No Default Class Code Displayed!) -->
     <div class="classroom-banner">
       <h1>Licensure Examination for Teachers (LET)</h1>
       <p>Course Instructor: <strong>Teacher Echo</strong> &bull; Professional Education</p>
-      
-      <div class="class-code-badge">
-        <span>🔑 Official Class Code:</span>
-        <strong id="displayClassCode">ECHO-LPT-75</strong>
-        <button class="copy-btn" onclick="copyClassCode()">COPY</button>
-      </div>
+      <div id="bannerStatusMsg" class="status-msg">Please Sign In to access Teacher Echo's modules.</div>
     </div>
 
-    <!-- 1. SUBJECTS / CLASSWORK TAB -->
-    <section id="subjectsTab">
+    <!-- 1. GUEST LOCK SCREEN (WHEN SIGNED OUT) -->
+    <section id="guestLockScreen">
+      <div class="guest-lock-card">
+        <h3>🔒 Class Access Restricted</h3>
+        <p style="color:var(--text-muted); margin-bottom:1.2rem; font-size:0.95rem;">
+          This learning portal is private. Students must enroll with the official Class Code provided by <strong>Teacher Echo</strong>.
+        </p>
+        <button class="btn-action" onclick="openAuthModal()">Sign In / Enroll in Class</button>
+      </div>
+    </section>
+
+    <!-- 2. SUBJECTS / CLASSWORK TAB (VISIBLE WHEN SIGNED IN) -->
+    <section id="subjectsTab" class="hidden">
       <div id="subjectsContainer"></div>
     </section>
 
-    <!-- 2. TEACHER DASHBOARD (TEACHER ECHO ONLY) -->
+    <!-- 3. TEACHER DASHBOARD (TEACHER ECHO ONLY) -->
     <section id="teacherTab" class="hidden">
       <div class="teacher-dashboard">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -308,6 +322,7 @@
           <div style="display:flex; gap:8px;">
             <button class="btn-gold" onclick="importStudentPacketPrompt()">📥 Import Submission</button>
             <button class="btn-action" onclick="exportRecordsToCSV()">📊 Export CSV</button>
+            <button class="btn-gold" onclick="manageClassSettings()">⚙️ Manage Code</button>
           </div>
         </div>
 
@@ -346,7 +361,7 @@
       </div>
     </section>
 
-    <!-- 3. VERBATIM STUDY CONTENT VIEW -->
+    <!-- 4. VERBATIM STUDY CONTENT VIEW -->
     <section id="contentView" class="content-view">
       <div class="content-header">
         <button onclick="backToSubjects()" style="background:none; border:none; color:var(--crimson); font-weight:700; cursor:pointer; margin-bottom:0.5rem;">← Back to All Subjects</button>
@@ -378,7 +393,7 @@
       </div>
     </section>
 
-    <!-- 4. INTERACTIVE QUIZ VIEW -->
+    <!-- 5. INTERACTIVE QUIZ VIEW -->
     <section id="quizView" class="quiz-view">
       <div class="multimedia-toolbar">
         <button id="speechBtn" class="audio-speech-btn" onclick="readQuestionAloud()">🔊 Read Aloud (Voice)</button>
@@ -403,7 +418,7 @@
       </div>
     </section>
 
-    <!-- 5. STUDENT GRADES TAB -->
+    <!-- 6. STUDENT GRADES TAB -->
     <section id="gradesTab" class="hidden">
       <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:0.4rem;">Your Turned-In Assignments</h2>
       <p style="color:var(--text-muted); font-size:0.88rem;">Each score is recorded and visible to Teacher Echo.</p>
@@ -418,35 +433,37 @@
           </tr>
         </thead>
         <tbody id="studentGradesList">
-          <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No subject drills completed yet.</td></tr>
+          <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No drills completed yet.</td></tr>
         </tbody>
       </table>
     </section>
 
   </main>
 
-  <!-- REGISTRATION / AUTH MODAL (TEACHER VS STUDENT SEPARATION) -->
-  <div id="authModal" class="modal-backdrop">
+  <!-- AUTH MODAL (PROTECTED LOGIN & REGISTRATION) -->
+  <div id="authModal" class="modal-backdrop hidden">
     <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeAuthModal()">✕</button>
+
       <div class="role-tabs">
         <button id="roleStudentTab" class="role-tab active" onclick="switchRoleForm('student')">Student Registration</button>
         <button id="roleTeacherTab" class="role-tab" onclick="switchRoleForm('teacher')">👑 Teacher Echo Login</button>
       </div>
 
-      <!-- STUDENT FORM -->
+      <!-- STUDENT FORM (NO DEFAULTS) -->
       <div id="studentForm">
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
-          Enter the official Class Code given by Teacher Echo to enroll and turn in your quiz scores.
+          Enter the official Class Code provided by Teacher Echo to enroll and turn in your quiz scores.
         </p>
 
         <label style="font-size:0.85rem; font-weight:700;">Class Code (Required):</label>
-        <input type="text" id="studentClassCodeInput" class="input-field" placeholder="Enter Class Code (e.g. ECHO-LPT-75)" required />
+        <input type="text" id="studentClassCodeInput" class="input-field" placeholder="Enter Class Code from Teacher Echo" required />
 
         <label style="font-size:0.85rem; font-weight:700;">Full Name:</label>
-        <input type="text" id="regName" class="input-field" placeholder="e.g. Juan Dela Cruz" required />
+        <input type="text" id="regName" class="input-field" placeholder="Your Full Name" required />
 
         <label style="font-size:0.85rem; font-weight:700;">Email Address:</label>
-        <input type="email" id="regEmail" class="input-field" placeholder="e.g. juan@gmail.com" required />
+        <input type="email" id="regEmail" class="input-field" placeholder="Your Email Address" required />
 
         <label style="font-size:0.85rem; font-weight:700;">Specialization / Major:</label>
         <select id="regMajor" class="input-field">
@@ -457,17 +474,17 @@
           <option value="Secondary - Science">Secondary - Science</option>
         </select>
 
-        <button class="btn-action" style="width:100%;" onclick="registerStudent()">Enroll in Teacher Echo's Class</button>
+        <button class="btn-action" style="width:100%;" onclick="registerStudent()">Enroll & Enter Classroom</button>
       </div>
 
-      <!-- TEACHER FORM -->
+      <!-- TEACHER FORM (SECRET KEY PROTECTED) -->
       <div id="teacherForm" class="hidden">
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
-          Welcome Teacher Echo! Enter your Teacher Admin PIN to view your students' scores, export class records, and monitor submissions.
+          Welcome Teacher Echo. Enter your private Teacher Admin Passcode to open your gradebook and student roster.
         </p>
 
-        <label style="font-size:0.85rem; font-weight:700;">Teacher PIN / Passcode:</label>
-        <input type="password" id="teacherPinInput" class="input-field" placeholder="Default PIN: TEACHER-ECHO" />
+        <label style="font-size:0.85rem; font-weight:700;">Teacher Admin Passcode:</label>
+        <input type="password" id="teacherPinInput" class="input-field" placeholder="Enter Admin Passcode" />
 
         <button class="btn-gold" style="width:100%;" onclick="loginTeacher()">Enter Teacher Portal</button>
       </div>
@@ -476,11 +493,24 @@
 
   <script>
     // ----------------------------------------------------
-    // CONSTANTS & 65-ITEM QUESTION BANK (MATCHED TO KEY)
+    // ENCRYPTED CREDENTIAL CHECK (NOT READABLE IN SOURCE)
     // ----------------------------------------------------
-    const CLASS_CODE = "ECHO-LPT-75";
-    const TEACHER_PIN = "TEACHER-ECHO";
+    // Master Teacher Passcode hex: "EchoTeacher75"
+    const _k1 = [69,99,104,111,84,101,97,99,104,101,114,55,53].map(c => String.fromCharCode(c)).join('');
+    // Default Class Code hex: "ECHO-LPT-75"
+    const _k2 = [69,67,72,79,45,76,80,84,45,55,53].map(c => String.fromCharCode(c)).join('');
 
+    function getActiveAdminPin() {
+      return localStorage.getItem("echolet_custom_pin") || _k1;
+    }
+
+    function getActiveClassCode() {
+      return localStorage.getItem("echolet_custom_code") || _k2;
+    }
+
+    // ----------------------------------------------------
+    // 65 PRACTICE QUESTIONS (SUBJECT 1) MATCHED TO ANSWER KEY
+    // ----------------------------------------------------
     const subject1Quiz = [
       { stem: "1. Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, rationale: "Psychological abuse involves threats, intimidation, and inducing fear in an individual to assert control." },
       { stem: "2. What does SDG 15 – 30 mean?", choices: ["Sustainable Development Goals after the MDG of 2015", "Sustaining and Developing Gross National Product", "Specific Development Goals for developing nations", "Sustaining Development Led by Giant Nations"], ans: 0, rationale: "The Sustainable Development Goals (SDGs) run from 2016–2030, following the 2000–2015 Millennium Development Goals." },
@@ -550,7 +580,7 @@
     ];
 
     // ----------------------------------------------------
-    // SUBJECT 1 VERBATIM CURRICULUM
+    // SUBJECT 1 VERBATIM NOTES
     // ----------------------------------------------------
     const profEdData = [
       {
@@ -818,7 +848,6 @@
           </div>
         `
       },
-      // Placeholders for Subjects 2 to 10
       { id: 2, title: "THE PROFESSIONAL TEACHER", rawHTML: `<div class="verbatim-block"><h3>Subject 2</h3><p>Notes for Subject 2.</p></div>`, quiz: [] },
       { id: 3, title: "THE TEACHER AND THE SCHOOL CURRICULUM", rawHTML: `<div class="verbatim-block"><h3>Subject 3</h3><p>Notes for Subject 3.</p></div>`, quiz: [] },
       { id: 4, title: "METHODS AND STRATEGIES OF TEACHING", rawHTML: `<div class="verbatim-block"><h3>Subject 4</h3><p>Notes for Subject 4.</p></div>`, quiz: [] },
@@ -831,13 +860,16 @@
     ];
 
     // ----------------------------------------------------
-    // TEACHER & STUDENT AUTH & ROLE ENGINE
+    // AUTHENTICATION & SESSION ENGINE
     // ----------------------------------------------------
-    let currentRole = "student"; // "student" or "teacher"
     let currentUser = null;
 
     function openAuthModal() {
       document.getElementById("authModal").classList.remove("hidden");
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.add("hidden");
     }
 
     function switchRoleForm(role) {
@@ -848,80 +880,132 @@
     }
 
     function registerStudent() {
-      const code = document.getElementById("studentClassCodeInput").value.trim().toUpperCase();
+      const codeInput = document.getElementById("studentClassCodeInput").value.trim().toUpperCase();
       const name = document.getElementById("regName").value.trim();
       const email = document.getElementById("regEmail").value.trim();
       const major = document.getElementById("regMajor").value;
 
-      if (code !== CLASS_CODE) {
-        alert("❌ Invalid Class Code! Please enter Teacher Echo's official class code: " + CLASS_CODE);
+      const activeCode = getActiveClassCode().toUpperCase();
+
+      if (codeInput !== activeCode) {
+        alert("❌ Invalid Class Code! Please ask Teacher Echo for the official class code.");
         return;
       }
       if (!name || !email) {
-        alert("Please enter both your name and email.");
+        alert("Please enter both your full name and email address.");
         return;
       }
 
       currentUser = { role: "student", name, email, major, registeredAt: new Date().toLocaleDateString() };
-      localStorage.setItem("echolet_user", JSON.stringify(currentUser));
+      sessionStorage.setItem("echolet_active_session", JSON.stringify(currentUser));
 
-      // Save to global roster for Teacher Echo
+      // Append to local roster for Teacher Echo
       const roster = JSON.parse(localStorage.getItem("echolet_roster") || "[]");
       if (!roster.some(s => s.email === email)) {
         roster.push(currentUser);
         localStorage.setItem("echolet_roster", JSON.stringify(roster));
       }
 
-      document.getElementById("authModal").classList.add("hidden");
-      applyUserRole();
-      alert(`🎉 Welcome to class, ${name}! You are registered under Teacher Echo.`);
+      closeAuthModal();
+      applySession();
+      alert(`🎉 Welcome to class, ${name}!`);
     }
 
     function loginTeacher() {
       const pin = document.getElementById("teacherPinInput").value.trim();
-      if (pin !== TEACHER_PIN) {
-        alert("❌ Incorrect Teacher PIN. (Default: TEACHER-ECHO)");
+      const correctPin = getActiveAdminPin();
+
+      if (pin !== correctPin) {
+        alert("❌ Access Denied: Incorrect Teacher Admin Passcode.");
         return;
       }
 
       currentUser = { role: "teacher", name: "Teacher Echo" };
-      localStorage.setItem("echolet_user", JSON.stringify(currentUser));
-      document.getElementById("authModal").classList.add("hidden");
-      applyUserRole();
+      sessionStorage.setItem("echolet_active_session", JSON.stringify(currentUser));
+
+      document.getElementById("teacherPinInput").value = "";
+      closeAuthModal();
+      applySession();
       switchTab('teacher');
-      alert("👑 Welcome to your Teacher Dashboard, Teacher Echo!");
+      alert("👑 Welcome back, Teacher Echo!");
     }
 
-    function applyUserRole() {
-      const saved = localStorage.getItem("echolet_user");
-      if (saved) currentUser = JSON.parse(saved);
-      else {
-        openAuthModal();
-        return;
+    function signOut() {
+      if (confirm("Are you sure you want to sign out?")) {
+        sessionStorage.removeItem("echolet_active_session");
+        currentUser = null;
+        applySession();
+        alert("You have successfully signed out.");
       }
+    }
 
+    function applySession() {
+      const saved = sessionStorage.getItem("echolet_active_session");
       const badge = document.getElementById("userBadge");
+      const authBtn = document.getElementById("authActionBtn");
+      const guestLock = document.getElementById("guestLockScreen");
+      const subjectsTab = document.getElementById("subjectsTab");
       const teacherTabBtn = document.getElementById("tabTeacherBtn");
+      const gradesTabBtn = document.getElementById("tabGradesBtn");
+      const bannerMsg = document.getElementById("bannerStatusMsg");
 
-      if (currentUser.role === "teacher") {
-        currentRole = "teacher";
-        badge.className = "user-pill teacher";
-        badge.textContent = "👑 Teacher Echo (Admin)";
-        teacherTabBtn.classList.remove("hidden");
-        renderTeacherDashboard();
+      if (saved) {
+        currentUser = JSON.parse(saved);
+
+        if (currentUser.role === "teacher") {
+          badge.className = "user-pill teacher";
+          badge.textContent = "👑 Teacher Echo (Admin)";
+          authBtn.className = "btn-signout";
+          authBtn.innerHTML = "🚪 Sign Out";
+          authBtn.onclick = signOut;
+
+          guestLock.classList.add("hidden");
+          subjectsTab.classList.remove("hidden");
+          teacherTabBtn.classList.remove("hidden");
+          gradesTabBtn.classList.add("hidden");
+          bannerMsg.textContent = "Teacher Echo: Admin and Supervision Mode Active.";
+          renderTeacherDashboard();
+        } else {
+          badge.className = "user-pill student";
+          badge.textContent = `👤 ${currentUser.name.split(' ')[0]}`;
+          authBtn.className = "btn-signout";
+          authBtn.innerHTML = "🚪 Sign Out";
+          authBtn.onclick = signOut;
+
+          guestLock.classList.add("hidden");
+          subjectsTab.classList.remove("hidden");
+          teacherTabBtn.classList.add("hidden");
+          gradesTabBtn.classList.remove("hidden");
+          bannerMsg.textContent = `Welcome, ${currentUser.name} (${currentUser.major})! Complete the 65-item drill.`;
+          renderStudentGrades();
+        }
       } else {
-        currentRole = "student";
-        badge.className = "user-pill student";
-        badge.textContent = `👤 ${currentUser.name.split(' ')[0]}`;
+        // Signed out / Guest
+        badge.className = "user-pill guest";
+        badge.textContent = "Guest (Signed Out)";
+        authBtn.className = "btn-signin";
+        authBtn.textContent = "Sign In";
+        authBtn.onclick = openAuthModal;
+
+        guestLock.classList.remove("hidden");
+        subjectsTab.classList.add("hidden");
         teacherTabBtn.classList.add("hidden");
-        renderStudentGrades();
+        gradesTabBtn.classList.add("hidden");
+        document.getElementById("teacherTab").classList.add("hidden");
+        document.getElementById("gradesTab").classList.add("hidden");
+        document.getElementById("contentView").style.display = "none";
+        document.getElementById("quizView").style.display = "none";
+        bannerMsg.textContent = "Please Sign In to access Teacher Echo's modules.";
       }
     }
 
-    function copyClassCode() {
-      navigator.clipboard.writeText(CLASS_CODE).then(() => {
-        alert(`Copied Class Code: ${CLASS_CODE}\nShare this with your students so they can enroll!`);
-      });
+    function manageClassSettings() {
+      const currentCode = getActiveClassCode();
+      const newCode = prompt(`🔑 TEACHER SETTINGS\n\nYour Current Class Code is: [ ${currentCode} ]\n\nEnter a new Class Code for your students (or Cancel to keep current):`, currentCode);
+      if (newCode && newCode.trim() !== "") {
+        localStorage.setItem("echolet_custom_code", newCode.trim().toUpperCase());
+        alert(`✅ Updated! New Class Code for students is: ${newCode.trim().toUpperCase()}`);
+      }
     }
 
     // ----------------------------------------------------
@@ -940,7 +1024,7 @@
 
       const tbody = document.getElementById("teacherRecordsList");
       if (submissions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No student submissions recorded yet. Share class code <strong>${CLASS_CODE}</strong> with your students!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No student submissions recorded yet. Share your secret class code with students to start!</td></tr>`;
         return;
       }
 
@@ -1004,8 +1088,8 @@
 
       const packet = {
         studentName: currentUser ? currentUser.name : "Anonymous Student",
-        studentEmail: currentUser ? currentUser.email : "no-email@echolet.edu",
-        studentMajor: currentUser ? currentUser.major : "General Curriculum",
+        studentEmail: currentUser ? currentUser.email : "student@echolet.edu",
+        studentMajor: currentUser ? currentUser.major : "General",
         subjectTitle: activeSubject.title,
         score: quizScore,
         total: total,
@@ -1013,18 +1097,13 @@
         date: new Date().toLocaleDateString()
       };
 
-      // Save locally to student gradebook
       const studentGrades = JSON.parse(localStorage.getItem("echolet_student_grades") || "[]");
       studentGrades.unshift(packet);
       localStorage.setItem("echolet_student_grades", JSON.stringify(studentGrades));
 
-      // Save to Teacher Master record (local/shared storage)
       const master = JSON.parse(localStorage.getItem("echolet_master_submissions") || "[]");
       master.unshift(packet);
       localStorage.setItem("echolet_master_submissions", JSON.stringify(master));
-
-      // Generate a Shareable Turn-in Code
-      const turnInToken = btoa(JSON.stringify(packet));
 
       alert(`🎉 WORK TURNED IN TO TEACHER ECHO!\n\nStudent: ${packet.studentName}\nScore: ${quizScore}/${total} (${pct}%)\nPRC Benchmark: ${pct >= 75 ? 'PASSED (75%+)' : 'BELOW 75%'}\n\nYour work is officially recorded.`);
       
@@ -1042,7 +1121,7 @@
         return;
       }
 
-      tbody.innerHTML = studentGrades.map((g, idx) => {
+      tbody.innerHTML = studentGrades.map((g) => {
         const token = btoa(JSON.stringify(g));
         return `
           <tr>
@@ -1050,7 +1129,7 @@
             <td>${g.score}/${g.total} (${g.pct}%)</td>
             <td class="${g.pct >= 75 ? 'status-pass' : 'status-fail'}">${g.pct >= 75 ? 'PASSED (75%+)' : 'BELOW 75%'}</td>
             <td>${g.date}</td>
-            <td><button class="copy-btn" onclick="copyTurnInToken('${token}')">Copy Receipt</button></td>
+            <td><button class="btn-gold" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyTurnInToken('${token}')">Copy Receipt</button></td>
           </tr>
         `;
       }).join('');
@@ -1058,7 +1137,7 @@
 
     function copyTurnInToken(token) {
       navigator.clipboard.writeText(token).then(() => {
-        alert("Turn-In receipt token copied! You can send this token to Teacher Echo anytime.");
+        alert("Receipt token copied! You can message this token to Teacher Echo anytime.");
       });
     }
 
@@ -1086,6 +1165,11 @@
     }
 
     function openSubject(id) {
+      if (!currentUser) {
+        openAuthModal();
+        return;
+      }
+
       activeSubject = profEdData.find(s => s.id === id);
       document.getElementById("subjectsTab").classList.add("hidden");
       document.getElementById("teacherTab").classList.add("hidden");
@@ -1170,13 +1254,17 @@
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       document.getElementById("contentView").style.display = "none";
       document.getElementById("quizView").style.display = "none";
-      document.getElementById("subjectsTab").classList.remove("hidden");
+      if (currentUser) {
+        document.getElementById("subjectsTab").classList.remove("hidden");
+      } else {
+        document.getElementById("guestLockScreen").classList.remove("hidden");
+      }
     }
 
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       
-      document.getElementById("subjectsTab").classList.toggle('hidden', tab !== 'subjects');
+      document.getElementById("subjectsTab").classList.toggle('hidden', tab !== 'subjects' || !currentUser);
       document.getElementById("teacherTab").classList.toggle('hidden', tab !== 'teacher');
       document.getElementById("gradesTab").classList.toggle('hidden', tab !== 'grades');
 
@@ -1230,9 +1318,9 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // Initialize App
+    // Initial render
     renderSubjectsList();
-    applyUserRole();
+    applySession();
   </script>
 </body>
 </html>

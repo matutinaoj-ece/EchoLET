@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EchoLET - Classroom Reviewer</title>
+  <title>EchoLET - Professional Education Classroom</title>
   
   <!-- Pencil Icon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
   <meta name="theme-color" content="#7A0019" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <!-- Embedded Web App Manifest for Direct Download -->
+  <!-- Embedded Web App Manifest for App Download -->
   <link rel="manifest" href='data:application/manifest+json,{"name":"EchoLET Classroom","short_name":"EchoLET","start_url":".","display":"standalone","background_color":"%237A0019","theme_color":"%237A0019","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%23D4AF37%27><path d=%27M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z%27/></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}' />
 
   <style>
@@ -28,20 +28,10 @@
       --radius: 8px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Google Sans", Roboto, Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Google Sans", Roboto, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); padding-bottom: 4rem; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      padding-bottom: 3rem;
-    }
-
-    /* Google Classroom Header */
+    /* Header */
     header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -54,341 +44,137 @@
       z-index: 100;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 12px; }
     .pencil-logo {
-      width: 36px;
-      height: 36px;
-      background: var(--crimson);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 36px; height: 36px; background: var(--crimson); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
+    .pencil-logo svg { width: 20px; height: 20px; fill: var(--gold); }
+    .app-title { font-size: 1.2rem; font-weight: 500; color: var(--crimson); }
+    .app-title span { color: var(--gold-dark); font-weight: 700; }
 
-    .pencil-logo svg {
-      width: 20px;
-      height: 20px;
-      fill: var(--gold);
-    }
-
-    .app-title {
-      font-size: 1.2rem;
-      font-weight: 500;
-      color: var(--crimson);
-    }
-
-    .app-title span {
-      color: var(--gold-dark);
-      font-weight: 700;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
+    .header-right { display: flex; align-items: center; gap: 12px; }
     .student-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--crimson);
-      background: var(--gold-light);
-      padding: 0.35rem 0.75rem;
-      border-radius: 20px;
-      border: 1px solid var(--gold);
+      display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600;
+      color: var(--crimson); background: var(--gold-light); padding: 0.35rem 0.75rem;
+      border-radius: 20px; border: 1px solid var(--gold);
     }
-
     .install-btn {
-      background: var(--gold);
-      color: var(--crimson-dark);
-      font-weight: 700;
-      border: 1px solid var(--gold-dark);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.8rem;
+      background: var(--gold); color: var(--crimson-dark); font-weight: 700;
+      border: 1px solid var(--gold-dark); padding: 0.4rem 0.8rem; border-radius: 20px;
+      cursor: pointer; font-size: 0.8rem;
     }
 
     /* Tabs */
     .classroom-tabs {
-      display: flex;
-      justify-content: center;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      gap: 2rem;
+      display: flex; justify-content: center; background: var(--surface);
+      border-bottom: 1px solid var(--border); gap: 2rem;
     }
-
     .tab-btn {
-      padding: 0.85rem 1.2rem;
-      background: none;
-      border: none;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      position: relative;
+      padding: 0.85rem 1.2rem; background: none; border: none; font-size: 0.95rem;
+      font-weight: 600; color: var(--text-muted); cursor: pointer; position: relative;
     }
-
-    .tab-btn.active {
-      color: var(--crimson);
-    }
-
+    .tab-btn.active { color: var(--crimson); }
     .tab-btn.active::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--crimson);
+      content: ""; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: var(--crimson);
     }
 
-    main {
-      max-width: 860px;
-      margin: 1.5rem auto;
-      padding: 0 1rem;
-    }
+    main { max-width: 900px; margin: 1.5rem auto; padding: 0 1rem; }
 
     /* Banner */
     .classroom-banner {
       background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);
-      color: white;
-      padding: 2.2rem;
-      border-radius: var(--radius);
-      margin-bottom: 1.5rem;
-      border-bottom: 4px solid var(--gold);
-      position: relative;
+      color: white; padding: 2.2rem; border-radius: var(--radius); margin-bottom: 1.5rem;
+      border-bottom: 4px solid var(--gold); position: relative;
     }
+    .classroom-banner h1 { font-size: 1.65rem; color: var(--gold); margin-bottom: 0.2rem; }
+    .classroom-banner p { font-size: 0.95rem; color: #fce8e6; }
+    .student-greeting { margin-top: 0.8rem; font-size: 0.9rem; color: #fff; font-weight: 500; }
 
-    .classroom-banner h1 {
-      font-size: 1.7rem;
-      color: var(--gold);
-      margin-bottom: 0.2rem;
+    /* Subject Cards */
+    .subject-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.15rem 1.4rem; margin-bottom: 0.9rem; display: flex; align-items: center;
+      justify-content: space-between; cursor: pointer; transition: all 0.2s;
     }
+    .subject-card:hover { border-color: var(--crimson); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card-left { display: flex; align-items: center; gap: 1rem; }
+    .card-num {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--gold-light);
+      color: var(--crimson-dark); font-weight: 800; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; border: 1px solid var(--gold); flex-shrink: 0;
+    }
+    .subject-title { font-size: 0.96rem; font-weight: 600; color: var(--text-main); }
+    .subject-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
-    .classroom-banner p {
-      font-size: 0.95rem;
-      color: #fce8e6;
+    /* View Modal: Subject Study Content */
+    .content-view {
+      display: none; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem; animation: fadeIn 0.25s ease;
     }
-
-    .student-greeting {
-      margin-top: 0.8rem;
-      font-size: 0.9rem;
-      color: #fff;
-      font-weight: 500;
-    }
-
-    /* Cards */
-    .class-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .class-card:hover {
-      border-color: var(--crimson);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .card-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .card-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--gold-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-icon svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--crimson);
-    }
+    .content-header { border-bottom: 2px solid var(--gold-light); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    .content-header h2 { color: var(--crimson); font-size: 1.35rem; }
+    .study-block { background: #fafafa; border-left: 4px solid var(--crimson); padding: 1.2rem; border-radius: 0 6px 6px 0; margin-bottom: 1.5rem; }
+    .study-block h4 { color: var(--crimson); margin-bottom: 0.5rem; font-size: 0.98rem; }
+    .study-block ul { padding-left: 1.2rem; font-size: 0.92rem; color: var(--text-main); line-height: 1.6; }
+    .study-block li { margin-bottom: 0.4rem; }
 
     /* Quiz Panel */
     .quiz-view {
-      display: none;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
+      display: none; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem;
     }
-
-    .multimedia-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
+    .multimedia-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .audio-speech-btn {
-      background: var(--gold-light);
-      color: var(--crimson-dark);
-      border: 1px solid var(--gold);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      background: var(--gold-light); color: var(--crimson-dark); border: 1px solid var(--gold);
+      padding: 0.4rem 0.85rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
     }
-
-    .audio-speech-btn:hover {
-      background: var(--gold);
-      color: white;
-    }
-
-    .stem {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .choices {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-
+    .stem { font-size: 1.15rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .choices { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
     .choice-btn {
-      padding: 0.95rem 1.2rem;
-      border: 1.5px solid var(--border);
-      background: white;
-      border-radius: var(--radius);
-      text-align: left;
-      font-size: 0.95rem;
-      cursor: pointer;
+      padding: 0.95rem 1.2rem; border: 1.5px solid var(--border); background: white;
+      border-radius: var(--radius); text-align: left; font-size: 0.95rem; cursor: pointer;
       transition: all 0.2s;
     }
-
-    .choice-btn:hover:not(:disabled) {
-      border-color: var(--gold-dark);
-      background: var(--gold-light);
-    }
-
-    .choice-btn.correct {
-      background: #e6f4ea !important;
-      border-color: #137333 !important;
-      color: #137333;
-      font-weight: 600;
-    }
-
-    .choice-btn.wrong {
-      background: #fce8e6 !important;
-      border-color: var(--crimson) !important;
-      color: var(--crimson);
-    }
-
+    .choice-btn:hover:not(:disabled) { border-color: var(--gold-dark); background: var(--gold-light); }
+    .choice-btn.correct { background: #e6f4ea !important; border-color: #137333 !important; color: #137333; font-weight: 600; }
+    .choice-btn.wrong { background: #fce8e6 !important; border-color: var(--crimson) !important; color: var(--crimson); }
     .rationalization {
-      display: none;
-      background: var(--gold-light);
-      border-left: 4px solid var(--gold);
-      padding: 1rem;
-      border-radius: 4px;
-      margin-bottom: 1.5rem;
+      display: none; background: var(--gold-light); border-left: 4px solid var(--gold);
+      padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;
     }
-
     .btn-action {
-      background: var(--crimson);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      font-weight: 600;
-      cursor: pointer;
+      background: var(--crimson); color: white; border: none; padding: 0.75rem 1.5rem;
+      border-radius: 4px; font-weight: 600; cursor: pointer;
     }
-
-    .btn-action:hover {
-      background: var(--crimson-dark);
-    }
+    .btn-action:hover { background: var(--crimson-dark); }
 
     /* Registration Modal */
     .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 1rem;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65);
+      display: flex; align-items: center; justify-content: center; z-index: 999; padding: 1rem;
     }
-
     .modal-card {
-      background: white;
-      border-radius: 12px;
-      max-width: 440px;
-      width: 100%;
-      padding: 2rem;
-      border-top: 6px solid var(--crimson);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: white; border-radius: 12px; max-width: 440px; width: 100%;
+      padding: 2rem; border-top: 6px solid var(--crimson); box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-
-    .modal-card h2 {
-      color: var(--crimson);
-      font-size: 1.35rem;
-      margin-bottom: 0.4rem;
-    }
-
     .input-field {
-      width: 100%;
-      padding: 0.8rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-top: 0.35rem;
-      margin-bottom: 1rem;
-      font-size: 0.95rem;
+      width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;
+      margin-top: 0.35rem; margin-bottom: 1rem; font-size: 0.95rem;
     }
 
     /* Grades Table */
     .grades-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border);
+      width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius);
+      overflow: hidden; border: 1px solid var(--border); margin-top: 1rem;
     }
-
-    .grades-table th, .grades-table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .grades-table th {
-      background: var(--gold-light);
-      color: var(--crimson-dark);
-      font-weight: 700;
-    }
+    .grades-table th, .grades-table td { padding: 0.9rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .grades-table th { background: var(--gold-light); color: var(--crimson-dark); font-weight: 700; }
 
     .hidden { display: none !important; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
@@ -412,79 +198,47 @@
 
   <!-- Classroom Tabs -->
   <div class="classroom-tabs">
-    <button class="tab-btn active" onclick="switchTab('stream')">Stream</button>
-    <button class="tab-btn" onclick="switchTab('classwork')">Classwork</button>
-    <button class="tab-btn" onclick="switchTab('grades')">Grades & Records</button>
+    <button class="tab-btn active" onclick="switchTab('subjects')">Classwork / 10 Subjects</button>
+    <button class="tab-btn" onclick="switchTab('grades')">Gradebook & Records</button>
   </div>
 
   <main>
     
     <!-- Banner -->
     <div class="classroom-banner">
-      <h1>Licensure Examination for Teachers</h1>
-      <p>Course Instructor: Teacher Echo &bull; Batch 2026-2027</p>
-      <div id="studentGreeting" class="student-greeting">Welcome! Please register to start.</div>
+      <h1>Professional Education (ProfEd) Reviewer</h1>
+      <p>Course Instructor: Teacher Echo &bull; 10 Competency Domains</p>
+      <div id="studentGreeting" class="student-greeting">Welcome! Click any subject to review content and solve the quiz.</div>
     </div>
 
-    <!-- TAB 1: STREAM -->
-    <section id="streamTab">
-      <div class="class-card" onclick="startModule('profed')">
-        <div class="card-left">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-          </div>
-          <div>
-            <h3>Drill 1: Professional Education & Child Development</h3>
-            <p>Interactive Audio Quiz &bull; 100 Points</p>
-          </div>
-        </div>
-        <span style="color:var(--crimson); font-weight:700; font-size:0.85rem;">Solve Drill →</span>
-      </div>
-
-      <div class="class-card" onclick="startModule('gened')">
-        <div class="card-left">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-          </div>
-          <div>
-            <h3>Drill 2: General Education (History & Literature)</h3>
-            <p>Interactive Audio Quiz &bull; 100 Points</p>
-          </div>
-        </div>
-        <span style="color:var(--crimson); font-weight:700; font-size:0.85rem;">Solve Drill →</span>
+    <!-- 1. SUBJECTS LIST TAB -->
+    <section id="subjectsTab">
+      <div id="subjectsContainer">
+        <!-- Injected via JavaScript -->
       </div>
     </section>
 
-    <!-- TAB 2: CLASSWORK -->
-    <section id="classworkTab" class="hidden">
-      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:1rem;">Assigned Modules</h2>
-      <p style="color:var(--text-muted); font-size:0.9rem;">Complete the modules below. Your scores will automatically be recorded in your Gradebook.</p>
+    <!-- 2. SUBJECT STUDY CONTENT VIEW (Notes First) -->
+    <section id="contentView" class="content-view">
+      <div class="content-header">
+        <button onclick="backToSubjects()" style="background:none; border:none; color:var(--crimson); font-weight:700; cursor:pointer; margin-bottom:0.5rem;">← Back to All Subjects</button>
+        <h2 id="contentSubjectTitle">Subject Title</h2>
+      </div>
+
+      <div class="study-block">
+        <h4>📌 Core Competencies & Board Exam Notes</h4>
+        <ul id="contentBulletPoints"></ul>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button id="startSubjectQuizBtn" class="btn-action">Take Subject Quiz Now →</button>
+      </div>
     </section>
 
-    <!-- TAB 3: GRADES -->
-    <section id="gradesTab" class="hidden">
-      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:1rem;">Your Gradebook & Submission Record</h2>
-      <table class="grades-table">
-        <thead>
-          <tr>
-            <th>Module Name</th>
-            <th>Score</th>
-            <th>PRC Status (75% Target)</th>
-            <th>Date Completed</th>
-          </tr>
-        </thead>
-        <tbody id="gradesList">
-          <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No drills submitted yet.</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- INTERACTIVE MULTIMEDIA QUIZ VIEW -->
+    <!-- 3. INTERACTIVE MULTIMEDIA QUIZ VIEW -->
     <section id="quizView" class="quiz-view">
       <div class="multimedia-toolbar">
-        <button id="speechBtn" class="audio-speech-btn" onclick="readQuestionAloud()">
-          🔊 Read Aloud (Voice)
-        </button>
+        <button id="speechBtn" class="audio-speech-btn" onclick="readQuestionAloud()">🔊 Read Aloud (Voice)</button>
         <span id="quizCounter" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Question 1</span>
       </div>
 
@@ -497,9 +251,28 @@
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <button onclick="closeQuiz()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">Cancel Drill</button>
+        <button onclick="backToSubjects()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">Quit to Classwork</button>
         <button id="nextBtn" class="btn-action hidden" onclick="nextQuestion()">Next Question →</button>
       </div>
+    </section>
+
+    <!-- 4. GRADES / GRADEBOOK TAB -->
+    <section id="gradesTab" class="hidden">
+      <h2 style="color:var(--crimson); font-size:1.2rem; margin-bottom:0.4rem;">Your Professional Education Gradebook</h2>
+      <p style="color:var(--text-muted); font-size:0.88rem;">Each subject requires a 75% score to meet the PRC benchmark.</p>
+      <table class="grades-table">
+        <thead>
+          <tr>
+            <th>Subject Domain</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Date Completed</th>
+          </tr>
+        </thead>
+        <tbody id="gradesList">
+          <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No subject drills recorded yet.</td></tr>
+        </tbody>
+      </table>
     </section>
 
   </main>
@@ -507,35 +280,206 @@
   <!-- STUDENT REGISTRATION MODAL -->
   <div id="registrationModal" class="modal-backdrop">
     <div class="modal-card">
-      <h2>Welcome to EchoLET! ✏️</h2>
+      <h2 style="color:var(--crimson);">Welcome to EchoLET! ✏️</h2>
       <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">
-        Please enroll with your name and email to access Teacher Echo's review drills and record your scores.
+        Enroll with your name and email to record your scores across all 10 Professional Education subjects.
       </p>
 
       <label style="font-size:0.85rem; font-weight:600;">Full Name:</label>
-      <input type="text" id="regName" class="input-field" placeholder="e.g. Maria Santos" required />
+      <input type="text" id="regName" class="input-field" placeholder="e.g. Juan Dela Cruz" required />
 
       <label style="font-size:0.85rem; font-weight:600;">Email Address:</label>
-      <input type="email" id="regEmail" class="input-field" placeholder="e.g. maria@gmail.com" required />
+      <input type="email" id="regEmail" class="input-field" placeholder="e.g. juan@gmail.com" required />
 
-      <label style="font-size:0.85rem; font-weight:600;">Major / Field of Study:</label>
+      <label style="font-size:0.85rem; font-weight:600;">Specialization / Major:</label>
       <select id="regMajor" class="input-field">
-        <option value="General Curriculum (BEEd)">Elementary Education (BEEd)</option>
-        <option value="Secondary - English">Secondary - English (BSEd)</option>
-        <option value="Secondary - Social Sciences">Secondary - Social Studies</option>
-        <option value="Secondary - Mathematics">Secondary - Mathematics</option>
-        <option value="Secondary - Science">Secondary - Science</option>
+        <option value="Elementary (BEEd)">Bachelor of Elementary Education (BEEd)</option>
+        <option value="Secondary (BSEd)">Bachelor of Secondary Education (BSEd)</option>
       </select>
 
-      <button class="btn-action" style="width:100%; margin-top:0.5rem;" onclick="registerStudent()">
-        Enroll in EchoLET Classroom
-      </button>
+      <button class="btn-action" style="width:100%;" onclick="registerStudent()">Enroll in Class</button>
     </div>
   </div>
 
   <script>
+    // -------------------------------------------------------------------
+    // 10 PROFESSIONAL EDUCATION SUBJECTS: NOTES & HIGH-YIELD QUESTIONS
+    // -------------------------------------------------------------------
+    const profEdData = [
+      {
+        id: 1,
+        title: "The Teacher and the Community, School Culture and Organizational Leadership",
+        notes: [
+          "R.A. 9155 (Governance of Basic Education Act): Institutionalizes School-Based Management (SBM) and vests primary administrative leadership in the school principal.",
+          "School-Community Partnership: Schools are social institutions; parents, LGUs, and stakeholders are vital co-custodians in school improvement plans (SIP).",
+          "Leadership Styles: Transformational leaders inspire change; Distributed leadership empowers teachers to lead departmental innovations."
+        ],
+        quiz: [
+          {
+            stem: "Under Republic Act 9155, which administrative principle delegates decision-making authority, resources, and accountability down to the individual school level?",
+            choices: ["Centralized Supervision", "School-Based Management (SBM)", "Bureaucratic Control", "Hierarchical Protocol"],
+            ans: 1,
+            rationale: "R.A. 9155 explicitly mandates School-Based Management (SBM), giving schools autonomy to address local needs with community cooperation."
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "The Professional Teacher",
+        notes: [
+          "R.A. 7836 & R.A. 9293 (Philippine Teachers Professionalization Act): Mandates the PRC licensure examination and regulates teaching practice.",
+          "Code of Ethics for Professional Teachers: Sets binding ethical standards regarding teachers' relations with the state, community, students, and peers.",
+          "Philippine Professional Standards for Teachers (PPST): 7 domains outlining career stages (Beginning, Proficient, Highly Proficient, Distinguished)."
+        ],
+        quiz: [
+          {
+            stem: "According to the Code of Ethics for Professional Teachers, what should a teacher do if offered an expensive gift by a parent in exchange for an elevated passing grade for a student?",
+            choices: ["Accept it discreetly", "Refuse politely and maintain objective evaluation", "Donate the gift to the classroom", "Report the student for misconduct"],
+            ans: 1,
+            rationale: "Article VIII Section 4 of the Code of Ethics states that a teacher shall not accept gifts or favors from students or parents in exchange for academic concessions."
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "The Teacher and the School Curriculum",
+        notes: [
+          "Curriculum Types: Overt/Written (official syllabus), Taught (implemented), Learned (mastered outcomes), and Hidden (unintended values and cultural norms).",
+          "Curriculum Approaches: Ralph Tyler's objective model (Ends-Means) and Hilda Taba's inductive grassroots approach.",
+          "Curriculum Alignment: Ensuring learning competencies, instructional tasks, and assessment measures correspond directly."
+        ],
+        quiz: [
+          {
+            stem: "Which type of curriculum encompasses the informal, unwritten, and unintended messages, values, and social behaviors acquired by learners in the classroom environment?",
+            choices: ["Taught Curriculum", "Supported Curriculum", "Hidden Curriculum", "Assessed Curriculum"],
+            ans: 2,
+            rationale: "The 'Hidden Curriculum' refers to the unwritten, unofficial lessons and values that learners absorb through peer culture, institutional norms, and environment."
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "Methods and Strategies of Teaching",
+        notes: [
+          "Inductive vs. Deductive: Inductive leads from specific instances to general rules (Inquiry/Discovery); Deductive starts with the general rule followed by examples.",
+          "Direct vs. Indirect Instruction: Direct is teacher-directed (explicit lectures); Indirect is student-centered (problem-solving, case studies).",
+          "Differentiated Instruction: Adapting Content, Process, Product, or Learning Environment based on learner readiness and learning styles."
+        ],
+        quiz: [
+          {
+            stem: "A teacher presents several specific sentences illustrating the use of past continuous tense and guides students to infer the grammatical rule themselves. What teaching approach is this?",
+            choices: ["Deductive Method", "Inductive Method", "Direct Demonstration", "Rote Drill"],
+            ans: 1,
+            rationale: "The inductive method begins with specific examples and guides learners to discover or generalize the overarching concept or rule."
+          }
+        ]
+      },
+      {
+        id: 5,
+        title: "Technology for Teaching and Learning",
+        notes: [
+          "SAMR Model: Substitution (tech acts as direct tool substitute) -> Augmentation -> Modification -> Redefinition (tech allows creation of previously inconceivable tasks).",
+          "TPACK Framework: Technological Pedagogical Content Knowledge—the intersection of technology, pedagogy, and specialized subject content.",
+          "Dale's Cone of Experience: Learning moves from concrete direct purposeful experiences (base) to abstract verbal symbols (apex)."
+        ],
+        quiz: [
+          {
+            stem: "In the SAMR model of technology integration, at what stage does technology enable the creation of brand new learning tasks that were previously impossible without it?",
+            choices: ["Substitution", "Augmentation", "Modification", "Redefinition"],
+            ans: 3,
+            rationale: "Redefinition is the highest level of SAMR, where technology allows students to create new tasks previously inconceivable (e.g., real-time global collaboration)."
+          }
+        ]
+      },
+      {
+        id: 6,
+        title: "Child and Adolescent Learners and Learning Principles",
+        notes: [
+          "Jean Piaget: Sensorimotor -> Preoperational (Egocentrism) -> Concrete Operational (Conservation) -> Formal Operational (Abstract logic).",
+          "Erik Erikson: Psychosocial crises (e.g., Trust vs. Mistrust, Industry vs. Inferiority, Identity vs. Role Confusion).",
+          "Lev Vygotsky: Sociocultural theory, Zone of Proximal Development (ZPD), and Scaffolding."
+        ],
+        quiz: [
+          {
+            stem: "According to Erikson's stages of psychosocial development, elementary school-aged children (ages 6 to 12) strive to achieve a sense of competence through which crisis?",
+            choices: ["Trust vs. Mistrust", "Autonomy vs. Shame", "Industry vs. Inferiority", "Initiative vs. Guilt"],
+            ans: 2,
+            rationale: "During the elementary school years, children face 'Industry vs. Inferiority' as they learn to read, write, and master complex skills alongside peers."
+          }
+        ]
+      },
+      {
+        id: 7,
+        title: "Facilitating Learner-Centered Teaching",
+        notes: [
+          "Metacognition: Knowledge and regulation of one's own cognitive processes ('thinking about one's own thinking').",
+          "Howard Gardner's Multiple Intelligences: Bodily-kinesthetic, Interpersonal, Intrapersonal, Naturalistic, Linguistic, Logical, etc.",
+          "14 Learner-Centered Psychological Principles (APA): Focuses on cognitive, motivational, developmental, and social factors in learning."
+        ],
+        quiz: [
+          {
+            stem: "When a student regularly evaluates their own study habits, identifies which memory strategies work best for them, and adjusts their study plan, they are demonstrating:",
+            choices: ["Rote Memorization", "Metacognition", "Classical Conditioning", "Extrinsic Motivation"],
+            ans: 1,
+            rationale: "Metacognition involves higher-order monitoring, self-assessment, and active regulation of one's own learning and cognitive processes."
+          }
+        ]
+      },
+      {
+        id: 8,
+        title: "Assessment of Learning 1 and 2",
+        notes: [
+          "Assessment Categories: Diagnostic (prior), Formative (during/monitoring), Summative (after/grading).",
+          "Assessment Dimensions: Norm-referenced (compared to peers) vs. Criterion-referenced (compared to a fixed standard/mastery level).",
+          "Test Validity vs. Reliability: Validity measures what it intends to measure; Reliability ensures score consistency over time."
+        ],
+        quiz: [
+          {
+            stem: "A teacher constructs an authentic performance rubric and administers a midterm test specifically designed to monitor student misunderstandings during instruction. What type of assessment is this?",
+            choices: ["Diagnostic Assessment", "Summative Assessment", "Formative Assessment", "Placement Assessment"],
+            ans: 2,
+            rationale: "Formative assessments occur during instruction to provide continuous feedback and guide pedagogical adjustments before final summative evaluations."
+          }
+        ]
+      },
+      {
+        id: 9,
+        title: "Field Study and Teaching Internship",
+        notes: [
+          "Experiential Learning Courses (ELC): Linking educational theory to real school classroom observations and pre-service practice.",
+          "Action Research Cycle: Plan -> Act -> Observe -> Reflect (resolving immediate classroom challenges).",
+          "Reflective Teaching: Evaluating one's instructional effectiveness to continuously improve practice."
+        ],
+        quiz: [
+          {
+            stem: "During their teaching internship, pre-service teachers conduct an action research project. What is the fundamental primary objective of action research in classroom settings?",
+            choices: ["Fulfill international publication quotas", "Identify and immediately resolve localized teaching-learning challenges", "Rank students based on test scores", "Replace the school principal's policies"],
+            ans: 1,
+            rationale: "Action research is pragmatic inquiry designed specifically to resolve immediate localized classroom learning difficulties and refine teaching practice."
+          }
+        ]
+      },
+      {
+        id: 10,
+        title: "Foundation of Special and Inclusive Education",
+        notes: [
+          "R.A. 11650: Policy of inclusion and services for learners with disabilities across the basic education system.",
+          "Individualized Education Plan (IEP): Document specifying custom learning goals and accommodations for a child with special educational needs.",
+          "Universal Design for Learning (UDL): Designing instruction with multiple means of representation, expression, and engagement for diverse learners."
+        ],
+        quiz: [
+          {
+            stem: "Which customized legal document is designed collaboratively by teachers, specialists, and parents to delineate tailored academic objectives and accommodations for a child with special needs?",
+            choices: ["Daily Lesson Log (DLL)", "Individualized Education Plan (IEP)", "Curriculum Guide (CG)", "Table of Specifications (TOS)"],
+            ans: 1,
+            rationale: "An IEP (Individualized Education Plan) is specifically structured to address the individual strengths, needs, accommodations, and goals of a child with special needs."
+          }
+        ]
+      }
+    ];
+
     // ----------------------------------------------------
-    // 1. MULTIMEDIA SOUND EFFECTS (Web Audio API)
+    // MULTIMEDIA AUDIO & SPEECH SYNTHESIS
     // ----------------------------------------------------
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -547,15 +491,13 @@
       gain.connect(audioCtx.destination);
 
       if (type === 'correct') {
-        // High, cheerful bell chime
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.12); // A5
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.12);
         gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.45);
       } else {
-        // Low buzzer tone
         osc.frequency.setValueAtTime(180, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
@@ -564,24 +506,18 @@
       }
     }
 
-    // ----------------------------------------------------
-    // 2. TEXT-TO-SPEECH (MULTIMEDIA READ ALOUD)
-    // ----------------------------------------------------
     function readQuestionAloud() {
-      if (!('speechSynthesis' in window)) {
-        alert("Text-to-Speech is not supported in this browser.");
-        return;
-      }
-      window.speechSynthesis.cancel(); // Stop any ongoing speech
-      const q = currentSet[currentIndex];
-      const textToRead = `${q.stem}. Options: A, ${q.choices[0]}. B, ${q.choices[1]}. C, ${q.choices[2]}. D, ${q.choices[3]}.`;
+      if (!('speechSynthesis' in window)) return alert("Speech is not supported in this browser.");
+      window.speechSynthesis.cancel();
+      const q = activeSubject.quiz[quizIndex];
+      const textToRead = `${q.stem}. Option A: ${q.choices[0]}. Option B: ${q.choices[1]}. Option C: ${q.choices[2]}. Option D: ${q.choices[3]}.`;
       const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.rate = 0.95; // Clear teacher pacing
+      utterance.rate = 0.95;
       window.speechSynthesis.speak(utterance);
     }
 
     // ----------------------------------------------------
-    // 3. STUDENT REGISTRATION (LocalStorage Persistence)
+    // REGISTRATION & PERSISTENCE
     // ----------------------------------------------------
     let currentUser = null;
 
@@ -592,7 +528,7 @@
         document.getElementById("registrationModal").classList.add("hidden");
         document.getElementById("studentBadge").classList.remove("hidden");
         document.getElementById("studentDisplay").textContent = currentUser.name.split(' ')[0];
-        document.getElementById("studentGreeting").textContent = `Welcome back, ${currentUser.name} (${currentUser.major})!`;
+        document.getElementById("studentGreeting").textContent = `Welcome back, ${currentUser.name}! Choose a subject to review and take the quiz.`;
         renderGrades();
       } else {
         document.getElementById("registrationModal").classList.remove("hidden");
@@ -604,76 +540,69 @@
       const email = document.getElementById("regEmail").value.trim();
       const major = document.getElementById("regMajor").value;
 
-      if (!name || !email) {
-        alert("Please provide both your name and email.");
-        return;
-      }
-
-      currentUser = { name, email, major, registeredAt: new Date().toLocaleDateString() };
+      if (!name || !email) return alert("Please fill in your name and email.");
+      currentUser = { name, email, major };
       localStorage.setItem("echolet_student", JSON.stringify(currentUser));
       checkRegistration();
     }
 
     // ----------------------------------------------------
-    // 4. QUESTIONS & QUIZ CONTROLLER
+    // SUBJECT RENDERING & QUIZ CONTROLLER
     // ----------------------------------------------------
-    const questions = {
-      profed: [
-        {
-          stem: "A teacher provides hints, modeling, and temporary supports to assist a learner in solving a math task until the learner achieves independence. What pedagogical strategy is being applied?",
-          choices: ["Classical Conditioning", "Scaffolding", "Drill and Practice", "Intrinsic Extinction"],
-          ans: 1,
-          rationale: "Scaffolding (derived from Jerome Bruner and Lev Vygotsky's ZPD) provides temporary supportive structures that are gradually removed as learner competence develops."
-        },
-        {
-          stem: "Under Article II of the Code of Ethics for Professional Teachers, the school is considered the nursery of the future citizens of the state. What is the teacher's primary commitment to the state?",
-          choices: ["Engage in partisan political campaigning", "Transmit cultural heritage and foster national pride", "Promote commercial business inside the school", "Limit education only to elite students"],
-          ans: 1,
-          rationale: "Teachers are tasked with transmitting the national heritage, instilling love of country, and preparing learners to become productive and moral citizens of the Republic."
-        }
-      ],
-      gened: [
-        {
-          stem: "Which Philippine hero and writer was known by the pen names 'Plaridel' and 'Dolores Manapat', and founded the famous reformist newspaper Diariong Tagalog?",
-          choices: ["Graciano Lopez Jaena", "Marcelo H. Del Pilar", "Jose Rizal", "Mariano Ponce"],
-          ans: 1,
-          rationale: "Marcelo H. Del Pilar wrote under the pen name 'Plaridel' and established the bilingual daily Diariong Tagalog in 1882."
-        }
-      ]
-    };
+    let activeSubject = null;
+    let quizIndex = 0;
+    let quizScore = 0;
 
-    let currentSet = [];
-    let currentIndex = 0;
-    let score = 0;
-    let currentModuleName = "";
+    function renderSubjectsList() {
+      const container = document.getElementById("subjectsContainer");
+      container.innerHTML = profEdData.map(sub => `
+        <div class="subject-card" onclick="openSubject(${sub.id})">
+          <div class="card-left">
+            <div class="card-num">${sub.id}</div>
+            <div>
+              <div class="subject-title">${sub.title}</div>
+              <div class="subject-desc">Click to read High-Yield Notes & take the Quiz</div>
+            </div>
+          </div>
+          <span style="color:var(--crimson); font-size:0.85rem; font-weight:700;">Open →</span>
+        </div>
+      `).join('');
+    }
 
-    function startModule(type) {
-      currentSet = questions[type];
-      currentModuleName = type === 'profed' ? "ProfEd Child Pedagogy" : "GenEd History & Literature";
-      currentIndex = 0;
-      score = 0;
+    function openSubject(id) {
+      activeSubject = profEdData.find(s => s.id === id);
+      document.getElementById("subjectsTab").classList.add("hidden");
+      document.getElementById("quizView").style.display = "none";
+      document.getElementById("contentView").style.display = "block";
 
-      document.getElementById('streamTab').classList.add('hidden');
-      document.getElementById('classworkTab').classList.add('hidden');
-      document.getElementById('gradesTab').classList.add('hidden');
-      document.getElementById('quizView').style.display = 'block';
+      document.getElementById("contentSubjectTitle").textContent = `${activeSubject.id}. ${activeSubject.title}`;
+      document.getElementById("contentBulletPoints").innerHTML = activeSubject.notes.map(n => `<li>${n}</li>`).join('');
 
+      document.getElementById("startSubjectQuizBtn").onclick = () => startSubjectQuiz();
+    }
+
+    function startSubjectQuiz() {
+      document.getElementById("contentView").style.display = "none";
+      document.getElementById("quizView").style.display = "block";
+
+      quizIndex = 0;
+      quizScore = 0;
       loadQuestion();
     }
 
     function loadQuestion() {
-      const q = currentSet[currentIndex];
-      document.getElementById('quizCounter').textContent = `Question ${currentIndex + 1} of ${currentSet.length}`;
-      document.getElementById('stem').textContent = q.stem;
-      document.getElementById('rationalization').style.display = 'none';
-      document.getElementById('nextBtn').classList.add('hidden');
+      const q = activeSubject.quiz[quizIndex];
+      document.getElementById("quizCounter").textContent = `Question ${quizIndex + 1} of ${activeSubject.quiz.length}`;
+      document.getElementById("stem").textContent = q.stem;
+      document.getElementById("rationalization").style.display = "none";
+      document.getElementById("nextBtn").classList.add("hidden");
 
-      const choicesBox = document.getElementById('choices');
-      choicesBox.innerHTML = '';
+      const choicesBox = document.getElementById("choices");
+      choicesBox.innerHTML = "";
 
       q.choices.forEach((choice, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
+        const btn = document.createElement("button");
+        btn.className = "choice-btn";
         btn.textContent = `${String.fromCharCode(65 + idx)}. ${choice}`;
         btn.onclick = () => selectChoice(idx, btn);
         choicesBox.appendChild(btn);
@@ -681,55 +610,60 @@
     }
 
     function selectChoice(idx, btn) {
-      const q = currentSet[currentIndex];
-      const buttons = document.querySelectorAll('.choice-btn');
+      const q = activeSubject.quiz[quizIndex];
+      const buttons = document.querySelectorAll(".choice-btn");
       buttons.forEach(b => b.disabled = true);
 
       if (idx === q.ans) {
-        btn.classList.add('correct');
-        playSound('correct');
-        score++;
+        btn.classList.add("correct");
+        playSound("correct");
+        quizScore++;
       } else {
-        btn.classList.add('wrong');
-        buttons[q.ans].classList.add('correct');
-        playSound('wrong');
+        btn.classList.add("wrong");
+        buttons[q.ans].classList.add("correct");
+        playSound("wrong");
       }
 
-      document.getElementById('rationaleText').textContent = q.rationale;
-      document.getElementById('rationalization').style.display = 'block';
-      document.getElementById('nextBtn').classList.remove('hidden');
+      document.getElementById("rationaleText").textContent = q.rationale;
+      document.getElementById("rationalization").style.display = "block";
+      document.getElementById("nextBtn").classList.remove("hidden");
     }
 
     function nextQuestion() {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      currentIndex++;
-      if (currentIndex < currentSet.length) {
+      quizIndex++;
+      if (quizIndex < activeSubject.quiz.length) {
         loadQuestion();
       } else {
-        submitGrade();
+        submitQuizResult();
       }
     }
 
-    function submitGrade() {
-      const pct = Math.round((score / currentSet.length) * 100);
+    function submitQuizResult() {
+      const pct = Math.round((quizScore / activeSubject.quiz.length) * 100);
       const passed = pct >= 75;
 
       const record = {
-        module: currentModuleName,
-        score: `${score} / ${currentSet.length} (${pct}%)`,
+        subject: `${activeSubject.id}. ${activeSubject.title}`,
+        score: `${quizScore}/${activeSubject.quiz.length} (${pct}%)`,
         status: passed ? "PASSED (75%+)" : "BELOW 75%",
         date: new Date().toLocaleDateString()
       };
 
-      // Save grade to user profile
       const history = JSON.parse(localStorage.getItem("echolet_grades") || "[]");
       history.unshift(record);
       localStorage.setItem("echolet_grades", JSON.stringify(history));
 
-      alert(`🎉 Assignment Turned In!\nStudent: ${currentUser.name}\nScore: ${record.score}\nPRC Benchmark: ${record.status}`);
-      closeQuiz();
+      alert(`🎉 Subject Quiz Completed!\nSubject: ${activeSubject.title}\nScore: ${record.score}\nPRC Benchmark: ${record.status}`);
+      backToSubjects();
       renderGrades();
-      switchTab('grades');
+    }
+
+    function backToSubjects() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById("contentView").style.display = "none";
+      document.getElementById("quizView").style.display = "none";
+      document.getElementById("subjectsTab").classList.remove("hidden");
     }
 
     function renderGrades() {
@@ -737,13 +671,13 @@
       const list = document.getElementById("gradesList");
 
       if (history.length === 0) {
-        list.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No drills submitted yet.</td></tr>';
+        list.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No subject drills recorded yet.</td></tr>';
         return;
       }
 
       list.innerHTML = history.map(h => `
         <tr>
-          <td><strong>${h.module}</strong></td>
+          <td><strong>${h.subject}</strong></td>
           <td>${h.score}</td>
           <td style="color:${h.status.includes('PASSED') ? '#137333' : '#7A0019'}; font-weight:700;">${h.status}</td>
           <td>${h.date}</td>
@@ -751,23 +685,17 @@
       `).join('');
     }
 
-    function closeQuiz() {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      document.getElementById('quizView').style.display = 'none';
-      document.getElementById('streamTab').classList.remove('hidden');
-    }
-
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       event.target.classList.add('active');
 
-      document.getElementById('streamTab').classList.toggle('hidden', tab !== 'stream');
-      document.getElementById('classworkTab').classList.toggle('hidden', tab !== 'classwork');
+      document.getElementById('subjectsTab').classList.toggle('hidden', tab !== 'subjects');
       document.getElementById('gradesTab').classList.toggle('hidden', tab !== 'grades');
-      document.getElementById('quizView').style.display = 'none';
+      backToSubjects();
     }
 
-    // App Startup
+    // App Initialization
+    renderSubjectsList();
     checkRegistration();
   </script>
 </body>

@@ -10,7 +10,6 @@
   <meta name="theme-color" content="#7A0019" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <!-- Embedded Web App Manifest for App Download -->
   <link rel="manifest" href='data:application/manifest+json,{"name":"EchoLET Classroom","short_name":"EchoLET","start_url":".","display":"standalone","background_color":"%237A0019","theme_color":"%237A0019","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%23D4AF37%27><path d=%27M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z%27/></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}' />
 
   <style>
@@ -33,22 +32,14 @@
 
     /* Header */
     header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem; display: flex; justify-content: space-between;
+      align-items: center; position: sticky; top: 0; z-index: 100;
     }
-
     .header-left { display: flex; align-items: center; gap: 12px; }
     .pencil-logo {
       width: 36px; height: 36px; background: var(--crimson); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     .pencil-logo svg { width: 20px; height: 20px; fill: var(--gold); }
     .app-title { font-size: 1.2rem; font-weight: 500; color: var(--crimson); }
@@ -109,17 +100,23 @@
     .subject-title { font-size: 0.96rem; font-weight: 600; color: var(--text-main); }
     .subject-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* View Modal: Subject Study Content */
+    /* Content View (Reader) */
     .content-view {
       display: none; background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 2rem; animation: fadeIn 0.25s ease;
     }
     .content-header { border-bottom: 2px solid var(--gold-light); padding-bottom: 1rem; margin-bottom: 1.5rem; }
     .content-header h2 { color: var(--crimson); font-size: 1.35rem; }
-    .study-block { background: #fafafa; border-left: 4px solid var(--crimson); padding: 1.2rem; border-radius: 0 6px 6px 0; margin-bottom: 1.5rem; }
-    .study-block h4 { color: var(--crimson); margin-bottom: 0.5rem; font-size: 0.98rem; }
-    .study-block ul { padding-left: 1.2rem; font-size: 0.92rem; color: var(--text-main); line-height: 1.6; }
-    .study-block li { margin-bottom: 0.4rem; }
+
+    .section-card {
+      background: #fafafa; border: 1px solid #e5e7eb; border-left: 5px solid var(--crimson);
+      padding: 1.2rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem;
+    }
+    .section-card h3 { color: var(--crimson); margin-bottom: 0.6rem; font-size: 1.05rem; }
+    .section-card h4 { color: var(--gold-dark); margin: 0.7rem 0 0.3rem 0; font-size: 0.95rem; }
+    .section-card p { font-size: 0.9rem; line-height: 1.55; margin-bottom: 0.5rem; }
+    .section-card ul { padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.6rem; }
+    .section-card li { margin-bottom: 0.35rem; }
 
     /* Quiz Panel */
     .quiz-view {
@@ -213,9 +210,7 @@
 
     <!-- 1. SUBJECTS LIST TAB -->
     <section id="subjectsTab">
-      <div id="subjectsContainer">
-        <!-- Injected via JavaScript -->
-      </div>
+      <div id="subjectsContainer"></div>
     </section>
 
     <!-- 2. SUBJECT STUDY CONTENT VIEW (Notes First) -->
@@ -225,12 +220,11 @@
         <h2 id="contentSubjectTitle">Subject Title</h2>
       </div>
 
-      <div class="study-block">
-        <h4>📌 Core Competencies & Board Exam Notes</h4>
-        <ul id="contentBulletPoints"></ul>
+      <div id="contentSectionsContainer">
+        <!-- Structured study sections injected by JS -->
       </div>
 
-      <div style="display:flex; justify-content:flex-end;">
+      <div style="display:flex; justify-content:flex-end; margin-top:2rem;">
         <button id="startSubjectQuizBtn" class="btn-action">Take Subject Quiz Now →</button>
       </div>
     </section>
@@ -282,7 +276,7 @@
     <div class="modal-card">
       <h2 style="color:var(--crimson);">Welcome to EchoLET! ✏️</h2>
       <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">
-        Enroll with your name and email to record your scores across all 10 Professional Education subjects.
+        Enroll with your name and email to access Teacher Echo's review modules and track your grades.
       </p>
 
       <label style="font-size:0.85rem; font-weight:600;">Full Name:</label>
@@ -303,178 +297,264 @@
 
   <script>
     // -------------------------------------------------------------------
-    // 10 PROFESSIONAL EDUCATION SUBJECTS: NOTES & HIGH-YIELD QUESTIONS
+    // DATA STORE: ALL 10 SUBJECTS (SUBJECT 1 FULLY POPULATED WITH YOUR NOTES)
     // -------------------------------------------------------------------
     const profEdData = [
       {
         id: 1,
         title: "The Teacher and the Community, School Culture and Organizational Leadership",
-        notes: [
-          "R.A. 9155 (Governance of Basic Education Act): Institutionalizes School-Based Management (SBM) and vests primary administrative leadership in the school principal.",
-          "School-Community Partnership: Schools are social institutions; parents, LGUs, and stakeholders are vital co-custodians in school improvement plans (SIP).",
-          "Leadership Styles: Transformational leaders inspire change; Distributed leadership empowers teachers to lead departmental innovations."
+        sections: [
+          {
+            title: "1. Philosophical Foundations of Education",
+            content: `
+              <p><strong>Philosophy:</strong> Derived from Greek <em>philia</em> (love/pursuit) and <em>sophia</em> (wisdom) — "lover of wisdom".</p>
+              <h4>Branches of Philosophy</h4>
+              <ul>
+                <li><strong>Metaphysics:</strong> Nature of reality and existence. Focus: <em>What is the nature of reality?</em>
+                  <br>• <strong>Ontology:</strong> Study of being and existence.
+                  <br>• <strong>Cosmology:</strong> Origin and structure of the universe.
+                  <br>• <strong>Theology:</strong> Divine nature and religious concepts.
+                  <br>• <strong>Universal Science:</strong> Principles/laws underlying all existence.
+                  <br>• <strong>Anthropology:</strong> Study of human societies and cultures.
+                </li>
+                <li><strong>Epistemology:</strong> Examination of knowledge and belief. Focus: <em>What is knowledge? How is it acquired?</em></li>
+                <li><strong>Axiology:</strong> Study of value.
+                  <br>• <strong>Ethics:</strong> Moral philosophy (right vs. wrong).
+                  <br>• <strong>Aesthetics:</strong> Nature of beauty and art.
+                </li>
+                <li><strong>Logic:</strong> Valid reasoning and argumentation.</li>
+                <li><strong>Political Philosophy:</strong> Principles of government and the just state.</li>
+                <li><strong>Philosophy of Mind:</strong> Nature of mind and mental processes.</li>
+              </ul>
+              <h4>Sources of Knowledge in Epistemology</h4>
+              <ul>
+                <li><strong>Empirical Observation / Empiricism:</strong> Direct sensory experience (sight, touch, etc.).</li>
+                <li><strong>Reason & Logic / Rationalism:</strong> Deductive/inductive conclusions, innate ideas independent of sensory experience.</li>
+                <li><strong>Intuition:</strong> Immediate knowledge without conscious reasoning.</li>
+                <li><strong>Testimony & Authority:</strong> Acceptance based on credibility and expertise of others.</li>
+                <li><strong>Memory:</strong> Recollection of past experiences.</li>
+                <li><strong>Social Constructivism:</strong> Knowledge shaped by social interaction and cultural context.</li>
+                <li><strong>Pragmatism:</strong> Knowledge is verified by practical consequences and real utility.</li>
+              </ul>
+            `
+          },
+          {
+            title: "2. Eastern Philosophies",
+            content: `
+              <ul>
+                <li><strong>Hinduism (Oldest in Asia):</strong>
+                  <br>• <em>Dharma:</em> Moral duty/righteousness.
+                  <br>• <em>Karma:</em> Law of cause and effect.
+                  <br>• <em>Samsara:</em> Cycle of birth, death, and rebirth.
+                  <br>• <em>Moksha:</em> Liberation from reincarnation to unite with Brahman (Cosmic Spirit). <em>Atman:</em> Individual soul.
+                </li>
+                <li><strong>Buddhism (Siddhartha Gautama):</strong>
+                  <br>• Four Noble Truths & Eightfold Path leading to <em>Nirvana</em> (liberation from suffering).
+                  <br>• <em>Anicca:</em> Impermanence.
+                  <br>• <em>Anatta:</em> Non-self.
+                  <br>• <em>Middle Way:</em> Balance between extremes.
+                </li>
+                <li><strong>Confucianism (Confucius):</strong>
+                  <br>• <em>Ren:</em> Benevolence/humaneness.
+                  <br>• <em>Li:</em> Ritual propriety/etiquette.
+                  <br>• <em>Xiao:</em> Filial piety. Focus on Five Relationships and virtue in society.
+                </li>
+                <li><strong>Taoism (Lao Tzu):</strong>
+                  <br>• <em>Tao:</em> The Way; ultimate unity.
+                  <br>• <em>Wu Wei:</em> Non-action, effortless spontaneity, living in harmony with nature. Yin & Yang balance.
+                </li>
+                <li><strong>Zen Buddhism:</strong>
+                  <br>• Zazen (seated meditation), Koan (paradoxical riddle), Satori (instant enlightenment), Sunyata (emptiness).
+                </li>
+                <li><strong>Sikhism:</strong>
+                  <br>• One God (Ik Onkar), equality of all humans, Guru Granth Sahib scripture. <em>Sewa:</em> Selfless service; <em>Simran:</em> Remembrance of God.
+                </li>
+              </ul>
+            `
+          },
+          {
+            title: "3. Historical Foundations of Education (World & Philippines)",
+            content: `
+              <h4>Ancient World Civilizations (Survival & Conformity)</h4>
+              <ul>
+                <li><strong>Sumerians (cuneiform):</strong> Training scribes and priests for administrative records.</li>
+                <li><strong>Egyptians (hieroglyphics):</strong> Formal education for bureaucracy and religious ceremonies.</li>
+                <li><strong>Ancient China:</strong> Confucian focus on moral character and social harmony.</li>
+                <li><strong>Sparta:</strong> <em>Agoge</em> system starting at age 7 — military discipline, physical toughness, warrior training.</li>
+                <li><strong>Athens:</strong> Well-rounded liberal education (literature, poetry, gymnasium, philosophy).</li>
+                <li><strong>Rome:</strong> Civic duty, rhetoric, and oratory to produce public servants.</li>
+              </ul>
+              <h4>Philippine Educational Eras</h4>
+              <ul>
+                <li><strong>Pre-Colonial:</strong> Informal, oral traditions, holistic survival skills, spiritual leadership via <em>Babaylan</em>.</li>
+                <li><strong>Spanish:</strong> Formal, centralized religious instruction, catechism; limited access favored the elite.</li>
+                <li><strong>American:</strong> Public secular schooling, Normal schools, democratic values, English as medium of instruction.</li>
+                <li><strong>Japanese:</strong> Love for labor, vocational/health education, Niponggo replaced English.</li>
+                <li><strong>Contemporary:</strong> R.A. 10533 (K-12 Basic Education Program, 2013), global competitiveness.</li>
+              </ul>
+            `
+          },
+          {
+            title: "4. Sociological Foundations & Theories",
+            content: `
+              <p><strong>Culture:</strong> Shared, learned, symbolic, dynamic, integrated, and normative.</p>
+              <h4>Types of Norms</h4>
+              <ul>
+                <li><strong>Folkways:</strong> Organized, repetitive customary routines of everyday life (e.g., table manners).</li>
+                <li><strong>Mores:</strong> Norms with deep moral and ethical value (violations are viewed as offensive/sinful).</li>
+                <li><strong>Laws:</strong> Formalized, codified norms enacted and enforced by political authorities.</li>
+                <li><strong>Rituals:</strong> Scripted ceremonial interactions.</li>
+              </ul>
+              <h4>Social Science Theories</h4>
+              <ul>
+                <li><strong>Structural Functionalism:</strong> Society is a system of interrelated parts working together to maintain social order and equilibrium.</li>
+                <li><strong>Conflict Theory:</strong> Society is shaped by power struggles and inequality; social change stems from conflict.</li>
+                <li><strong>Symbolic Interactionism:</strong> Micro-level face-to-face interactions using shared symbols and language.</li>
+                <li><strong>Social Exchange Theory:</strong> Social relationships are based on calculated costs vs. rewards.</li>
+                <li><strong>Consensus Theory:</strong> Shared values create social cohesion.</li>
+              </ul>
+              <h4>Global Goals</h4>
+              <ul>
+                <li><strong>MDGs (2000–2015):</strong> 8 Millennium Development Goals (focus on primary education, poverty reduction).</li>
+                <li><strong>SDGs (2016–2030):</strong> 17 Sustainable Development Goals. Goal 4: Quality, inclusive, equitable lifelong education for all.</li>
+              </ul>
+            `
+          },
+          {
+            title: "5. Anthropological Foundations & School-Community Relations",
+            content: `
+              <h4>Anthropological Terms</h4>
+              <ul>
+                <li><strong>Cultural Relativism:</strong> Evaluating a culture based on its own standards, without foreign prejudice.</li>
+                <li><strong>Ethnocentrism:</strong> Judging other cultures as inferior compared to one's own.</li>
+                <li><strong>Xenocentrism:</strong> Believing foreign cultural practices/products are superior to one's own.</li>
+              </ul>
+              <h4>Modes of Cultural Transmission</h4>
+              <ul>
+                <li><strong>Enculturation:</strong> Learning one's own native culture through family and primary social groups.</li>
+                <li><strong>Acculturation:</strong> Adopting elements from another culture through direct intercultural contact.</li>
+                <li><strong>Assimilation:</strong> Fully integrating into the dominant culture, losing original cultural identity.</li>
+                <li><strong>Cultural Diffusion:</strong> The spread of cultural elements (ideas, tools) across societies via trade or media.</li>
+              </ul>
+              <h4>School & Community Partnership</h4>
+              <ul>
+                <li><strong>Community to School:</strong> Brigada Eskwela, work immersions, advisory councils, resource sharing.</li>
+                <li><strong>School to Community:</strong> Evacuation shelters, polling centers, literacy outreach, medical missions.</li>
+              </ul>
+            `
+          },
+          {
+            title: "6. School Culture, Climate, Leadership, and DepEd Standards",
+            content: `
+              <h4>School Culture vs. School Climate</h4>
+              <ul>
+                <li><strong>Culture:</strong> The shared core values, deep beliefs, traditions, and institutional customs.</li>
+                <li><strong>Climate:</strong> The current atmosphere or "feel" (feelings of physical/emotional safety, relational warmth, daily vibe).</li>
+              </ul>
+              <h4>Leadership Styles</h4>
+              <ul>
+                <li><strong>Autocratic:</strong> Unilateral decisions, top-down directives.</li>
+                <li><strong>Democratic / Participative:</strong> Shared decision-making with faculty and stakeholders.</li>
+                <li><strong>Laissez-Faire:</strong> Hands-off approach, delegating full autonomy.</li>
+                <li><strong>Transformational:</strong> Visionary leadership inspiring innovation and systemic growth.</li>
+                <li><strong>Servant Leadership:</strong> Prioritizing the welfare and professional empowerment of others.</li>
+              </ul>
+              <h4>School-Based Management (SBM)</h4>
+              <p>Institutionalized under R.A. 9155; decentralizes authority to principals and local school boards with participatory accountability.</p>
+              <h4>DepEd Standards for School Heads</h4>
+              <ul>
+                <li><strong>NCBS-SH (DepEd Order 32, s. 2010):</strong> 7 Domains (School Leadership, Instructional Leadership, Student-Centered Climate, HR & PD, Community Partnership, Operations, Personal Attributes).</li>
+                <li><strong>PPSSH (DepEd Order 24, s. 2020):</strong> 5 Domains (1. Leading Strategically, 2. Managing Operations and Resources, 3. Focusing on Teaching and Learning, 4. Developing Self and Others, 5. Building Connections).</li>
+              </ul>
+            `
+          }
         ],
         quiz: [
           {
-            stem: "Under Republic Act 9155, which administrative principle delegates decision-making authority, resources, and accountability down to the individual school level?",
-            choices: ["Centralized Supervision", "School-Based Management (SBM)", "Bureaucratic Control", "Hierarchical Protocol"],
+            stem: "In Taoist philosophy, what core principle refers to purposeful non-action, effortless spontaneity, and living in complete harmony with nature?",
+            choices: ["Wu Wei", "Xiao", "Dharma", "Satori"],
+            ans: 0,
+            rationale: "Wu Wei is the Taoist concept of natural spontaneity, effortless action, and non-resistance in harmony with the Tao."
+          },
+          {
+            stem: "In ancient Greece, what was the state-mandated education system in Sparta that began at age seven and prioritized military discipline and warrior physical training?",
+            choices: ["Gymnasium", "Agoge", "Academy", "Lyceum"],
             ans: 1,
-            rationale: "R.A. 9155 explicitly mandates School-Based Management (SBM), giving schools autonomy to address local needs with community cooperation."
+            rationale: "The Spartan Agoge was the rigorous military and physical training program designed to produce disciplined soldiers."
+          },
+          {
+            stem: "A teacher believes that foreign educational methods and imported Western textbooks are inherently superior to local Philippine indigenous knowledge. What anthropological mindset is demonstrated?",
+            choices: ["Ethnocentrism", "Cultural Relativism", "Xenocentrism", "Enculturation"],
+            ans: 2,
+            rationale: "Xenocentrism is the conviction that the products, styles, or ideas of another culture are superior to one's own."
+          },
+          {
+            stem: "An immigrant student slowly adopts the language and lifestyle of a new country, eventually abandoning their native language, customs, and original cultural identity entirely. What process has occurred?",
+            choices: ["Cultural Diffusion", "Acculturation", "Enculturation", "Assimilation"],
+            ans: 3,
+            rationale: "Assimilation entails total cultural absorption into the dominant group, leading to the loss of original distinct cultural traits."
+          },
+          {
+            stem: "Under DepEd Order No. 24, s. 2020 (PPSSH), which domain outlines the school head's responsibility in setting the vision, decision-making, and strategic planning for school improvement?",
+            choices: ["Domain 1: Leading Strategically", "Domain 2: Managing Operations", "Domain 3: Focusing on Teaching", "Domain 5: Building Connections"],
+            ans: 0,
+            rationale: "Domain 1 of the PPSSH is 'Leading Strategically', which covers visioning, planning, decision-making, and results-based leadership."
           }
         ]
       },
       {
         id: 2,
         title: "The Professional Teacher",
-        notes: [
-          "R.A. 7836 & R.A. 9293 (Philippine Teachers Professionalization Act): Mandates the PRC licensure examination and regulates teaching practice.",
-          "Code of Ethics for Professional Teachers: Sets binding ethical standards regarding teachers' relations with the state, community, students, and peers.",
-          "Philippine Professional Standards for Teachers (PPST): 7 domains outlining career stages (Beginning, Proficient, Highly Proficient, Distinguished)."
-        ],
-        quiz: [
-          {
-            stem: "According to the Code of Ethics for Professional Teachers, what should a teacher do if offered an expensive gift by a parent in exchange for an elevated passing grade for a student?",
-            choices: ["Accept it discreetly", "Refuse politely and maintain objective evaluation", "Donate the gift to the classroom", "Report the student for misconduct"],
-            ans: 1,
-            rationale: "Article VIII Section 4 of the Code of Ethics states that a teacher shall not accept gifts or favors from students or parents in exchange for academic concessions."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "Under RA 7836, what is required to legally practice teaching in the Philippines?", choices: ["Civil Service Sub-Professional", "PRC Professional Teacher License", "Honor Graduate Eligibility", "Barangay Clearance"], ans: 1, rationale: "RA 7836 mandates passing the licensure examination and holding a valid PRC license." }]
       },
       {
         id: 3,
         title: "The Teacher and the School Curriculum",
-        notes: [
-          "Curriculum Types: Overt/Written (official syllabus), Taught (implemented), Learned (mastered outcomes), and Hidden (unintended values and cultural norms).",
-          "Curriculum Approaches: Ralph Tyler's objective model (Ends-Means) and Hilda Taba's inductive grassroots approach.",
-          "Curriculum Alignment: Ensuring learning competencies, instructional tasks, and assessment measures correspond directly."
-        ],
-        quiz: [
-          {
-            stem: "Which type of curriculum encompasses the informal, unwritten, and unintended messages, values, and social behaviors acquired by learners in the classroom environment?",
-            choices: ["Taught Curriculum", "Supported Curriculum", "Hidden Curriculum", "Assessed Curriculum"],
-            ans: 2,
-            rationale: "The 'Hidden Curriculum' refers to the unwritten, unofficial lessons and values that learners absorb through peer culture, institutional norms, and environment."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "Which curriculum includes unintended values and unwritten norms?", choices: ["Hidden Curriculum", "Written Curriculum", "Assessed Curriculum", "Taught Curriculum"], ans: 0, rationale: "Hidden curriculum refers to unwritten behaviors, values, and norms absorbed in school." }]
       },
       {
         id: 4,
         title: "Methods and Strategies of Teaching",
-        notes: [
-          "Inductive vs. Deductive: Inductive leads from specific instances to general rules (Inquiry/Discovery); Deductive starts with the general rule followed by examples.",
-          "Direct vs. Indirect Instruction: Direct is teacher-directed (explicit lectures); Indirect is student-centered (problem-solving, case studies).",
-          "Differentiated Instruction: Adapting Content, Process, Product, or Learning Environment based on learner readiness and learning styles."
-        ],
-        quiz: [
-          {
-            stem: "A teacher presents several specific sentences illustrating the use of past continuous tense and guides students to infer the grammatical rule themselves. What teaching approach is this?",
-            choices: ["Deductive Method", "Inductive Method", "Direct Demonstration", "Rote Drill"],
-            ans: 1,
-            rationale: "The inductive method begins with specific examples and guides learners to discover or generalize the overarching concept or rule."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "Starting from specific instances to infer a general rule is called:", choices: ["Inductive Method", "Deductive Method", "Direct Instruction", "Rote Drill"], ans: 0, rationale: "Inductive reasoning moves from specific observations to a general rule." }]
       },
       {
         id: 5,
         title: "Technology for Teaching and Learning",
-        notes: [
-          "SAMR Model: Substitution (tech acts as direct tool substitute) -> Augmentation -> Modification -> Redefinition (tech allows creation of previously inconceivable tasks).",
-          "TPACK Framework: Technological Pedagogical Content Knowledge—the intersection of technology, pedagogy, and specialized subject content.",
-          "Dale's Cone of Experience: Learning moves from concrete direct purposeful experiences (base) to abstract verbal symbols (apex)."
-        ],
-        quiz: [
-          {
-            stem: "In the SAMR model of technology integration, at what stage does technology enable the creation of brand new learning tasks that were previously impossible without it?",
-            choices: ["Substitution", "Augmentation", "Modification", "Redefinition"],
-            ans: 3,
-            rationale: "Redefinition is the highest level of SAMR, where technology allows students to create new tasks previously inconceivable (e.g., real-time global collaboration)."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "In SAMR, what level creates tasks previously inconceivable without tech?", choices: ["Redefinition", "Modification", "Augmentation", "Substitution"], ans: 0, rationale: "Redefinition enables completely new learning experiences." }]
       },
       {
         id: 6,
         title: "Child and Adolescent Learners and Learning Principles",
-        notes: [
-          "Jean Piaget: Sensorimotor -> Preoperational (Egocentrism) -> Concrete Operational (Conservation) -> Formal Operational (Abstract logic).",
-          "Erik Erikson: Psychosocial crises (e.g., Trust vs. Mistrust, Industry vs. Inferiority, Identity vs. Role Confusion).",
-          "Lev Vygotsky: Sociocultural theory, Zone of Proximal Development (ZPD), and Scaffolding."
-        ],
-        quiz: [
-          {
-            stem: "According to Erikson's stages of psychosocial development, elementary school-aged children (ages 6 to 12) strive to achieve a sense of competence through which crisis?",
-            choices: ["Trust vs. Mistrust", "Autonomy vs. Shame", "Industry vs. Inferiority", "Initiative vs. Guilt"],
-            ans: 2,
-            rationale: "During the elementary school years, children face 'Industry vs. Inferiority' as they learn to read, write, and master complex skills alongside peers."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "Conservation concepts are mastered in Piaget's:", choices: ["Concrete Operational Stage", "Sensorimotor Stage", "Preoperational Stage", "Formal Operational Stage"], ans: 0, rationale: "Concrete operational learners master reversibility and conservation." }]
       },
       {
         id: 7,
         title: "Facilitating Learner-Centered Teaching",
-        notes: [
-          "Metacognition: Knowledge and regulation of one's own cognitive processes ('thinking about one's own thinking').",
-          "Howard Gardner's Multiple Intelligences: Bodily-kinesthetic, Interpersonal, Intrapersonal, Naturalistic, Linguistic, Logical, etc.",
-          "14 Learner-Centered Psychological Principles (APA): Focuses on cognitive, motivational, developmental, and social factors in learning."
-        ],
-        quiz: [
-          {
-            stem: "When a student regularly evaluates their own study habits, identifies which memory strategies work best for them, and adjusts their study plan, they are demonstrating:",
-            choices: ["Rote Memorization", "Metacognition", "Classical Conditioning", "Extrinsic Motivation"],
-            ans: 1,
-            rationale: "Metacognition involves higher-order monitoring, self-assessment, and active regulation of one's own learning and cognitive processes."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "Evaluating and regulating one's own thinking processes is:", choices: ["Metacognition", "Behaviorism", "Constructivism", "Operant Conditioning"], ans: 0, rationale: "Metacognition is thinking about one's own thinking." }]
       },
       {
         id: 8,
         title: "Assessment of Learning 1 and 2",
-        notes: [
-          "Assessment Categories: Diagnostic (prior), Formative (during/monitoring), Summative (after/grading).",
-          "Assessment Dimensions: Norm-referenced (compared to peers) vs. Criterion-referenced (compared to a fixed standard/mastery level).",
-          "Test Validity vs. Reliability: Validity measures what it intends to measure; Reliability ensures score consistency over time."
-        ],
-        quiz: [
-          {
-            stem: "A teacher constructs an authentic performance rubric and administers a midterm test specifically designed to monitor student misunderstandings during instruction. What type of assessment is this?",
-            choices: ["Diagnostic Assessment", "Summative Assessment", "Formative Assessment", "Placement Assessment"],
-            ans: 2,
-            rationale: "Formative assessments occur during instruction to provide continuous feedback and guide pedagogical adjustments before final summative evaluations."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "Assessment conducted during instruction to monitor student progress is:", choices: ["Formative Assessment", "Summative Assessment", "Diagnostic Assessment", "Placement Assessment"], ans: 0, rationale: "Formative assessment provides ongoing feedback to improve learning." }]
       },
       {
         id: 9,
         title: "Field Study and Teaching Internship",
-        notes: [
-          "Experiential Learning Courses (ELC): Linking educational theory to real school classroom observations and pre-service practice.",
-          "Action Research Cycle: Plan -> Act -> Observe -> Reflect (resolving immediate classroom challenges).",
-          "Reflective Teaching: Evaluating one's instructional effectiveness to continuously improve practice."
-        ],
-        quiz: [
-          {
-            stem: "During their teaching internship, pre-service teachers conduct an action research project. What is the fundamental primary objective of action research in classroom settings?",
-            choices: ["Fulfill international publication quotas", "Identify and immediately resolve localized teaching-learning challenges", "Rank students based on test scores", "Replace the school principal's policies"],
-            ans: 1,
-            rationale: "Action research is pragmatic inquiry designed specifically to resolve immediate localized classroom learning difficulties and refine teaching practice."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "What is the primary aim of classroom action research?", choices: ["Solve immediate local teaching-learning problems", "Publish international articles", "Rank teachers", "Evaluate principals"], ans: 0, rationale: "Action research resolves immediate practical challenges in the classroom." }]
       },
       {
         id: 10,
         title: "Foundation of Special and Inclusive Education",
-        notes: [
-          "R.A. 11650: Policy of inclusion and services for learners with disabilities across the basic education system.",
-          "Individualized Education Plan (IEP): Document specifying custom learning goals and accommodations for a child with special educational needs.",
-          "Universal Design for Learning (UDL): Designing instruction with multiple means of representation, expression, and engagement for diverse learners."
-        ],
-        quiz: [
-          {
-            stem: "Which customized legal document is designed collaboratively by teachers, specialists, and parents to delineate tailored academic objectives and accommodations for a child with special needs?",
-            choices: ["Daily Lesson Log (DLL)", "Individualized Education Plan (IEP)", "Curriculum Guide (CG)", "Table of Specifications (TOS)"],
-            ans: 1,
-            rationale: "An IEP (Individualized Education Plan) is specifically structured to address the individual strengths, needs, accommodations, and goals of a child with special needs."
-          }
-        ]
+        sections: [{ title: "Overview", content: "<p>Content for this subject will be added next.</p>" }],
+        quiz: [{ stem: "The tailored plan outlining goals for a child with special needs is:", choices: ["IEP (Individualized Education Plan)", "TOS", "DLL", "SIP"], ans: 0, rationale: "An IEP is a legally customized plan for a student with special needs." }]
       }
     ];
 
@@ -507,7 +587,7 @@
     }
 
     function readQuestionAloud() {
-      if (!('speechSynthesis' in window)) return alert("Speech is not supported in this browser.");
+      if (!('speechSynthesis' in window)) return alert("Speech synthesis is not supported on this device.");
       window.speechSynthesis.cancel();
       const q = activeSubject.quiz[quizIndex];
       const textToRead = `${q.stem}. Option A: ${q.choices[0]}. Option B: ${q.choices[1]}. Option C: ${q.choices[2]}. Option D: ${q.choices[3]}.`;
@@ -517,7 +597,7 @@
     }
 
     // ----------------------------------------------------
-    // REGISTRATION & PERSISTENCE
+    // REGISTRATION & USER TRACKING
     // ----------------------------------------------------
     let currentUser = null;
 
@@ -528,7 +608,7 @@
         document.getElementById("registrationModal").classList.add("hidden");
         document.getElementById("studentBadge").classList.remove("hidden");
         document.getElementById("studentDisplay").textContent = currentUser.name.split(' ')[0];
-        document.getElementById("studentGreeting").textContent = `Welcome back, ${currentUser.name}! Choose a subject to review and take the quiz.`;
+        document.getElementById("studentGreeting").textContent = `Welcome, Teacher ${currentUser.name}! Choose a subject to review.`;
         renderGrades();
       } else {
         document.getElementById("registrationModal").classList.remove("hidden");
@@ -547,7 +627,7 @@
     }
 
     // ----------------------------------------------------
-    // SUBJECT RENDERING & QUIZ CONTROLLER
+    // SUBJECT & QUIZ NAVIGATION
     // ----------------------------------------------------
     let activeSubject = null;
     let quizIndex = 0;
@@ -561,7 +641,7 @@
             <div class="card-num">${sub.id}</div>
             <div>
               <div class="subject-title">${sub.title}</div>
-              <div class="subject-desc">Click to read High-Yield Notes & take the Quiz</div>
+              <div class="subject-desc">Click to review High-Yield Notes & solve Quiz</div>
             </div>
           </div>
           <span style="color:var(--crimson); font-size:0.85rem; font-weight:700;">Open →</span>
@@ -576,9 +656,17 @@
       document.getElementById("contentView").style.display = "block";
 
       document.getElementById("contentSubjectTitle").textContent = `${activeSubject.id}. ${activeSubject.title}`;
-      document.getElementById("contentBulletPoints").innerHTML = activeSubject.notes.map(n => `<li>${n}</li>`).join('');
+      
+      const sectionsContainer = document.getElementById("contentSectionsContainer");
+      sectionsContainer.innerHTML = activeSubject.sections.map(sec => `
+        <div class="section-card">
+          <h3>${sec.title}</h3>
+          <div>${sec.content}</div>
+        </div>
+      `).join('');
 
       document.getElementById("startSubjectQuizBtn").onclick = () => startSubjectQuiz();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function startSubjectQuiz() {
@@ -588,6 +676,7 @@
       quizIndex = 0;
       quizScore = 0;
       loadQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function loadQuestion() {
@@ -694,7 +783,7 @@
       backToSubjects();
     }
 
-    // App Initialization
+    // Initialize
     renderSubjectsList();
     checkRegistration();
   </script>

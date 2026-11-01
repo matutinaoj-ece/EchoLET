@@ -3,1140 +3,720 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>EchoLET AI - Intelligent Classroom & Board Exam Engine</title>
-  
-  <!-- Favicon -->
+  <title>Who Wants to Be a Board Topnotcher? - EchoLET</title>
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
-  <meta name="theme-color" content="#5B0013" />
 
   <style>
     :root {
-      --crimson-deep: #4A000E;
-      --crimson: #7A0019;
-      --crimson-dark: #580012;
-      --gold: #D4AF37;
-      --gold-light: #FFF8E1;
+      --bg-dark: #030712;
+      --bg-stage: radial-gradient(circle at center, #1e050c 0%, #060104 70%, #000000 100%);
+      --crimson: #80001C;
+      --crimson-glow: #e60033;
+      --gold: #FFD700;
       --gold-dark: #B8860B;
-      --gold-border: rgba(212, 175, 55, 0.4);
-      --bg: #F4F6F9;
-      --surface: #FFFFFF;
-      --text-main: #1F1F1F;
-      --text-muted: #5F6368;
-      --border: #DADCE0;
-      --radius: 12px;
-      --success: #137333;
-      --danger: #C5221F;
-      --shadow: 0 4px 16px rgba(74, 0, 14, 0.08);
+      --gold-glow: rgba(255, 215, 0, 0.45);
+      --choice-blue: #091224;
+      --choice-border: #2563eb;
+      --choice-hover: #1e3a8a;
+      --text: #F9FAFB;
+      --correct: #10B981;
+      --wrong: #EF4444;
+      --selected: #F59E0B;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", -apple-system, Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; padding-bottom: 5rem; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+    body { background: var(--bg-stage); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
 
-    /* Top Bar */
+    /* Arena Header */
     header {
-      background: var(--surface);
-      border-bottom: 2px solid var(--gold-border);
-      padding: 0.75rem 1.25rem;
+      padding: 0.8rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      box-shadow: 0 2px 8px rgba(74, 0, 14, 0.08);
+      background: rgba(0, 0, 0, 0.7);
+      border-bottom: 2px solid var(--gold-dark);
+      backdrop-filter: blur(10px);
+      z-index: 50;
     }
-    .header-left { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .pencil-logo {
-      width: 38px; height: 38px; background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-deep) 100%);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      border: 1.5px solid var(--gold); box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    .game-logo {
+      font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; color: var(--gold);
+      text-transform: uppercase; text-shadow: 0 0 10px var(--gold-glow);
     }
-    .pencil-logo svg { width: 20px; height: 20px; fill: var(--gold); }
-    .app-title { font-size: 1.2rem; font-weight: 700; color: var(--crimson); letter-spacing: -0.5px; }
-    .app-title span { color: var(--gold-dark); font-weight: 900; }
+    .game-logo span { color: #fff; }
 
-    .header-right { display: flex; align-items: center; gap: 8px; }
-    .user-pill {
-      display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700;
-      padding: 0.35rem 0.8rem; border-radius: 20px;
+    .lifelines { display: flex; gap: 10px; }
+    .lifeline-btn {
+      width: 44px; height: 38px; border-radius: 50%; background: #0f172a; border: 2px solid var(--gold);
+      color: var(--gold); font-size: 0.85rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
     }
-    .user-pill.teacher { background: var(--crimson); color: var(--gold); border: 1px solid var(--gold); }
-    .user-pill.student { background: var(--gold-light); color: var(--crimson-dark); border: 1px solid var(--gold); }
-    .user-pill.guest { background: #E5E7EB; color: var(--text-muted); }
+    .lifeline-btn:hover:not(:disabled) { background: var(--gold); color: #000; transform: scale(1.08); }
+    .lifeline-btn:disabled { opacity: 0.35; border-color: #64748b; color: #64748b; cursor: not-allowed; text-decoration: line-through; }
 
-    .btn-action-sm {
-      padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
-      border: 1px solid transparent; transition: all 0.2s;
+    .btn-header {
+      background: rgba(255,255,255,0.08); border: 1px solid var(--gold-dark); color: var(--gold);
+      padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
     }
-    .btn-signin { background: var(--gold); color: var(--crimson-deep); border-color: var(--gold-dark); }
-    .btn-signin:hover { background: var(--gold-dark); color: #fff; }
-    .btn-signout { background: #FFF; border-color: var(--danger); color: var(--danger); }
-    .btn-signout:hover { background: var(--danger); color: #fff; }
+    .btn-header:hover { background: var(--gold); color: #000; }
 
-    /* Tabs */
-    .classroom-tabs {
-      display: flex; justify-content: flex-start; overflow-x: auto; background: var(--surface);
-      border-bottom: 1px solid var(--border); padding: 0 1rem; gap: 0.8rem; scrollbar-width: none;
-    }
-    .classroom-tabs::-webkit-scrollbar { display: none; }
-    .tab-btn {
-      padding: 0.85rem 1rem; background: none; border: none; font-size: 0.9rem;
-      font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; white-space: nowrap;
-    }
-    .tab-btn.active { color: var(--crimson); }
-    .tab-btn.active::after {
-      content: ""; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: var(--crimson); border-radius: 3px 3px 0 0;
+    /* Game Stage */
+    .game-stage {
+      flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      max-width: 980px; width: 100%; margin: 0 auto; padding: 1.5rem 1rem; position: relative;
     }
 
-    main { max-width: 1040px; margin: 1.25rem auto; padding: 0 1rem; }
-
-    /* Banner */
-    .classroom-banner {
-      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-deep) 100%);
-      color: white; padding: 1.8rem; border-radius: var(--radius); margin-bottom: 1.5rem;
-      border: 2px solid var(--gold); box-shadow: var(--shadow); position: relative;
-    }
-    .classroom-banner h1 { font-size: 1.5rem; color: var(--gold); margin-bottom: 0.2rem; }
-    .classroom-banner p { font-size: 0.9rem; color: #FCE8E6; }
-    .banner-badge {
-      display: inline-block; background: rgba(212,175,55,0.25); border: 1px solid var(--gold);
-      padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; color: var(--gold-light); margin-top: 0.6rem;
+    /* Prize / Ladder Pill */
+    .level-indicator {
+      background: rgba(0, 0, 0, 0.8); border: 2px solid var(--gold); border-radius: 30px;
+      padding: 0.4rem 1.4rem; font-size: 0.95rem; font-weight: 800; color: var(--gold);
+      margin-bottom: 1.5rem; text-shadow: 0 0 8px var(--gold-glow); box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+      letter-spacing: 0.5px;
     }
 
-    /* Cards & Grids */
-    .grid-courses { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.2rem; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.25rem; transition: transform 0.2s, box-shadow 0.2s; position: relative;
+    /* Hexagonal Question Box */
+    .question-wrapper { width: 100%; max-width: 860px; margin-bottom: 1.8rem; position: relative; }
+    .question-box {
+      background: linear-gradient(180deg, #111827 0%, #030712 100%);
+      border: 2px solid var(--gold); border-radius: 14px; padding: 1.6rem 2rem; text-align: center;
+      font-size: 1.18rem; font-weight: 600; line-height: 1.5; color: #FFFFFF;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.15), inset 0 0 15px rgba(255, 215, 0, 0.05);
+      min-height: 110px; display: flex; align-items: center; justify-content: center;
     }
-    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--gold); }
-    .card-badge {
-      font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 6px;
-      text-transform: uppercase; display: inline-block; margin-bottom: 0.5rem;
-    }
-    .badge-core { background: var(--gold-light); color: var(--crimson-dark); border: 1px solid var(--gold); }
-    .card h3 { font-size: 1.05rem; color: var(--crimson); margin-bottom: 0.4rem; }
-    .card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
-    
-    .progress-track { background: #E5E7EB; border-radius: 999px; height: 6px; overflow: hidden; margin-bottom: 0.8rem; }
-    .progress-fill { background: var(--crimson); height: 100%; width: 0%; transition: width 0.3s; }
 
-    /* Buttons */
-    .btn {
-      padding: 0.6rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700;
-      cursor: pointer; border: none; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px;
+    /* Answer Choices Grid */
+    .choices-grid {
+      width: 100%; max-width: 860px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
     }
-    .btn-primary { background: var(--crimson); color: white; }
-    .btn-primary:hover { background: var(--crimson-dark); }
-    .btn-gold { background: var(--gold); color: var(--crimson-deep); border: 1px solid var(--gold-dark); }
-    .btn-gold:hover { background: var(--gold-dark); color: #fff; }
-    .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); }
-    .btn-outline:hover { border-color: var(--crimson); color: var(--crimson); }
-    .btn-block { width: 100%; justify-content: center; }
-
-    /* Lesson Layout */
-    .lesson-grid { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
-    @media (max-width: 860px) { .lesson-grid { grid-template-columns: 1fr; } }
-
-    .media-player-box {
-      background: #111; border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem;
-      aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
-      border: 2px solid var(--gold-border);
+    @media (max-width: 720px) {
+      .choices-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+      .question-box { font-size: 1.05rem; padding: 1.2rem; }
     }
-    .media-player-box img { width: 100%; height: 100%; object-fit: cover; }
-    .media-caption-box {
-      background: var(--gold-light); border-left: 4px solid var(--gold); padding: 0.8rem;
-      border-radius: 4px; font-size: 0.85rem; margin-bottom: 1rem;
+
+    .choice-btn {
+      background: linear-gradient(180deg, #0b152c 0%, #030814 100%);
+      border: 2px solid #3b82f6; border-radius: 12px; padding: 1rem 1.4rem; color: #FFF;
+      font-size: 0.98rem; font-weight: 600; cursor: pointer; text-align: left;
+      display: flex; align-items: center; gap: 12px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--gold); background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      transform: translateY(-2px); box-shadow: 0 0 15px var(--gold-glow);
+    }
+    .choice-btn .key {
+      color: var(--gold); font-weight: 900; font-size: 1.1rem; min-width: 26px;
+    }
+    .choice-btn .label { flex: 1; }
+
+    /* Answer States */
+    .choice-btn.selected {
+      background: var(--selected) !important; border-color: #FFF !important; color: #000 !important;
+      animation: pulseSelection 0.6s infinite alternate;
+    }
+    .choice-btn.selected .key { color: #000 !important; }
+
+    .choice-btn.correct {
+      background: linear-gradient(180deg, #059669 0%, #047857 100%) !important;
+      border-color: #34D399 !important; color: #FFF !important;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.7) !important;
+    }
+    .choice-btn.correct .key { color: #FFF !important; }
+
+    .choice-btn.wrong {
+      background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%) !important;
+      border-color: #F87171 !important; color: #FFF !important;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.7) !important;
+    }
+
+    .choice-btn.eliminated {
+      opacity: 0.2; pointer-events: none; border-color: #334155; text-decoration: line-through;
+    }
+
+    @keyframes pulseSelection {
+      from { transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+      to { transform: scale(1.02); box-shadow: 0 0 22px rgba(245, 158, 11, 0.9); }
     }
 
     /* ========================================================
-       ADVANCED AI TUTOR CONVERSATION DRAWER (PHASE 3)
+       MODAL: EXPLANATION SCREEN (REAL PHOTOS + AUDIO)
        ======================================================== */
-    .ai-tutor-container {
-      background: #FFFFFF; border: 2px solid #C7D2FE; border-radius: var(--radius);
-      box-shadow: 0 4px 18px rgba(67, 56, 202, 0.08); display: flex; flex-direction: column;
-      overflow: hidden; margin-top: 1.2rem; height: 500px;
+    .explanation-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 100;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+      backdrop-filter: blur(8px); animation: fadeIn 0.3s ease;
     }
-    .ai-tutor-header {
-      background: linear-gradient(135deg, #3730A3 0%, #1E1B4B 100%); color: #FFF;
-      padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;
+    .explanation-card {
+      background: #0f172a; border: 2px solid var(--gold); border-radius: 16px;
+      max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.3); display: flex; flex-direction: column;
     }
-    .ai-badge-engine {
-      background: rgba(255, 255, 255, 0.2); font-size: 0.7rem; padding: 0.2rem 0.5rem;
-      border-radius: 12px; font-weight: 600;
+    .explanation-header {
+      padding: 1.1rem 1.4rem; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3); background: rgba(0,0,0,0.4);
     }
-    .ai-chat-history {
-      flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column;
-      gap: 0.75rem; background: #F8FAFC;
+    .outcome-pill {
+      font-size: 0.85rem; font-weight: 900; padding: 0.3rem 0.8rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .chat-bubble {
-      max-width: 88%; padding: 0.75rem 0.95rem; border-radius: 12px; font-size: 0.86rem;
-      line-height: 1.5; word-wrap: break-word;
-    }
-    .chat-bubble.ai {
-      align-self: flex-start; background: #FFFFFF; color: #1E293B;
-      border: 1px solid #E2E8F0; border-left: 4px solid #4F46E5; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .chat-bubble.user {
-      align-self: flex-end; background: var(--crimson); color: #FFFFFF;
-      border-bottom-right-radius: 2px;
-    }
-    .chat-bubble strong { color: var(--crimson); }
-    .chat-bubble.user strong { color: var(--gold); }
-    
-    .ai-quick-prompts {
-      display: flex; gap: 5px; overflow-x: auto; padding: 0.5rem 0.8rem;
-      background: #EEF2FF; border-top: 1px solid #E0E7FF; scrollbar-width: none;
-    }
-    .ai-quick-prompts::-webkit-scrollbar { display: none; }
-    .chip-prompt {
-      background: white; border: 1px solid #C7D2FE; color: #4338CA; font-size: 0.72rem;
-      padding: 0.25rem 0.6rem; border-radius: 12px; cursor: pointer; white-space: nowrap; font-weight: 600;
-    }
-    .chip-prompt:hover { background: #4338CA; color: white; }
+    .outcome-correct { background: #065F46; color: #34D399; border: 1px solid #34D399; }
+    .outcome-wrong { background: #7F1D1D; color: #F87171; border: 1px solid #F87171; }
 
-    .ai-input-bar {
-      display: flex; padding: 0.6rem 0.8rem; background: #FFF; border-top: 1px solid var(--border); gap: 6px;
+    /* Real Photo Box */
+    .photo-frame {
+      width: 100%; height: 240px; position: relative; background: #000; overflow: hidden;
+      border-bottom: 2px solid var(--gold-dark);
     }
-    .ai-input-bar input {
-      flex: 1; padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: 8px;
-      font-size: 0.85rem; outline: none;
-    }
-    .ai-input-bar input:focus { border-color: #4F46E5; }
-
-    /* Assessment Elements */
-    .stem-card {
-      background: white; border: 1px solid var(--border); border-left: 5px solid var(--crimson);
-      border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.2rem;
-    }
-    .competency-tag {
-      background: #F3F4F6; color: var(--crimson-dark); border: 1px solid var(--border);
-      font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 700;
-      display: inline-block; margin-bottom: 0.6rem;
-    }
-    .choices-list { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1rem; }
-    .choice-item {
-      padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 8px;
-      cursor: pointer; font-size: 0.92rem; text-align: left; background: white; transition: all 0.2s;
-    }
-    .choice-item:hover:not(:disabled) { border-color: var(--gold-dark); background: var(--gold-light); }
-    .choice-item.correct { background: #E6F4EA !important; border-color: var(--success) !important; color: var(--success); font-weight: 700; }
-    .choice-item.wrong { background: #FCE8E6 !important; border-color: var(--danger) !important; color: var(--danger); font-weight: 700; }
-    
-    .rationale-drawer {
-      background: var(--gold-light); border-left: 4px solid var(--gold);
-      padding: 1rem; border-radius: 6px; margin: 1.2rem 0; font-size: 0.88rem; display: none;
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-caption {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 0.5rem 1rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+      font-size: 0.8rem; color: #E2E8F0; font-weight: 500;
     }
 
-    .remediation-panel {
-      background: #FDF2F2; border: 1.5px solid #F87171; border-radius: var(--radius);
-      padding: 1.5rem; margin-top: 1.5rem;
+    .explanation-content { padding: 1.4rem; flex: 1; }
+    .concept-tag {
+      display: inline-block; background: var(--crimson); color: var(--gold); border: 1px solid var(--gold);
+      padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 800;
+      text-transform: uppercase; margin-bottom: 0.6rem;
+    }
+    .explanation-text {
+      font-size: 0.95rem; line-height: 1.6; color: #E2E8F0; margin-bottom: 1.2rem;
+    }
+    .explanation-text strong { color: var(--gold); }
+
+    .audio-narration-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255, 215, 0, 0.08); border: 1px solid var(--gold); border-radius: 10px;
+      padding: 0.65rem 1rem; margin-bottom: 1.2rem;
+    }
+    .narration-label { font-size: 0.85rem; color: var(--gold); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .btn-voice {
+      background: var(--gold); color: #000; border: none; padding: 0.4rem 0.9rem;
+      border-radius: 20px; font-weight: 800; font-size: 0.8rem; cursor: pointer; transition: transform 0.2s;
+    }
+    .btn-voice:hover { transform: scale(1.05); }
+
+    .btn-continue {
+      width: 100%; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: #000; font-weight: 900; font-size: 1.05rem; border: none; padding: 1rem;
+      border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); transition: transform 0.2s;
+    }
+    .btn-continue:hover { transform: scale(1.02); }
+
+    /* Ladder Overlay */
+    .ladder-drawer {
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+      background: #090d16; border-left: 2px solid var(--gold); padding: 1.5rem 1rem;
+      z-index: 90; transition: right 0.3s ease; display: flex; flex-direction: column;
+    }
+    .ladder-drawer.open { right: 0; }
+    .ladder-item {
+      display: flex; justify-content: space-between; padding: 0.45rem 0.8rem;
+      font-size: 0.85rem; font-weight: 700; border-radius: 6px; margin-bottom: 2px;
+      color: #94a3b8;
+    }
+    .ladder-item.milestone { color: #FFF; font-weight: 900; }
+    .ladder-item.active { background: var(--selected); color: #000; font-weight: 900; }
+    .ladder-item.cleared { color: var(--gold); }
+
+    /* Modal dialog for Lifelines */
+    .dialog-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 150;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .dialog-card {
+      background: #0f172a; border: 2px solid var(--gold); border-radius: 12px;
+      max-width: 440px; width: 100%; padding: 1.5rem; text-align: center;
     }
 
-    /* Modal */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
-      display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem;
-    }
-    .modal-card {
-      background: white; border-radius: var(--radius); max-width: 500px; width: 100%;
-      padding: 2rem; border-top: 6px solid var(--crimson); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      position: relative; max-height: 90vh; overflow-y: auto;
-    }
-    .modal-card input, .modal-card select, .modal-card textarea {
-      width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px;
-      margin-top: 0.35rem; margin-bottom: 1rem; font-size: 0.9rem;
-    }
-
-    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: var(--surface); }
-    .data-table th, .data-table td { padding: 0.75rem 0.9rem; border: 1px solid var(--border); text-align: left; }
-    .data-table th { background: var(--crimson); color: white; }
-
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
+  <!-- Game Header -->
   <header>
-    <div class="header-left" onclick="switchView('courses')">
-      <div class="pencil-logo">
-        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-      </div>
-      <div class="app-title">Echo<span>LET</span> AI Tutor</div>
+    <div class="game-logo">Topnotcher <span>Millionaire</span></div>
+    
+    <!-- Lifelines -->
+    <div class="lifelines">
+      <button id="life5050" class="lifeline-btn" onclick="use5050()" title="50:50 Lifeline">50:50</button>
+      <button id="lifeEcho" class="lifeline-btn" onclick="useAskEcho()" title="Ask Teacher Echo">🤖</button>
+      <button id="lifePoll" class="lifeline-btn" onclick="useAudiencePoll()" title="Audience Poll">👥</button>
     </div>
-    <div class="header-right">
-      <button class="btn btn-outline" style="padding:0.35rem 0.65rem; font-size:0.75rem;" onclick="openAiSettingsModal()">⚙️ AI Settings</button>
-      <div id="userBadge" class="user-pill guest">Guest (Signed Out)</div>
-      <button id="authBtn" class="btn-action-sm btn-signin" onclick="openAuthModal()">Sign In</button>
+
+    <div>
+      <button class="btn-header" onclick="toggleLadder()">🏆 Money Tree</button>
     </div>
   </header>
 
-  <!-- Tabs Navigation -->
-  <div class="classroom-tabs">
-    <button id="navCoursesBtn" class="tab-btn active" onclick="switchView('courses')">📚 Classwork & Modules</button>
-    <button id="navTeacherBtn" class="tab-btn hidden" onclick="switchView('teacher')">👑 Teacher Studio</button>
-    <button id="navDiagnosticsBtn" class="tab-btn" onclick="switchView('diagnostics')">📊 Cognitive Diagnostics</button>
-    <button class="tab-btn" onclick="triggerPwaPrompt()">📱 PWA / Mobile Sync</button>
-  </div>
-
-  <main>
-    <!-- Welcome Banner -->
-    <div class="classroom-banner">
-      <h1>Licensure Examination for Teachers (LET) Studio</h1>
-      <p>Equipped with Dual-Brain AI: Interactive Conversational Tutor, Item Diagnostic Engine, and Adaptive Remediation.</p>
-      <div class="banner-badge" id="bannerStatus">🔒 Private Classroom: Sign In with code ECHO-LPT-75</div>
+  <!-- Central Game Screen -->
+  <main class="game-stage">
+    
+    <!-- Rank / Prize Badge -->
+    <div class="level-indicator" id="rankBadge">
+      QUESTION 1 &bull; ₱1,000 (Freshman Cadet)
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: COURSES DIRECTORY -->
-    <!-- ========================================== -->
-    <section id="viewCourses">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h2 style="font-size:1.25rem; color:var(--crimson);">Active Review Modules</h2>
+    <!-- Question Box -->
+    <div class="question-wrapper">
+      <div class="question-box" id="questionStem">
+        Loading question...
       </div>
-      <div class="grid-courses" id="coursesGrid"></div>
-    </section>
+    </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: LESSON & CONVERSATIONAL AI TUTOR -->
-    <!-- ========================================== -->
-    <section id="viewLesson" class="hidden">
-      <div style="margin-bottom:1rem;">
-        <button class="btn btn-outline" onclick="switchView('courses')">← Back to Course Directory</button>
-      </div>
-
-      <div class="lesson-grid">
-        <!-- Left: Topics List & Upgraded AI Chatbot -->
-        <div>
-          <div class="card" style="padding:1rem; margin-bottom:1rem;">
-            <h4 style="color:var(--crimson); font-size:0.95rem; margin-bottom:0.6rem;">📑 Course Syllabus</h4>
-            <div id="topicsList" style="display:flex; flex-direction:column; gap:6px;"></div>
-          </div>
-
-          <!-- SMART CONVERSATIONAL AI TUTOR CHAT DRAWER -->
-          <div class="ai-tutor-container">
-            <div class="ai-tutor-header">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7H8V5.73C7.4 5.39 7 4.74 7 4a2 2 0 0 1 2-2h3m-4 9a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m8 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2z"/></svg>
-                <span style="font-weight:700; font-size:0.9rem;">EchoLET Smart Tutor</span>
-              </div>
-              <span class="ai-badge-engine" id="aiEngineLabel">Offline Brain Active</span>
-            </div>
-
-            <!-- Chat Messages Container -->
-            <div class="ai-chat-history" id="aiChatHistory">
-              <div class="chat-bubble ai">
-                Hello! I am your <strong>Teacher Echo AI Assistant</strong>. Ask me <em>any question</em> about Philippine Education, teaching laws, philosophies, or rationalizations for all 65 exam items!
-              </div>
-            </div>
-
-            <!-- Contextual Quick Chips -->
-            <div class="ai-quick-prompts">
-              <span class="chip-prompt" onclick="sendAiQuickPrompt('Explain the difference between folkways and mores.')">Folkways vs Mores</span>
-              <span class="chip-prompt" onclick="sendAiQuickPrompt('Explain Piaget\'s 4 stages of cognitive development.')">Piaget's Stages</span>
-              <span class="chip-prompt" onclick="sendAiQuickPrompt('What is RA 4670 Magna Carta for Public School Teachers?')">RA 4670</span>
-              <span class="chip-prompt" onclick="sendAiQuickPrompt('Explain question 18 and why Essentialism was the correct answer.')">Explain Item 18</span>
-            </div>
-
-            <!-- Interactive Text Input -->
-            <div class="ai-input-bar">
-              <input type="text" id="aiUserInput" placeholder="Ask anything about this lesson or LET..." onkeydown="if(event.key==='Enter') executeAiQuery()" />
-              <button class="btn btn-primary" style="padding:0.5rem 0.8rem;" onclick="executeAiQuery()">Ask</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Multimedia Screen -->
-        <div>
-          <div class="card" style="padding:1.5rem;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.8rem;">
-              <div>
-                <span class="card-badge badge-core" id="lessonCategory">Professional Education</span>
-                <h2 id="lessonTopicTitle" style="color:var(--crimson); font-size:1.4rem;">Topic Heading</h2>
-              </div>
-              <button id="markCompleteBtn" class="btn btn-outline" onclick="toggleTopicCompletion()">✓ Mark as Done</button>
-            </div>
-
-            <div class="media-player-box" id="mediaPlayerContainer"></div>
-
-            <div class="media-caption-box" id="mediaCaption">
-              <strong>💡 Instructional Guide:</strong> Review this core conceptual pillar thoroughly before attempting the 65-item drill.
-            </div>
-
-            <div id="lessonTextBody" style="font-size:0.95rem; line-height:1.7; margin-bottom:1.5rem;"></div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:1rem;">
-              <span style="font-size:0.85rem; color:var(--text-muted);" id="lessonProgressIndicator">Topic 1 of 12</span>
-              <button class="btn btn-gold" id="btnLaunchQuiz" onclick="launchQuizForCurrentCourse()">Take 65-Item Assessment →</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- VIEW 3: INTELLIGENT ASSESSMENT -->
-    <!-- ========================================== -->
-    <section id="viewQuiz" class="hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <button class="btn btn-outline" onclick="switchView('lesson')">← Return to Lesson</button>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <button class="btn btn-outline" style="font-size:0.78rem;" onclick="speakCurrentItem()">🔊 Read Aloud</button>
-          <span style="font-weight:700; font-size:0.85rem; color:var(--crimson);" id="quizItemTracker">Item 1 of 65</span>
-        </div>
-      </div>
-
-      <div class="progress-track">
-        <div id="quizProgressBar" class="progress-fill"></div>
-      </div>
-
-      <div class="stem-card">
-        <div class="competency-tag" id="quizConceptTag">Competency Domain</div>
-        <h3 id="quizStemText" style="font-size:1.15rem; font-weight:600; line-height:1.5;">Question stem will load here...</h3>
-        <div class="choices-list" id="quizChoicesBox"></div>
-        <div class="rationale-drawer" id="quizRationaleBox">
-          <strong style="color:var(--crimson);">Item Analysis & PRC Rationalization:</strong>
-          <p id="quizRationaleText" style="margin-top:0.3rem;"></p>
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:space-between;">
-        <button class="btn btn-outline" onclick="askAiAboutCurrentItem()">🤖 Ask AI To Explain This Question</button>
-        <button id="btnNextQuizItem" class="btn btn-primary hidden" onclick="stepQuizNext()">Next Question →</button>
-      </div>
-
-      <!-- Phase 5 Innovation: Targeted Remediation Loop Card -->
-      <div id="remediationInnovationCard" class="remediation-panel hidden">
-        <h3 style="color:var(--danger); font-size:1.1rem; margin-bottom:0.4rem;">🔬 Adaptive Misconception Remediation</h3>
-        <p style="font-size:0.88rem; color:var(--text-main); margin-bottom:0.8rem;" id="remediationDiagnosisText"></p>
-        <div id="remediationResourceBox" style="background:white; border:1px solid #FECACA; border-radius:8px; padding:0.9rem; margin-bottom:1rem; font-size:0.88rem;"></div>
-        <button class="btn btn-gold" onclick="launchTargetedMicroQuiz()">⚡ Take 3-Item Targeted Re-Assessment</button>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- VIEW 4: DIAGNOSTICS & GRADES -->
-    <!-- ========================================== -->
-    <section id="viewDiagnostics" class="hidden">
-      <h2 style="color:var(--crimson); font-size:1.3rem; margin-bottom:0.3rem;">🧠 Cognitive Error Diagnostics</h2>
-      <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:1.2rem;">Detailed item analysis and diagnosed learning gaps.</p>
-      <div class="card" style="margin-bottom:1.5rem;">
-        <h3 style="color:var(--crimson); font-size:1rem; margin-bottom:0.6rem;">⚠️ Top Fragile Competencies</h3>
-        <ul id="fragileConceptsList" style="padding-left:1.2rem; font-size:0.88rem; color:var(--text-muted);">
-          <li>Take the 65-item assessment to generate your personalized error matrix.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--crimson); font-size:1rem; margin-bottom:0.8rem;">📋 Complete Submissions Ledger</h3>
-        <table class="data-table">
-          <thead>
-            <tr><th>Course</th><th>Score</th><th>Status</th><th>Diagnosed Weakness</th></tr>
-          </thead>
-          <tbody id="studentDiagnosticTableBody">
-            <tr><td colspan="4" style="text-align:center;">No submissions recorded yet.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- VIEW 5: TEACHER STUDIO -->
-    <!-- ========================================== -->
-    <section id="viewTeacher" class="hidden">
-      <h2 style="color:var(--crimson); font-size:1.4rem; margin-bottom:0.8rem;">👑 Teacher Echo's Control Tower</h2>
-      <div class="card">
-        <h3 style="color:var(--crimson); margin-bottom:0.8rem;">Student Submissions</h3>
-        <table class="data-table">
-          <thead>
-            <tr><th>Student</th><th>Major</th><th>Score</th><th>Rating</th><th>Date</th></tr>
-          </thead>
-          <tbody id="teacherMasterTableBody">
-            <tr><td colspan="5" style="text-align:center;">No submissions recorded yet.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <!-- Choices Grid (A, B, C, D) -->
+    <div class="choices-grid" id="choicesGrid">
+      <button class="choice-btn" id="btnChoice0" onclick="chooseAnswer(0)">
+        <span class="key">A:</span> <span class="label" id="labelChoice0">...</span>
+      </button>
+      <button class="choice-btn" id="btnChoice1" onclick="chooseAnswer(1)">
+        <span class="key">B:</span> <span class="label" id="labelChoice1">...</span>
+      </button>
+      <button class="choice-btn" id="btnChoice2" onclick="chooseAnswer(2)">
+        <span class="key">C:</span> <span class="label" id="labelChoice2">...</span>
+      </button>
+      <button class="choice-btn" id="btnChoice3" onclick="chooseAnswer(3)">
+        <span class="key">D:</span> <span class="label" id="labelChoice3">...</span>
+      </button>
+    </div>
   </main>
 
-  <!-- AI SETTINGS MODAL -->
-  <div id="aiSettingsModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <button onclick="closeAiSettingsModal()" style="position:absolute; right:1rem; top:1rem; border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      <h3 style="color:var(--crimson); margin-bottom:0.6rem;">⚙️ EchoLET AI Settings</h3>
-      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">
-        EchoLET features a <strong>Built-in Offline Pedagogical Engine</strong>. To unlock unlimited, full-strength LLM reasoning, paste your free Google Gemini API Key below.
-      </p>
-      <label style="font-size:0.8rem; font-weight:700;">Google Gemini API Key (Optional):</label>
-      <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." />
-      <button class="btn btn-primary btn-block" onclick="saveAiSettings()">Save API Configuration</button>
-      <button class="btn btn-outline btn-block" style="margin-top:0.5rem;" onclick="clearAiKey()">Use Built-In Offline Brain Only</button>
+  <!-- EXPLANATION VIEW (REAL PHOTOS + AUDIO RATIONALIZATION) -->
+  <div id="explanationModal" class="explanation-overlay hidden">
+    <div class="explanation-card">
+      <div class="explanation-header">
+        <span id="explanationOutcomePill" class="outcome-pill outcome-correct">CORRECT ANSWER!</span>
+        <span id="explanationPrizeWon" style="color:var(--gold); font-weight:800; font-size:0.9rem;">₱1,000 EARNED</span>
+      </div>
+
+      <!-- Real Photograph Frame -->
+      <div class="photo-frame">
+        <img id="explanationPhoto" src="" alt="Pedagogical Concept Photo" />
+        <div class="photo-caption" id="explanationPhotoCaption">Pedagogical Concept Overview</div>
+      </div>
+
+      <!-- Explanation Content -->
+      <div class="explanation-content">
+        <span class="concept-tag" id="explanationConceptTag">Domain</span>
+        <div class="audio-narration-bar">
+          <span class="narration-label">🔊 Audio Teacher Explanation:</span>
+          <button class="btn-voice" id="btnToggleSpeech" onclick="toggleAudioNarration()">▶ Listen to Teacher Echo</button>
+        </div>
+
+        <div class="explanation-text" id="explanationText"></div>
+
+        <button class="btn-continue" id="btnModalNext" onclick="nextQuestion()">Continue To Next Question →</button>
+      </div>
     </div>
   </div>
 
-  <!-- AUTH MODAL -->
-  <div id="authModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <button onclick="closeAuthModal()" style="position:absolute; right:1rem; top:1rem; border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      <h3 style="color:var(--crimson); margin-bottom:1rem;">Sign In / Enroll</h3>
-      <label style="font-size:0.8rem; font-weight:700;">Class Enrollment Code:</label>
-      <input type="text" id="regClassCode" value="ECHO-LPT-75" />
-      <label style="font-size:0.8rem; font-weight:700;">Full Name:</label>
-      <input type="text" id="regStudentName" placeholder="Maria Santos" />
-      <label style="font-size:0.8rem; font-weight:700;">Email Address:</label>
-      <input type="email" id="regStudentEmail" placeholder="maria@univ.edu" />
-      <label style="font-size:0.8rem; font-weight:700;">Degree Specialization:</label>
-      <select id="regStudentMajor">
-        <option>Bachelor of Elementary Education (BEEd)</option>
-        <option>BSEd - English</option>
-        <option>BSEd - Social Studies</option>
-        <option>BSEd - Mathematics</option>
-        <option>BSEd - Science</option>
-      </select>
-      <button class="btn btn-primary btn-block" onclick="doRegisterStudent()">Enter Classroom</button>
-      <hr style="margin:1rem 0;" />
-      <button class="btn btn-outline btn-block" onclick="teacherFastSign()">👑 Sign In as Teacher Echo</button>
+  <!-- Prize Ladder Drawer -->
+  <aside class="ladder-drawer" id="ladderDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <h3 style="color:var(--gold); font-size:1rem;">LPT RANK LADDER</h3>
+      <button onclick="toggleLadder()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
+    </div>
+    <div id="ladderList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column-reverse;"></div>
+  </aside>
+
+  <!-- Lifeline Dialog (Ask Echo / Audience Poll) -->
+  <div id="dialogModal" class="dialog-overlay hidden">
+    <div class="dialog-card">
+      <h3 id="dialogTitle" style="color:var(--gold); margin-bottom:0.8rem;">Lifeline</h3>
+      <div id="dialogBody" style="font-size:0.92rem; color:#cbd5e1; line-height:1.6; margin-bottom:1.2rem;"></div>
+      <button class="btn-continue" style="padding:0.6rem;" onclick="closeDialog()">Return to Game</button>
     </div>
   </div>
 
   <script>
     /* ========================================================
-       65 COMPLETE AUTHENTIC LET QUESTIONS REPOSITORY
+       CURATED 15-TIER PRIZE LADDER
        ======================================================== */
-    const master65Items = [
-      { stem: "1. Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "School Safety & Child Protection", rationale: "Psychological abuse involves threats, intimidation, and inducing fear in an individual to assert control." },
-      { stem: "2. What does SDG 15 – 30 mean?", choices: ["Sustainable Development Goals after the MDG of 2015", "Sustaining and Developing Gross National Product", "Specific Development Goals for developing nations", "Sustaining Development Led by Giant Nations"], ans: 0, concept: "Global Goals (MDG & SDG)", rationale: "The Sustainable Development Goals (SDGs) run from 2016–2030, following the 2000–2015 Millennium Development Goals." },
-      { stem: "3. Which is TRUE of a school and community partnership?", choices: ["Community helps school", "School is a recipient of assistance from community", "Both school and community benefit", "Both school and community lose"], ans: 2, concept: "School & Community Partnerships", rationale: "School-community partnerships are mutually beneficial collaborations that enrich both institutions." },
-      { stem: "4. Which program is a proof of school and community partnership where every month of May education stakeholders contribute their time, talent and treasure to ensure that school facilities are set in time for the school opening?", choices: ["Parents and Teachers Association Assembly", "School Governing Council Annual Assembly", "Brigada Eskwela", "Palarong Pambansa"], ans: 2, concept: "DepEd Programs & Community Alliances", rationale: "Brigada Eskwela unites stakeholders every May to clean and prepare public school facilities before classes start." },
-      { stem: "5. 'It takes a village to educate a child'. Which does this statement imply?", choices: ["PTA is more than enough partnership", "Institutionalize school – community partnership", "School can be substitute for absentee parents", "Children need more models"], ans: 1, concept: "Sociological Foundations", rationale: "This proverb emphasizes the necessity of institutionalized, widespread community-school collaboration." },
-      { stem: "6. As a teacher, you are a facilitator of learning. What is expected of you?", choices: ["Do not fail anyone", "Make teaching – learning interactive and exciting", "Use video clips", "Allow them to use their cellphones in the classroom"], ans: 1, concept: "Teaching Methodologies", rationale: "A facilitator creates engaging, interactive, and active learning environments for students." },
-      { stem: "7. Who is the most interested in improving the present status of an organization?", choices: ["The authoritarian leader", "The laissez faire type of leader", "The transformational leader", "The servant leader"], ans: 2, concept: "Organizational Leadership", rationale: "Transformational leaders challenge the status quo and inspire members to innovate and transform the organization." },
-      { stem: "8. Is SBM, if implemented the right way, an effective way to strengthen school and community partnership?", choices: ["Yes", "No", "Depends on size of school", "Depends on school location"], ans: 0, concept: "School-Based Management (SBM)", rationale: "Yes, School-Based Management decentralizes governance and directly involves local community stakeholders." },
-      { stem: "9. Which is an advantage of SBM?", choices: ["Fast resolution of problems in school because school head decides", "Sense of ownership of stakeholders", "In accordance with decentralization law", "Total independence of schools"], ans: 1, concept: "School-Based Management (SBM)", rationale: "Direct involvement in school governance gives parents, teachers, and communities a deep sense of ownership." },
-      { stem: "10. For SBM to succeed, which must be present?", choices: ["Effective school support system", "Leader with a strong personality", "Docile community", "Low expectation"], ans: 0, concept: "School-Based Management (SBM)", rationale: "SBM requires robust, effective support systems from institutional leaders and stakeholders." },
-      { stem: "11. Which is TRUE of school culture?", choices: ["Passed on like a hereditary trait", "Created by the school head and other stakeholders", "Has significant effect on student performance", "Cannot be altered"], ans: 2, concept: "School Culture & Climate", rationale: "A school's culture (shared values, rituals, and climate) directly affects student achievement and performance." },
-      { stem: "12. Which is the most effective way of making policies?", choices: ["School head to involve stakeholders", "Students not to participate since policies are for them", "Only parents of students enrolled are involved", "School policies are permanent to build the culture of excellence"], ans: 0, concept: "Policy Formulation & Governance", rationale: "Involving all affected stakeholders yields effective, respected, and lasting school policies." },
-      { stem: "13. Which competency/ies is/are practiced by a school head who demonstrates strategic thinking and innovation?\nI. Charting the strategic direction of the school\nII. Making informed decisions\nIII. Leading change and innovation", choices: ["I and II", "I only", "II and III", "I, II and III"], ans: 3, concept: "NCBS-SH Competencies", rationale: "Strategic thinking covers direction-setting, data-informed decisions, and leading change (I, II, and III)." },
-      { stem: "14. Which does the school head do as instructional leader?", choices: ["Leads in curriculum implementation and improvement", "Manages education alliances and networks", "Manages school resources and systems", "Makes informed decisions"], ans: 0, concept: "Instructional Leadership", rationale: "Instructional leadership centers on pedagogical guidance, curriculum implementation, and learning improvement." },
-      { stem: "15. To which domain in School Heads’ Competency Framework is supervising and evaluating teachers’ performance aligned?", choices: ["Strategic thinking and innovation", "Instructional leadership", "Personal excellence", "Stakeholder’s engagement"], ans: 1, concept: "Instructional Leadership", rationale: "Teacher instructional supervision and evaluation belong directly to Domain 2: Instructional Leadership." },
-      { stem: "16. How can a school create a student–centered learning climate?\nI. Set high social and academic expectations\nII. Sensitive to children’s needs\nIII. Create inclusive school environment", choices: ["I only", "I, II, III", "II only", "I and II"], ans: 1, concept: "Student-Centered Climate", rationale: "High expectations, child sensitivity, and inclusivity together create a student-centered climate (I, II, and III)." },
-      { stem: "17. Teacher Q regards the student as a spiritual entity and as part of the larger spiritual universe. To what philosophy does teacher Q subscribe?", choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"], ans: 0, concept: "Western Philosophical Foundations", rationale: "Idealism views the universe as spiritual and values the individual soul and moral ideas." },
-      { stem: "18. Who among the following believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?", choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"], ans: 1, concept: "Western Philosophical Foundations", rationale: "Essentialism prioritizes academic rigor, 3Rs mastery, homework, and teacher authority." },
-      { stem: "19. Teacher U emphasizes to her students the importance of deep personal reflection on one’s commitments and choices. Teacher U subscribes to which Philosophy?", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, concept: "Western Philosophical Foundations", rationale: "Existentialism values self-definition, personal freedom, and individual responsibility for one's choices." },
-      { stem: "20. Teacher X is often times frustrated. The students in her class hardly volunteer to recite and to do other learning-related tasks. This is a proof of the Filipino’s:", choices: ["Sense of humor", "Lack of resourcefulness", "Lack of reflection", "Passivity and lack of initiative"], ans: 3, concept: "Filipino Sociocultural Values", rationale: "Reluctance to volunteer and waiting for directives reflect the Filipino weakness of passivity and lack of initiative." },
-      { stem: "21. The tendency to emphasize so much on school beautification to the detriment of pupil’s performance illustrated the:", choices: ["Filipino’s sense of humor", "Filipino’s lack of reflection", "Filipino’s love for 'Porma' at the expense of substance", "Filipino’s lack of seriousness"], ans: 2, concept: "Filipino Sociocultural Values", rationale: "Prioritizing physical appearance over actual academic learning illustrates valuing 'porma' over substance." },
-      { stem: "22. Which of the following statements is NOT TRUE of an ideal social principle?", choices: ["Restructure society to create a union of communities", "Advocate direct life-relations between men and men", "De-emphasize centralization of power", "Advocate an ethics of manipulation"], ans: 3, concept: "Sociological Foundations", rationale: "An ideal social principle fosters genuine human community and firmly rejects manipulation." },
-      { stem: "23. In a vocational school, students are taught skills and knowledge that have practical applications. Which source of knowledge aligns with this pragmatic approach?", choices: ["The nature of reality and existence.", "The mind and mental processes.", "The practical consequences and utility of knowledge.", "Inquiry into the nature of the divine."], ans: 2, concept: "Epistemology", rationale: "Pragmatism determines the validity of knowledge by its practical utility and observable consequences." },
-      { stem: "24. Epistemology is concerned with:", choices: ["The nature of value.", "The study of being and existence.", "Examination of knowledge and the nature of belief.", "Analysis of government principles."], ans: 2, concept: "Epistemology", rationale: "Epistemology studies the nature, origins, criteria, and limits of knowledge and belief." },
-      { stem: "25. Which among the following is the primary concern of Cosmology?", choices: ["Inquiry into the nature of beauty and art.", "Examination of the nature of the universe.", "Study of valid reasoning and argumentation.", "Exploration of concepts of right and wrong."], ans: 1, concept: "Metaphysics", rationale: "Cosmology examines the origin, nature, and structure of the physical universe." },
-      { stem: "26. Empirical Observation involves ______.", choices: ["Immediate knowledge without conscious reasoning.", "Knowledge acquired through deductive reasoning.", "Direct observation using the senses.", "Recollection of past experiences."], ans: 2, concept: "Epistemology", rationale: "Empirical observation is information gathered directly through the five senses." },
-      { stem: "27. Which among the following questions does Ontology seek to answer?", choices: ["What exists? What is the nature of being?", "What is the origin and structure of the universe?", "What defines humanity? How do societies develop?", "What is the nature of God? What is the relationship between God and the world?"], ans: 0, concept: "Metaphysics", rationale: "Ontology studies being and existence: 'What exists? What is the nature of being?'" },
-      { stem: "28. Which branch of Metaphysics focuses on the examination of the nature of the universe?", choices: ["Ontology", "Cosmology", "Theology", "Anthropology"], ans: 1, concept: "Metaphysics", rationale: "Cosmology is the sub-branch of metaphysics that investigates the nature of the universe." },
-      { stem: "29. Which is NOT included in the DepEd Primer on School Community Partnership?", choices: ["School used as an evacuation center", "School used as a polling place", "School used for PTA meetings", "School used for medical mission"], ans: 2, concept: "School & Community Partnerships", rationale: "In community partnerships, schools serve as evacuation centers, polling places, and medical venues. PTA meetings are internal school functions." },
-      { stem: "30. All statements are descriptive of school policies EXCEPT that ______.", choices: ["they are supportive of the learning process", "they guide all sectors towards the attainment of school goals", "they ensure smooth flow of school operations", "they suffocate school climate"], ans: 3, concept: "School Culture & Climate", rationale: "Policies support school operations; they do not suffocate school climate." },
-      { stem: "31. Which of the following periods focused on the rediscovery of classical philosophy, literature and art?", choices: ["Athenian period", "Medieval period", "Reformation period", "Renaissance period"], ans: 3, concept: "Historical Foundations", rationale: "The Renaissance was characterized by the revival and rediscovery of classical Greco-Roman art, literature, and philosophy." },
-      { stem: "32. How can a school head exercise school management and operations?\nI. Managing School Operations\nII. Use of Technology in School Management\nIII. Financial Resources Matters", choices: ["I, II and III", "I and III", "II and III", "I, and II"], ans: 0, concept: "School Operations & Management", rationale: "Managing operations, integrating administrative tech, and fiscal management are all vital (I, II, and III)." },
-      { stem: "33. The legal basis for the implementation of the National Competency-Based Standards for School Heads is", choices: ["Philippine Constitution", "DepEd order 8, s2015", "DepEd order 32, s2010", "DepEd order 04, s2012"], ans: 2, concept: "Legal Bases of Education", rationale: "DepEd Order No. 32, s. 2010 established the NCBS-SH framework." },
-      { stem: "34. The success of SBM primarily depends on", choices: ["basic resources", "school heads", "local government", "the Department of Education"], ans: 1, concept: "School-Based Management (SBM)", rationale: "The school head is the primary instructional and organizational leader driving SBM." },
-      { stem: "35. Transformational leaders are described as the following EXCEPT", choices: ["charismatic", "inspirational", "collaborator", "powerful"], ans: 3, concept: "Organizational Leadership", rationale: "Transformational leaders rely on inspiration, vision, and collaboration rather than authoritarian power." },
-      { stem: "36. A teacher in the city calls a shy student 'promdi'. Which does 'promdi' imply? Those who come from the province", choices: ["may be belittled", "deserves respect", "are as civilized as the city-bred", "are achievers"], ans: 0, concept: "Filipino Sociocultural Values", rationale: "'Promdi' is a derogatory label used to belittle individuals from rural provinces." },
-      { stem: "37. Who is considered the first teacher of Ancient China and the key figure in Confucianism?", choices: ["Lao Tzu.", "Siddhartha Gautama.", "Confucius.", "Guru Nanak."], ans: 2, concept: "Eastern Philosophies", rationale: "Confucius is revered as the first great teacher and philosopher of Ancient China." },
-      { stem: "38. How is Karma understood in Hinduism?", choices: ["Liberation from the cycle of rebirth.", "Ritualistic meditation.", "Law of cause and effect where actions determine future consequences.", "The ultimate cosmic spirit."], ans: 2, concept: "Eastern Philosophies", rationale: "Karma is the moral law of cause and effect governing actions and their rebirth consequences." },
-      { stem: "39. According to Buddhism, what does the concept of Impermanence (Anicca) suggest?", choices: ["Everything is permanent and unchanging.", "Nothing is permanent.", "Only spiritual truths are impermanent.", "Impermanence is irrelevant in Buddhism."], ans: 1, concept: "Eastern Philosophies", rationale: "Anicca teaches that all conditioned existence is impermanent and constantly changing." },
-      { stem: "40. Which philosophy emphasizes the idea that school exists for the society?", choices: ["Reconstructionism", "Idealism", "Perennialism", "Realism"], ans: 0, concept: "Western Philosophical Foundations", rationale: "Social Reconstructionism views schools as vehicles to reform and rebuild society." },
-      { stem: "41. Teacher Maria sees to it that her classroom is clean and orderly so her pupils will less likely disarrange seats and litter on the floor. On which thought is her action based?", choices: ["Behaviorism", "Existentialism", "Progressivism", "Reconstructionism"], ans: 0, concept: "Psychological & Learning Theories", rationale: "Behaviorism posits that environmental conditions and physical stimuli directly influence behavior." },
-      { stem: "42. As a member of the curriculum committee, your chief concern is to give the child freedom to choose what to learn and believe, as you allow them to set their own identities and standards. What philosophy will you consider?", choices: ["Existentialism", "Fatalism", "Idealism", "Pragmatism"], ans: 0, concept: "Western Philosophical Foundations", rationale: "Existentialism highlights individual freedom, personal responsibility, and self-chosen identity." },
-      { stem: "43. Teacher S lets students construct their own learning through active interplay and engagement in class. He primarily considers the student’s interest in lesson planning. To which philosophy does Teacher S adhere?", choices: ["Essentialism", "Perennialism", "Progressivism", "Reconstructionism"], ans: 2, concept: "Western Philosophical Foundations", rationale: "Progressivism (John Dewey) builds education upon student interests and active experiential learning." },
-      { stem: "44. The shooting incidents in school campuses abroad have made schools rethink the curriculum. Which changes are being introduced in schools to counteract campus violence?\nI. Inclusion of socio-emotional teaching\nII. The emphasis on the concept of competition against self and not against others\nIII. Focus on academic achievement and productivity", choices: ["I and II", "I and III", "II and III", "I, II, III"], ans: 0, concept: "School Safety & Child Protection", rationale: "Socio-emotional learning (I) and self-mastery over cutthroat competition (II) counteract violence." },
-      { stem: "45. To ensure high standards of teachers' personal and professional development, which measure must be implemented?\nI. A school head plans the professional development of his/her teachers.\nII. Every teacher formulates his/her own professional development plan\nIII. The implementation of what is learned in training must be monitored.", choices: ["I and III", "II only", "I only", "II and III"], ans: 3, concept: "Teacher Professional Development", rationale: "Individualized development plans (II) and active post-training monitoring (III) ensure genuine teacher growth." },
-      { stem: "46. The wide acceptance of 'bottom up' management style has influenced schools to practice which management practice?", choices: ["Prescription of what ought to be done from the central office", "Exclusion of politicians from the pool of guest speakers during graduation exercises", "Involvement of students, parents, teachers and community in school planning", "Allowing schools to do what they think is best"], ans: 2, concept: "School-Based Management (SBM)", rationale: "Bottom-up management actively involves local stakeholders in school governance and strategic planning." },
-      { stem: "47. A stakeholder in curriculum development, Mr. C, a district supervisor and a member of the school board has one of the following primary roles:", choices: ["Support and participate in the parent-school organization activities", "Authorize school expenditures for curriculum development, implementation and evaluation", "Enact legislation to effect curriculum improvement.", "Recommend changes in the curriculum."], ans: 3, concept: "Curriculum Development", rationale: "Supervisors evaluate curricular implementation in schools and recommend evidence-based improvements." },
-      { stem: "48. In Sociological Foundations of Education, which characteristic of culture involves adapting to environmental, social, and economic changes?", choices: ["Integrated", "Adaptive", "Dynamic", "Symbolic"], ans: 1, concept: "Sociological Foundations", rationale: "Culture is adaptive as it evolves mechanisms to adjust to changing socio-environmental realities." },
-      { stem: "49. What is the primary function of the economy as a social institution in Sociological Foundations of Education?", choices: ["Providing moral guidance.", "Generating jobs and livelihoods.", "Making collective decisions for society.", "Transmitting cultural values."], ans: 1, concept: "Sociological Foundations", rationale: "The economy organizes production and provides employment, goods, and livelihoods for society." },
-      { stem: "50. Which social institution involves systems of beliefs, rituals, and practices related to religion?", choices: ["Family", "School", "Government", "Church"], ans: 3, concept: "Sociological Foundations", rationale: "The church/religion provides shared spiritual beliefs, rituals, and ethical principles." },
-      { stem: "51. How do folkways differ from mores?", choices: ["Folkways are highly scripted ceremonies, while mores are behavior patterns.", "Folkways are organized and repetitive behavior patterns, while mores have a moralistic value.", "Folkways are formalized norms, while mores are customary behavior patterns.", "Folkways are specific sequences of actions, while mores are enacted by government authorities."], ans: 1, concept: "Sociological Foundations", rationale: "Folkways are customary conventions; mores carry strict moral significance and societal weight." },
-      { stem: "52. According to Conflict Theory, what is the primary driver of social change?", choices: ["Cooperation between different groups.", "Inequality and power struggles.", "Shared meanings and symbols.", "Rational calculations of rewards and costs."], ans: 1, concept: "Sociological Theories", rationale: "Conflict theory posits that social transformation arises from struggles over resources and power." },
-      { stem: "53. What is the primary focus of Consensus Theory in social science theories?", choices: ["Challenging grand narratives and universal truths.", "Shared values and norms that create social order.", "Examining gender-based inequalities and oppression.", "Advocating for gender equality and social justice."], ans: 1, concept: "Sociological Theories", rationale: "Consensus theory views society as an integrated system maintained through shared norms and values." },
-      { stem: "54. How does Enculturation shape individual identity and social behavior?", choices: ["Through assimilation into the dominant culture.", "By adopting cultural norms from other societies.", "Learning and acquiring one's own culture through informal means.", "The spread of cultural elements through trade."], ans: 2, concept: "Anthropological Foundations", rationale: "Enculturation is the lifelong acquisition of one's own native culture through family and primary community." },
-      { stem: "55. Which among the following characterizes partnership between school and community?", choices: ["Competition between educational institutions.", "Collaborative efforts to enhance students' well-being and educational experiences.", "Isolation of schools from the local community.", "Strict separation of resources between schools and communities."], ans: 1, concept: "School & Community Partnerships", rationale: "Effective partnerships unite school and community for the holistic development of students." },
-      { stem: "56. What is the overall atmosphere or 'feel' of a school defined as?", choices: ["School Leadership.", "School Climate.", "Organizational Leadership.", "School Culture."], ans: 1, concept: "School Culture & Climate", rationale: "School climate describes the interpersonal, emotional, and physical environment and 'feel' of the school." },
-      { stem: "57. How does a Leader differ from a Manager?", choices: ["A Leader focuses on tasks and goals.", "A leader sets vision and aligns people.", "A Leader influences through authority.", "A Manager inspires through vision."], ans: 1, concept: "Organizational Leadership", rationale: "Leaders set vision and align people, while managers coordinate operational tasks and resources." },
-      { stem: "58. What is a key component of School-Based Management (SBM)?", choices: ["Centralized decision-making.", "Accountability.", "Limited autonomy for schools.", "Reduced community engagement."], ans: 1, concept: "School-Based Management (SBM)", rationale: "SBM decentralizes authority to schools while demanding high accountability for educational outcomes." },
-      { stem: "59. Which domain of NCBS-SH focuses on guiding the school towards its vision and mission?", choices: ["Domain 1: School Leadership.", "Domain 2: Instructional Leadership.", "Domain 3: Creating a Student-Centered Learning Climate.", "Domain 4: HR Management and Professional Development."], ans: 0, concept: "NCBS-SH Competencies", rationale: "Domain 1: School Leadership centers on vision, mission, and strategic school direction." },
-      { stem: "60. The school is facing challenges in maintaining a positive learning environment. What domain and key competency in NCBS-SH should the school head focus on to address this issue?", choices: ["Domain 3: Creating a Student-Centered Learning Climate - Student Welfare and Discipline.", "Domain 1: School Leadership - Ethical and Effective Leadership.", "Domain 5: Parents Involvement and Community Partnership - Community Partnership.", "Domain 6: School Management and Operation - Financial Management."], ans: 0, concept: "NCBS-SH Competencies", rationale: "Student welfare, supportive discipline, and environment fall under Domain 3: Student-Centered Learning Climate." },
-      { stem: "61. The school head wants to enhance the professional development of the teaching staff. Which domain and key competency in NCBS-SH align with this goal?", choices: ["Domain 2: Instructional Leadership - Instructional Supervision.", "Domain 4: HR Management and Professional Development - Professional Development.", "Domain 5: Parents Involvement and Community Partnership - Parental Involvement.", "Domain 7: Personal and Professional Attributes - Professional Ethics."], ans: 1, concept: "Teacher Professional Development", rationale: "Domain 4 explicitly governs HR management and continuous teacher professional development." },
-      { stem: "62. A school head wants to strengthen the school's connections with the community. Which domain and key component in PPSSH align with this goal?", choices: ["Domain 5: Building Connections - Stakeholder Engagement.", "Domain 1: Leading Strategically - Results-Based Leadership.", "Domain 3: Focusing on Teaching and Learning - Monitoring and Evaluation.", "Domain 4: Developing Self and Others - Personal and Professional Development."], ans: 0, concept: "PPSSH & NCBS-SH", rationale: "Domain 5 of PPSSH (DO 24 s. 2020) is Building Connections, focusing on stakeholder engagement." },
-      { stem: "63. To which domain in School Heads' Competency Framework is supervising and evaluating teachers' performance aligned?", choices: ["Personal excellence", "Strategic thinking and innovation", "Instructional leadership", "Stakeholder's engagement"], ans: 2, concept: "Instructional Leadership", rationale: "Supervising, mentoring, and appraising classroom teaching is the heart of Instructional Leadership." },
-      { stem: "64. Which is the essence of SBM?", choices: ["Principal empowerment", "Reduced authority of school head", "School empowerment", "Absolute freedom of education stakeholders"], ans: 2, concept: "School-Based Management (SBM)", rationale: "The essence of SBM is school empowerment—giving schools autonomy to address local needs." },
-      { stem: "65. Which does a transformational teacher leader do?\nI. Helps others with their self-development\nII. Challenges team members to help them grow\nIII. Direct colleagues to get things done while she does not lift a finger\nIV. Set teaching-learning standards by himself/herself", choices: ["II", "II and IV", "I and III", "I and II"], ans: 3, concept: "Organizational Leadership", rationale: "Transformational leaders assist others with personal growth (I) and challenge colleagues to excel (II)." }
+    const prizeLadder = [
+      { level: 1, prize: "₱1,000", title: "Freshman Cadet", milestone: false },
+      { level: 2, prize: "₱2,000", title: "Sophomore Major", milestone: false },
+      { level: 3, prize: "₱3,000", title: "Junior Major", milestone: false },
+      { level: 4, prize: "₱5,000", title: "Senior Field Intern", milestone: false },
+      { level: 5, prize: "₱10,000", title: "✨ SAFE HAVEN: BSED/BEED GRADUATE", milestone: true },
+      { level: 6, prize: "₱20,000", title: "PRC Board Applicant", milestone: false },
+      { level: 7, prize: "₱40,000", title: "Examinee In Review", milestone: false },
+      { level: 8, prize: "₱70,000", title: "Teacher I Candidate", milestone: false },
+      { level: 9, prize: "₱100,000", title: "Teacher II Candidate", milestone: false },
+      { level: 10, prize: "₱150,000", title: "✨ SAFE HAVEN: LICENSED PROFESSIONAL TEACHER (LPT)", milestone: true },
+      { level: 11, prize: "₱250,000", title: "Master Teacher I", milestone: false },
+      { level: 12, prize: "₱400,000", title: "Head Teacher", milestone: false },
+      { level: 13, prize: "₱600,000", title: "School Principal", milestone: false },
+      { level: 14, prize: "₱800,000", title: "Regional Top 5", milestone: false },
+      { level: 15, prize: "₱1,000,000", title: "🏆 NATIONAL TOPNOTCHER #1", milestone: true }
     ];
 
     /* ========================================================
-       COURSE & SYLLABUS DATA
+       TOPIC IMAGE MAP (REAL HIGH-RES PHOTOGRAPHS)
        ======================================================== */
-    const courses = [
-      {
-        id: "course-1",
-        title: "The Teacher & Community, School Culture & Organizational Leadership",
-        domain: "Professional Education",
-        desc: "NCBS-SH, PPSSH, Philosophies of Education, DepEd Orders & School-Community Alliances.",
-        items: master65Items,
-        topics: [
-          {
-            id: "t1",
-            title: "1. Philosophical Foundations of Education",
-            mediaUrl: "https://images.unsplash.com/photo-1532012164546-f432f2e3777a?auto=format&fit=crop&w=900&q=80",
-            mediaCaption: "Epistemology, Metaphysics, Axiology, and Classical Philosophies.",
-            body: "<p><strong>Philosophy</strong> is derived from the Greek <em>philia</em> (love) and <em>sophia</em> (wisdom). Metaphysics studies existence; Epistemology explores knowledge origins; Axiology governs ethics and aesthetics.</p>"
-          },
-          {
-            id: "t2",
-            title: "2. Eastern Philosophies in Education",
-            mediaUrl: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=900&q=80",
-            mediaCaption: "Hinduism, Buddhism, Confucianism, Taoism, and Sikhism.",
-            body: "<p>Eastern schools of thought cultivate harmony, duty, and holistic spiritual balance. Confucianism emphasizes <em>Ren</em> (benevolence) and filial piety; Buddhism teaches <em>Anicca</em> (impermanence).</p>"
-          },
-          {
-            id: "t3",
-            title: "3. Organizational Leadership & SBM",
-            mediaUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
-            mediaCaption: "Decentralized School-Based Management (RA 9155).",
-            body: "<p>School-Based Management empowers school heads and communities to collaborate on school improvement plans (SIP), fostering mutual accountability.</p>"
-          }
-        ]
+    const topicPhotos = {
+      philosophy: {
+        url: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=900&q=80",
+        caption: "Western Philosophical Traditions & Epistemological Roots"
+      },
+      eastern: {
+        url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
+        caption: "Eastern Philosophies: Harmony, Dharma, and Filial Piety"
+      },
+      community: {
+        url: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=900&q=80",
+        caption: "School & Community Alliances (Brigada Eskwela)"
+      },
+      leadership: {
+        url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
+        caption: "Decentralized School-Based Management & Leadership"
+      },
+      history: {
+        url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
+        caption: "Classical & Renaissance Educational Heritage"
+      },
+      assessment: {
+        url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=80",
+        caption: "Assessment of Learning & Cognitive Evaluation"
+      },
+      safety: {
+        url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80",
+        caption: "Child Protection, Psychological Welfare & Inclusive Climate"
       }
+    };
+
+    /* ========================================================
+       AUTHENTIC 65 LET BOARD EXAM QUESTIONS BANK
+       ======================================================== */
+    const masterQuestionBank = [
+      { stem: "Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "Child Protection & Safety", photoKey: "safety", rationale: "Psychological abuse involves threats, intimidation, and inducing fear in an individual to assert control." },
+      { stem: "What does SDG 15 – 30 mean?", choices: ["Sustainable Development Goals after MDG 2015", "Sustaining Gross National Product", "Specific Development Goals for developing nations", "Sustaining Development by Giant Nations"], ans: 0, concept: "Global Development Goals", photoKey: "history", rationale: "The Sustainable Development Goals (SDGs) run from 2016–2030, building on the 2000–2015 Millennium Development Goals." },
+      { stem: "Which is TRUE of a school and community partnership?", choices: ["Community helps school only", "School is only a recipient of assistance", "Both school and community benefit", "Both school and community lose"], ans: 2, concept: "School & Community Alliances", photoKey: "community", rationale: "School-community partnerships are mutually beneficial collaborations that enrich both institutions." },
+      { stem: "Which program is proof of school-community partnership where stakeholders donate time, talent, and treasure every May?", choices: ["PTA Assembly", "School Governing Council", "Brigada Eskwela", "Palarong Pambansa"], ans: 2, concept: "DepEd Programs", photoKey: "community", rationale: "Brigada Eskwela unites stakeholders every May to clean, maintain, and ready public school classrooms." },
+      { stem: "'It takes a village to educate a child.' Which does this statement imply?", choices: ["PTA is enough partnership", "Institutionalize school-community partnerships", "School substitutes for parents", "Children need more models"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "This proverb asserts that educating youth requires wide-scale, institutionalized community participation." },
+      { stem: "As a teacher, you are a facilitator of learning. What is expected of you?", choices: ["Do not fail anyone", "Make teaching-learning interactive and exciting", "Use video clips exclusively", "Allow unlimited smartphone use"], ans: 1, concept: "Pedagogical Leadership", photoKey: "assessment", rationale: "A facilitator designs interactive, student-centered environments that spark active inquiry." },
+      { stem: "Who is the most interested in improving the present status of an organization?", choices: ["The authoritarian leader", "The laissez-faire leader", "The transformational leader", "The servant leader"], ans: 2, concept: "Organizational Leadership", photoKey: "leadership", rationale: "Transformational leaders actively disrupt complacency to elevate organizational performance." },
+      { stem: "Is SBM, if implemented the right way, an effective way to strengthen school and community partnership?", choices: ["Yes", "No", "Depends on size of school", "Depends on location"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "Yes, School-Based Management (RA 9155) directly empowers local stakeholders in school governance." },
+      { stem: "Which is an advantage of SBM?", choices: ["Principal decides everything alone", "Sense of ownership among stakeholders", "Independence from all national laws", "Complete privatization"], ans: 1, concept: "School-Based Management", photoKey: "leadership", rationale: "Stakeholder participation fosters deep shared ownership and commitment to school success." },
+      { stem: "For SBM to succeed, which must be present?", choices: ["Effective school support system", "Leader with authoritarian personality", "Docile community", "Low academic expectations"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "SBM requires robust technical and institutional support systems to sustain decentralization." },
+      { stem: "Which is TRUE of school culture?", choices: ["Inherited like biological genes", "Formed only by the school principal", "Has significant effect on student performance", "Cannot be altered once built"], ans: 2, concept: "School Culture", photoKey: "community", rationale: "The values, beliefs, and climate within a school directly determine student achievement." },
+      { stem: "Which is the most effective way of making policies in school?", choices: ["School head to involve stakeholders", "Students must never participate", "Only parents of honor students participate", "Make policies permanent"], ans: 0, concept: "Educational Governance", photoKey: "leadership", rationale: "Participatory policy-making builds consensus, compliance, and lasting institutional trust." },
+      { stem: "A school head who charts strategic direction, makes informed decisions, and leads change demonstrates:", choices: ["Strategic thinking and innovation", "Personal survival only", "Laissez-faire governance", "Authoritarian rule"], ans: 0, concept: "NCBS-SH Competencies", photoKey: "leadership", rationale: "Under Domain 1 of NCBS-SH, strategic thinking combines vision-setting, data-informed choices, and innovation." },
+      { stem: "Supervising and evaluating teachers' instructional performance aligns with which domain of NCBS-SH?", choices: ["Strategic thinking", "Instructional leadership", "Personal excellence", "Fiscal management"], ans: 1, concept: "Instructional Supervision", photoKey: "assessment", rationale: "Instructional supervision, clinical mentoring, and teacher appraisal sit in Domain 2: Instructional Leadership." },
+      { stem: "Teacher Q regards the student as a spiritual entity and part of the larger spiritual universe. To which philosophy does Teacher Q subscribe?", choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"], ans: 0, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Idealism (Plato) views ultimate reality as spiritual, mental, and anchored in eternal ideas." },
+      { stem: "Who believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?", choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Essentialism (William Bagley) champions academic rigor, mastery of core 3Rs, and teacher authority." },
+      { stem: "Teacher U emphasizes deep personal reflection on one's choices and commitments. Teacher U subscribes to:", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Existentialism asserts that existence precedes essence; learners must freely define their own purpose." },
+      { stem: "In a vocational school, students are taught skills with direct practical application. Which source of knowledge aligns with this approach?", choices: ["Inquiry into the divine", "The mind and innate forms", "The practical utility and consequences of knowledge", "Purely theoretical ontology"], ans: 2, concept: "Epistemology", photoKey: "philosophy", rationale: "Pragmatism (John Dewey) tests the truth and value of knowledge by its practical, experiential utility." },
+      { stem: "Cosmology as a branch of Metaphysics is primarily concerned with:", choices: ["Beauty and aesthetic taste", "The origin and nature of the universe", "Valid syllogistic reasoning", "Ethics of right and wrong"], ans: 1, concept: "Metaphysics", photoKey: "philosophy", rationale: "Cosmology examines the origins, structural laws, and nature of the cosmos/universe." },
+      { stem: "Which period focused on the rediscovery of classical Greek philosophy, literature, and art?", choices: ["Athenian period", "Medieval period", "Reformation period", "Renaissance period"], ans: 3, concept: "Historical Foundations", photoKey: "history", rationale: "The Renaissance celebrated humanism by reviving classical Greco-Roman arts and philosophies." },
+      { stem: "Who is considered the first great teacher of Ancient China and key figure in Confucianism?", choices: ["Lao Tzu", "Siddhartha Gautama", "Confucius", "Guru Nanak"], ans: 2, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Confucius established ethical teachings centered on Ren (benevolence) and Li (propriety)." },
+      { stem: "How is Karma understood in Hinduism?", choices: ["Liberation from cycles of birth", "Law of cause and effect where actions determine future consequences", "The cosmic supreme creator", "Ritual asceticism"], ans: 1, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Karma is the moral law of cause and effect governing all actions and their reincarnated results." },
+      { stem: "According to Buddhism, what does the concept of Impermanence (Anicca) suggest?", choices: ["Everything is permanent and enduring", "Nothing is permanent; all things change", "Only suffering is eternal", "The self is absolute"], ans: 1, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Anicca teaches that all conditioned physical and mental phenomena are subject to continuous change." },
+      { stem: "How do folkways differ from mores?", choices: ["Folkways are legal codes; mores are customs", "Folkways are repetitive conventions; mores carry profound moral weight", "Folkways are strict; mores are optional", "Folkways are religious dogmas"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "Folkways govern casual etiquette; mores dictate deep moral values that invoke severe societal sanctions." },
+      { stem: "According to Conflict Theory, what is the primary driver of social change?", choices: ["Cooperation between institutions", "Inequality and power struggles between groups", "Shared symbolic interactions", "Spiritual consensus"], ans: 1, concept: "Sociological Theories", photoKey: "safety", rationale: "Conflict theory (Karl Marx) posits that societal evolution is propelled by clashes over scarce resources." }
     ];
 
-    let activeCourse = courses[0];
-    let currentTopicIndex = 0;
-    let currentUser = JSON.parse(sessionStorage.getItem("echolet_user")) || null;
-    let completedTopics = JSON.parse(localStorage.getItem("echolet_completed_topics")) || {};
-    let errorBank = JSON.parse(localStorage.getItem("echolet_error_bank")) || {};
-    let geminiApiKey = localStorage.getItem("echolet_gemini_key") || "";
+    /* ========================================================
+       GAME STATE
+       ======================================================== */
+    let currentLevel = 0;
+    let currentGameQuestions = [];
+    let activeQuestion = null;
+    let selectedChoiceIndex = null;
+    let isLocked = false;
+    let speechSynth = window.speechSynthesis;
+    let currentUtterance = null;
 
-    // Quiz Execution State
-    let quizActiveItems = [];
-    let currentQuizIndex = 0;
-    let currentQuizScore = 0;
-    let currentFailedItems = [];
+    // Lifeline tracking
+    let used5050 = false;
+    let usedEcho = false;
+    let usedPoll = false;
 
     /* ========================================================
-       PHASE 3: SMART DUAL-BRAIN AI TUTOR ENGINE
+       AUDIO SYNTHESIZER (WEB AUDIO API)
        ======================================================== */
-    function openAiSettingsModal() {
-      document.getElementById("geminiApiKeyInput").value = geminiApiKey;
-      document.getElementById("aiSettingsModal").classList.remove("hidden");
-    }
-    function closeAiSettingsModal() { document.getElementById("aiSettingsModal").classList.add("hidden"); }
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    function saveAiSettings() {
-      const val = document.getElementById("geminiApiKeyInput").value.trim();
-      geminiApiKey = val;
-      if (val) {
-        localStorage.setItem("echolet_gemini_key", val);
-        alert("✅ Gemini Live AI Connected! Unlimited intelligence active.");
-      } else {
-        localStorage.removeItem("echolet_gemini_key");
-        alert("Offline Brain selected.");
-      }
-      closeAiSettingsModal();
-      updateAiEngineLabel();
+    function playTone(freq, duration, type = "sine", gainVal = 0.2) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) { console.log(e); }
     }
 
-    function clearAiKey() {
-      geminiApiKey = "";
-      localStorage.removeItem("echolet_gemini_key");
-      document.getElementById("geminiApiKeyInput").value = "";
-      closeAiSettingsModal();
-      updateAiEngineLabel();
-      alert("Switched to Built-in Offline Brain.");
+    function soundSelect() { playTone(440, 0.25, "triangle", 0.15); }
+    function soundCorrect() {
+      setTimeout(() => playTone(523.25, 0.15, "triangle", 0.25), 0);
+      setTimeout(() => playTone(659.25, 0.15, "triangle", 0.25), 150);
+      setTimeout(() => playTone(783.99, 0.45, "triangle", 0.3), 300);
     }
-
-    function updateAiEngineLabel() {
-      const lbl = document.getElementById("aiEngineLabel");
-      if (geminiApiKey) {
-        lbl.textContent = "⚡ Live Gemini 2.5 Flash Online";
-        lbl.style.background = "#10B981";
-      } else {
-        lbl.textContent = "🧠 Built-In Offline LET Brain";
-        lbl.style.background = "rgba(255, 255, 255, 0.2)";
-      }
+    function soundWrong() {
+      playTone(180, 0.6, "sawtooth", 0.3);
+      setTimeout(() => playTone(140, 0.8, "sawtooth", 0.35), 250);
     }
-
-    function appendChatBubble(role, htmlText) {
-      const container = document.getElementById("aiChatHistory");
-      const bubble = document.createElement("div");
-      bubble.className = `chat-bubble ${role}`;
-      bubble.innerHTML = htmlText;
-      container.appendChild(bubble);
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function sendAiQuickPrompt(promptText) {
-      document.getElementById("aiUserInput").value = promptText;
-      executeAiQuery();
-    }
-
-    async function executeAiQuery() {
-      const input = document.getElementById("aiUserInput");
-      const query = input.value.trim();
-      if (!query) return;
-
-      appendChatBubble("user", query);
-      input.value = "";
-
-      // Add loading state
-      const loadingId = "ai-loading-" + Date.now();
-      appendChatBubble("ai", `<span id="${loadingId}">Thinking and analyzing pedagogical concepts...</span>`);
-
-      if (geminiApiKey) {
-        try {
-          const answer = await queryGeminiApi(query);
-          document.getElementById(loadingId).parentElement.innerHTML = answer;
-          return;
-        } catch (err) {
-          console.warn("Gemini API call failed, falling back to Offline Brain:", err);
-        }
-      }
-
-      // Offline Semantic Brain
-      setTimeout(() => {
-        const fallbackAns = generateOfflineBrainResponse(query);
-        const el = document.getElementById(loadingId);
-        if (el) el.parentElement.innerHTML = fallbackAns;
-      }, 350);
-    }
-
-    async function queryGeminiApi(userPrompt) {
-      const systemPrompt = `You are Teacher Echo's AI, a master LET (Licensure Examination for Teachers) coach in the Philippines.
-Your domain expertise covers: Professional Education (Philippine Laws: RA 7836, RA 10533, RA 4670, RA 9155; DepEd Orders, PPST, PPSSH; Western & Eastern Philosophies; Child & Adolescent Development; Assessment of Learning; Curriculum).
-Respond clearly with concise board-exam formatting:
-1. Direct, authoritative answer
-2. High-Yield LET Board Exam Trap/Tip
-3. Memory Mnemonic or Concrete Classroom Example. Keep answers engaging and focused.`;
-
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
-      const payload = {
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: `${systemPrompt}\n\nExaminee Question: ${userPrompt}` }]
-          }
-        ]
-      };
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) throw new Error("Gemini API request failed.");
-      const data = await res.json();
-      return formatMarkdown(data.candidates[0].content.parts[0].text);
-    }
-
-    function formatMarkdown(txt) {
-      return txt
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/\n\n/g, '<br><br>')
-        .replace(/\n/g, '<br>');
-    }
-
-    /* EMBEDDED KNOWLEDGE GRAPH FOR OFFLINE BRAIN */
-    function generateOfflineBrainResponse(q) {
-      const low = q.toLowerCase();
-
-      // Check if querying a specific item number (e.g. "Item 18", "Question 42", "#2")
-      const itemMatch = low.match(/(?:item|question|number|#)\s*(\d+)/);
-      if (itemMatch) {
-        const itemNum = parseInt(itemMatch[1]);
-        if (itemNum >= 1 && itemNum <= 65) {
-          const item = master65Items[itemNum - 1];
-          const correctLetter = ["A", "B", "C", "D"][item.ans];
-          const correctChoice = item.choices[item.ans];
-          return `<strong>🎯 Analysis of Item #${itemNum}:</strong><br>
-          <strong>Competency Tag:</strong> ${item.concept}<br>
-          <strong>Question:</strong> "${item.stem}"<br>
-          <strong>Correct Answer:</strong> Option ${correctLetter} — <em>${correctChoice}</em><br><br>
-          <strong>💡 PRC Rationalization:</strong> ${item.rationale}<br><br>
-          <strong>⚡ Board Exam Strategy:</strong> Remember that in LET, distractors are chosen to trigger superficial word-associations. Always look at the underlying philosophical or legal premise!`;
-        }
-      }
-
-      // Semantic Keyword Matchers
-      if (low.includes("folkway") || low.includes("mores")) {
-        return `<strong>Sociological Norms: Folkways vs. Mores</strong><br>
-        • <strong>Folkways:</strong> Everyday customary habits, conventions, and etiquette (e.g., table manners, dress codes). Violating them results in mild social disapproval or eccentric labels, but no severe moral sanctions.<br>
-        • <strong>Mores (pronounced mor-ays):</strong> Deeply held moral and ethical norms crucial to societal welfare. Violating mores (e.g., child abuse, treason) causes strong moral outrage and severe societal punishment.<br><br>
-        <strong>🧠 Mnemonic:</strong> <em>Folkways = Fashion/Fad (Mild); Mores = Morals (Severe).</em>`;
-      }
-
-      if (low.includes("piaget")) {
-        return `<strong>Jean Piaget's Stages of Cognitive Development:</strong><br>
-        1. <strong>Sensorimotor (0–2 yrs):</strong> Object permanence, sensory-motor coordination.<br>
-        2. <strong>Preoperational (2–7 yrs):</strong> Egocentrism, symbolic play, centration (lacks conservation).<br>
-        3. <strong>Concrete Operational (7–11 yrs):</strong> Mastery of conservation, reversibility, seriation, logic tied to concrete objects.<br>
-        4. <strong>Formal Operational (11+ yrs):</strong> Abstract reasoning, hypothetical-deductive logic.<br><br>
-        <strong>🧠 Board Mnemonic:</strong> <strong>S</strong>mart <strong>P</strong>eople <strong>C</strong>ook <strong>F</strong>ish (Sensorimotor, Pre-op, Concrete, Formal).`;
-      }
-
-      if (low.includes("4670") || low.includes("magna carta")) {
-        return `<strong>Republic Act No. 4670: The Magna Carta for Public School Teachers (1966)</strong><br>
-        • <strong>Teaching Hours:</strong> Maximum 6 hours of actual classroom instruction per day; additional duties require 25% compensation.<br>
-        • <strong>Health & Leave:</strong> Free annual medical examination, study leaves (one year with 60% pay after 7 years of service).<br>
-        • <strong>Salary Scale:</strong> Automatic salary progression based on credentials; protected from non-consensual transfers.<br>
-        <strong>⚡ LET Tip:</strong> Memorize that 6 hours is the statutory classroom ceiling, NOT 8 hours.`;
-      }
-
-      if (low.includes("7836") || low.includes("9293") || low.includes("licensure") || low.includes("prc")) {
-        return `<strong>Philippine Teachers Professionalization Acts:</strong><br>
-        • <strong>RA 7836 (1994):</strong> Created the Board for Professional Teachers (BPT) under PRC; instituted the LET.<br>
-        • <strong>RA 9293 (2004):</strong> Amended RA 7836. Permitted para-teachers who scored 70–74% to receive 2-year special permits to teach in underserved areas.<br>
-        • <strong>Passing Benchmark:</strong> General average of 75% with no rating below 50% in any sub-test.`;
-      }
-
-      if (low.includes("idealism") || low.includes("realism") || low.includes("existentialism") || low.includes("pragmatism") || low.includes("essentialism") || low.includes("perennialism")) {
-        return `<strong>Quick Matrix of Western Philosophies in Education:</strong><br>
-        • <strong>Idealism (Plato):</strong> Reality is spiritual and mental. Truth is absolute and enduring.<br>
-        • <strong>Realism (Aristotle):</strong> Reality is physical and objective; truth is discovered through direct sensory empirical observation.<br>
-        • <strong>Pragmatism (John Dewey):</strong> Truth is what works in practical human experience (learning by doing).<br>
-        • <strong>Existentialism (Sartre, Kierkegaard):</strong> Existence precedes essence; individual freedom and self-defined choice.<br>
-        • <strong>Essentialism (Bagley):</strong> Rigorous mastery of 3Rs and traditional core academic disciplines.<br>
-        • <strong>Perennialism (Hutchins, Adler):</strong> Universal, unchanging truths through the Great Books.`;
-      }
-
-      if (low.includes("assessment") || low.includes("formative") || low.includes("summative")) {
-        return `<strong>Three Dimensions of Assessment:</strong><br>
-        1. <strong>Assessment FOR Learning (Formative):</strong> Ongoing during teaching to identify misconceptions and guide instructional adjustments (ungraded quizzes, check-ins).<br>
-        2. <strong>Assessment OF Learning (Summative):</strong> End-of-unit measurement for grading and certification (periodical exams, LET).<br>
-        3. <strong>Assessment AS Learning (Self/Peer):</strong> Students monitor, reflect upon, and regulate their own metacognitive processes.`;
-      }
-
-      // Default high-yield pedagogical overview response
-      return `<strong>Teacher Echo AI Response:</strong><br>
-      You asked: <em>"${q}"</em><br><br>
-      In the context of the <strong>Philippine Licensure Examination for Teachers (LET)</strong>, always tie this concept back to learner-centered pedagogy, the <em>Philippine Professional Standards for Teachers (PPST)</em>, and RA 10533.<br><br>
-      <strong>💡 Tip:</strong> Try asking me about:<br>
-      • Specific exam questions: <em>"Explain question 43"</em><br>
-      • Educational laws: <em>"What is RA 10533?"</em><br>
-      • Theories: <em>"Explain Vygotsky's ZPD and Scaffolding"</em><br>
-      • Connect a free Gemini API key in <strong>⚙️ AI Settings</strong> for open-domain reasoning!`;
-    }
-
-    function askAiAboutCurrentItem() {
-      switchView('lesson');
-      const itemNum = currentQuizIndex + 1;
-      sendAiQuickPrompt(`Explain question ${itemNum} and its complete rationalization.`);
+    function soundLifeline() {
+      playTone(800, 0.1, "sine", 0.2);
+      setTimeout(() => playTone(1200, 0.25, "sine", 0.2), 100);
     }
 
     /* ========================================================
-       APPLICATION CONTROLLER & ROUTING
+       GAME ENGINE & NAVIGATION
        ======================================================== */
-    function switchView(viewName) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      ['viewCourses', 'viewLesson', 'viewQuiz', 'viewDiagnostics', 'viewTeacher'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-      });
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-      if (viewName === 'courses') {
-        document.getElementById('viewCourses').classList.remove('hidden');
-        document.getElementById('navCoursesBtn').classList.add('active');
-        renderCoursesGrid();
-      } else if (viewName === 'lesson') {
-        document.getElementById('viewLesson').classList.remove('hidden');
-        document.getElementById('navCoursesBtn').classList.add('active');
-        renderLessonScreen();
-      } else if (viewName === 'quiz') {
-        document.getElementById('viewQuiz').classList.remove('hidden');
-      } else if (viewName === 'diagnostics') {
-        document.getElementById('viewDiagnostics').classList.remove('hidden');
-        document.getElementById('navDiagnosticsBtn').classList.add('active');
-        renderDiagnosticsView();
-      } else if (viewName === 'teacher') {
-        document.getElementById('viewTeacher').classList.remove('hidden');
-        document.getElementById('navTeacherBtn').classList.add('active');
-        renderTeacherStudio();
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function initGame() {
+      // Shuffle & select 15 questions for the run
+      const shuffled = [...masterQuestionBank].sort(() => 0.5 - Math.random());
+      currentGameQuestions = shuffled.slice(0, 15);
+      currentLevel = 0;
+      used5050 = false;
+      usedEcho = false;
+      usedPoll = false;
+      document.getElementById("life5050").disabled = false;
+      document.getElementById("lifeEcho").disabled = false;
+      document.getElementById("lifePoll").disabled = false;
+      renderLadder();
+      loadQuestionAtCurrentLevel();
     }
 
-    function renderCoursesGrid() {
-      const grid = document.getElementById("coursesGrid");
-      grid.innerHTML = courses.map((c) => `
-        <div class="card">
-          <span class="card-badge badge-core">${c.domain}</span>
-          <h3>${c.title}</h3>
-          <p>${c.desc}</p>
-          <button class="btn btn-primary btn-block" onclick="openCourse('${c.id}')">Open Lesson Studio →</button>
+    function renderLadder() {
+      const list = document.getElementById("ladderList");
+      list.innerHTML = prizeLadder.map((tier, idx) => `
+        <div class="ladder-item ${tier.milestone ? 'milestone' : ''} ${idx === currentLevel ? 'active' : ''} ${idx < currentLevel ? 'cleared' : ''}" id="ladderTier${idx}">
+          <span>${tier.level}. ${tier.title}</span>
+          <span>${tier.prize}</span>
         </div>
       `).join('');
     }
 
-    function openCourse(id) {
-      activeCourse = courses.find(c => c.id === id) || courses[0];
-      currentTopicIndex = 0;
-      switchView('lesson');
+    function loadQuestionAtCurrentLevel() {
+      isLocked = false;
+      selectedChoiceIndex = null;
+      activeQuestion = currentGameQuestions[currentLevel];
+      const tier = prizeLadder[currentLevel];
+
+      document.getElementById("rankBadge").innerHTML = `
+        QUESTION ${tier.level} OF 15 &bull; <strong style="color:#FFF;">${tier.prize}</strong> (${tier.title})
+      `;
+
+      document.getElementById("questionStem").textContent = activeQuestion.stem;
+
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btnChoice${i}`);
+        btn.className = "choice-btn";
+        btn.disabled = false;
+        document.getElementById(`labelChoice${i}`).textContent = activeQuestion.choices[i];
+      }
+
+      renderLadder();
     }
 
-    function renderLessonScreen() {
-      const topic = activeCourse.topics[currentTopicIndex];
-      document.getElementById("lessonTopicTitle").textContent = topic.title;
-      document.getElementById("lessonCategory").textContent = activeCourse.domain;
-      document.getElementById("mediaCaption").innerHTML = `<strong>💡 Guide:</strong> ${topic.mediaCaption}`;
-      document.getElementById("lessonTextBody").innerHTML = topic.body;
-      document.getElementById("mediaPlayerContainer").innerHTML = `<img src="${topic.mediaUrl}" alt="Lesson Material" />`;
+    function chooseAnswer(idx) {
+      if (isLocked) return;
+      isLocked = true;
+      selectedChoiceIndex = idx;
+      soundSelect();
 
-      const isDone = completedTopics[topic.id];
-      const markBtn = document.getElementById("markCompleteBtn");
-      markBtn.textContent = isDone ? "✓ Completed" : "Mark as Done";
-      markBtn.style.color = isDone ? "var(--success)" : "inherit";
+      const btn = document.getElementById(`btnChoice${idx}`);
+      btn.classList.add("selected");
 
-      document.getElementById("topicsList").innerHTML = activeCourse.topics.map((t, idx) => `
-        <button class="btn ${idx === currentTopicIndex ? 'btn-gold' : 'btn-outline'}" style="text-align:left; font-size:0.78rem; padding:0.5rem;" onclick="jumpToTopic(${idx})">
-          ${completedTopics[t.id] ? '✅ ' : '⭕ '}${t.title}
-        </button>
-      `).join('');
+      // Dramatic suspense delay (1.2s)
+      setTimeout(() => {
+        const isRight = (idx === activeQuestion.ans);
+        btn.classList.remove("selected");
 
-      document.getElementById("lessonProgressIndicator").textContent = `Topic ${currentTopicIndex + 1} of ${activeCourse.topics.length}`;
+        if (isRight) {
+          btn.classList.add("correct");
+          soundCorrect();
+        } else {
+          btn.classList.add("wrong");
+          document.getElementById(`btnChoice${activeQuestion.ans}`).classList.add("correct");
+          soundWrong();
+        }
+
+        // Show Explanation Screen with Real Photo & Audio after 1s
+        setTimeout(() => {
+          showExplanationModal(isRight);
+        }, 1000);
+
+      }, 1200);
     }
 
-    function jumpToTopic(idx) {
-      currentTopicIndex = idx;
-      renderLessonScreen();
+    /* ========================================================
+       EXPLANATION SCREEN (REAL PHOTOS + AUDIO SYNTHESIS)
+       ======================================================== */
+    function showExplanationModal(isRight) {
+      const modal = document.getElementById("explanationModal");
+      const tier = prizeLadder[currentLevel];
+      const photoData = topicPhotos[activeQuestion.photoKey] || topicPhotos.philosophy;
+
+      // Populate Status Banner
+      const pill = document.getElementById("explanationOutcomePill");
+      pill.className = `outcome-pill ${isRight ? 'outcome-correct' : 'outcome-wrong'}`;
+      pill.textContent = isRight ? "✓ CORRECT ANSWER!" : "✕ INCORRECT!";
+
+      document.getElementById("explanationPrizeWon").textContent = isRight
+        ? `${tier.prize} SECURED`
+        : `FALLBACK: ${getGuaranteedPrize()}`;
+
+      // Set Real High-Resolution Photograph
+      document.getElementById("explanationPhoto").src = photoData.url;
+      document.getElementById("explanationPhotoCaption").textContent = photoData.caption;
+
+      // Populate Concept & Explanation Text
+      document.getElementById("explanationConceptTag").textContent = `Domain: ${activeQuestion.concept}`;
+      document.getElementById("explanationText").innerHTML = `
+        <p><strong>Correct Answer:</strong> ${activeQuestion.choices[activeQuestion.ans]}</p>
+        <p style="margin-top:0.6rem;"><strong>💡 PRC Board Exam Rationalization:</strong><br>${activeQuestion.rationale}</p>
+      `;
+
+      // Setup Continue / Game Over Button
+      const nextBtn = document.getElementById("btnModalNext");
+      if (isRight) {
+        if (currentLevel === 14) {
+          nextBtn.textContent = "🏆 CLAIM ₱1,000,000 & TOPNOTCHER TROPHY!";
+          nextBtn.onclick = () => { alert("🎉 CONGRATULATIONS! You achieved Rank 1 in the Board Licensure Examination!"); initGame(); closeModal(); };
+        } else {
+          nextBtn.textContent = `Climb to Question ${currentLevel + 2} (${prizeLadder[currentLevel + 1].prize}) →`;
+          nextBtn.onclick = () => { closeModal(); currentLevel++; loadQuestionAtCurrentLevel(); };
+        }
+      } else {
+        nextBtn.textContent = `Game Over. Walk Away With ${getGuaranteedPrize()} (Restart) ↺`;
+        nextBtn.onclick = () => { closeModal(); initGame(); };
+      }
+
+      modal.classList.remove("hidden");
+
+      // Auto start speech audio narration
+      startAudioNarration();
     }
 
-    function toggleTopicCompletion() {
-      const topic = activeCourse.topics[currentTopicIndex];
-      completedTopics[topic.id] = !completedTopics[topic.id];
-      localStorage.setItem("echolet_completed_topics", JSON.stringify(completedTopics));
-      renderLessonScreen();
+    function closeModal() {
+      stopAudioNarration();
+      document.getElementById("explanationModal").classList.add("hidden");
     }
 
-    /* ASSESSMENT ENGINE */
-    function launchQuizForCurrentCourse() {
-      quizActiveItems = [...activeCourse.items];
-      currentQuizIndex = 0;
-      currentQuizScore = 0;
-      currentFailedItems = [];
-      document.getElementById("remediationInnovationCard").classList.add("hidden");
-      switchView('quiz');
-      renderCurrentQuizItem();
+    function getGuaranteedPrize() {
+      if (currentLevel >= 10) return "₱150,000 (Licensed Professional Teacher)";
+      if (currentLevel >= 5) return "₱10,000 (Education Graduate)";
+      return "₱0 (Cadet)";
     }
 
-    function renderCurrentQuizItem() {
-      const q = quizActiveItems[currentQuizIndex];
-      const total = quizActiveItems.length;
+    /* AUDIO NARRATION (WEB SPEECH SYNTHESIS) */
+    function startAudioNarration() {
+      if (!('speechSynthesis' in window)) return;
+      speechSynth.cancel();
 
-      document.getElementById("quizItemTracker").textContent = `Item ${currentQuizIndex + 1} of ${total}`;
-      document.getElementById("quizProgressBar").style.width = `${((currentQuizIndex) / total) * 100}%`;
-      document.getElementById("quizConceptTag").textContent = `Competency: ${q.concept}`;
-      document.getElementById("quizStemText").textContent = q.stem;
-      document.getElementById("quizRationaleBox").style.display = "none";
-      document.getElementById("btnNextQuizItem").classList.add("hidden");
+      const text = `The correct answer is: ${activeQuestion.choices[activeQuestion.ans]}. Here is Teacher Echo's explanation. ${activeQuestion.rationale}`;
+      currentUtterance = new SpeechSynthesisUtterance(text);
+      currentUtterance.rate = 0.95;
+      currentUtterance.onend = () => {
+        document.getElementById("btnToggleSpeech").textContent = "▶ Replay Explanation";
+      };
+      speechSynth.speak(currentUtterance);
+      document.getElementById("btnToggleSpeech").textContent = "⏹ Stop Voice Narration";
+    }
 
-      const choicesBox = document.getElementById("quizChoicesBox");
-      choicesBox.innerHTML = "";
+    function stopAudioNarration() {
+      if ('speechSynthesis' in window) speechSynth.cancel();
+      document.getElementById("btnToggleSpeech").textContent = "▶ Listen to Teacher Echo";
+    }
 
-      q.choices.forEach((choice, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "choice-item";
-        btn.textContent = choice;
-        btn.onclick = () => handleChoiceSelection(idx, btn);
-        choicesBox.appendChild(btn);
+    function toggleAudioNarration() {
+      if (speechSynth.speaking) {
+        stopAudioNarration();
+      } else {
+        startAudioNarration();
+      }
+    }
+
+    /* ========================================================
+       LIFELINES IMPLEMENTATION
+       ======================================================== */
+    function use5050() {
+      if (used5050 || isLocked) return;
+      used5050 = true;
+      soundLifeline();
+      document.getElementById("life5050").disabled = true;
+
+      // Find two incorrect answers to eliminate
+      const wrongIndices = [0, 1, 2, 3].filter(i => i !== activeQuestion.ans);
+      const shuffledWrongs = wrongIndices.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+      shuffledWrongs.forEach(i => {
+        const btn = document.getElementById(`btnChoice${i}`);
+        btn.classList.add("eliminated");
       });
     }
 
-    function handleChoiceSelection(selectedIdx, btnElement) {
-      const q = quizActiveItems[currentQuizIndex];
-      const choicesBtns = document.querySelectorAll(".choice-item");
-      choicesBtns.forEach(b => b.disabled = true);
+    function useAskEcho() {
+      if (usedEcho || isLocked) return;
+      usedEcho = true;
+      soundLifeline();
+      document.getElementById("lifeEcho").disabled = true;
 
-      if (selectedIdx === q.ans) {
-        btnElement.classList.add("correct");
-        currentQuizScore++;
-      } else {
-        btnElement.classList.add("wrong");
-        choicesBtns[q.ans].classList.add("correct");
-        currentFailedItems.push(q);
-        errorBank[q.concept] = (errorBank[q.concept] || 0) + 1;
-        localStorage.setItem("echolet_error_bank", JSON.stringify(errorBank));
-      }
+      const hints = [
+        `"Teacher Echo says: Focus closely on the primary definition of <strong>${activeQuestion.concept}</strong>. Distractor options often swap legal requirements with mere customs!"`,
+        `"Teacher Echo whispers: I strongly advise eliminating choice ${activeQuestion.choices[(activeQuestion.ans + 1) % 4]}. The Board examiners always place that as a superficial trap."`,
+        `"Teacher Echo analysis: Notice the direct connection between the question stem and <strong>${activeQuestion.choices[activeQuestion.ans].split(' ')[0]}</strong>!"`
+      ];
 
-      document.getElementById("quizRationaleText").textContent = q.rationale;
-      document.getElementById("quizRationaleBox").style.display = "block";
-      document.getElementById("btnNextQuizItem").classList.remove("hidden");
+      showDialog("🤖 Ask Teacher Echo (AI Lifeline)", hints[Math.floor(Math.random() * hints.length)]);
     }
 
-    function stepQuizNext() {
-      currentQuizIndex++;
-      if (currentQuizIndex < quizActiveItems.length) {
-        renderCurrentQuizItem();
-      } else {
-        finalizeAssessment();
-      }
-    }
+    function useAudiencePoll() {
+      if (usedPoll || isLocked) return;
+      usedPoll = true;
+      soundLifeline();
+      document.getElementById("lifePoll").disabled = true;
 
-    function finalizeAssessment() {
-      const total = quizActiveItems.length;
-      const pct = Math.round((currentQuizScore / total) * 100);
+      const letters = ["A", "B", "C", "D"];
+      let dist = [10, 10, 10, 10];
+      dist[activeQuestion.ans] = 65; // Heavily weight audience towards the correct answer
+      dist[(activeQuestion.ans + 1) % 4] += 15;
 
-      const sub = {
-        courseTitle: activeCourse.title,
-        score: currentQuizScore,
-        total: total,
-        pct: pct,
-        status: pct >= 75 ? "PASSED" : "FAILED",
-        failedCount: currentFailedItems.length,
-        date: new Date().toLocaleDateString(),
-        studentName: currentUser ? currentUser.name : "Anonymous Examinee",
-        studentMajor: currentUser ? currentUser.major : "General Education"
-      };
-
-      const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-      subs.unshift(sub);
-      localStorage.setItem("echolet_submissions", JSON.stringify(subs));
-
-      if (currentFailedItems.length > 0) {
-        document.getElementById("remediationInnovationCard").classList.remove("hidden");
-        document.getElementById("remediationDiagnosisText").innerHTML = `
-          <strong>Diagnosed Learning Fragility:</strong> You missed items across <em>${[...new Set(currentFailedItems.map(i => i.concept))].join(', ')}</em>.
-        `;
-        document.getElementById("remediationResourceBox").innerHTML = `
-          <strong>Tailored Action:</strong> The AI has flagged these topics. Ask the AI Tutor on the left to clarify each missed concept!
-        `;
-      } else {
-        alert("🎉 Congratulations! Perfect Score 65/65 (100%)!");
-        switchView('diagnostics');
-      }
-    }
-
-    function launchTargetedMicroQuiz() {
-      quizActiveItems = currentFailedItems.slice(0, 3);
-      currentQuizIndex = 0;
-      currentQuizScore = 0;
-      currentFailedItems = [];
-      document.getElementById("remediationInnovationCard").classList.add("hidden");
-      renderCurrentQuizItem();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function renderDiagnosticsView() {
-      const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-      const concepts = Object.keys(errorBank);
-      const listEl = document.getElementById("fragileConceptsList");
-      if (concepts.length > 0) {
-        listEl.innerHTML = concepts.map(c => `<li><strong>${c}</strong> (${errorBank[c]} recorded missed attempts)</li>`).join('');
-      }
-
-      const tbody = document.getElementById("studentDiagnosticTableBody");
-      if (subs.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No submissions recorded yet.</td></tr>';
-        return;
-      }
-      tbody.innerHTML = subs.map(s => `
-        <tr>
-          <td>${s.courseTitle}</td>
-          <td>${s.score}/${s.total} (${s.pct}%)</td>
-          <td style="color:${s.pct >= 75 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${s.status}</td>
-          <td>${s.failedCount > 0 ? `${s.failedCount} missed items` : 'Zero errors'}</td>
-        </tr>
+      const pollGraph = letters.map((l, i) => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.85rem;">
+          <span style="font-weight:700;">Choice ${l}</span>
+          <span style="color:var(--gold); font-weight:800;">${dist[i]}%</span>
+        </div>
+        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-bottom:8px;">
+          <div style="background:var(--gold); width:${dist[i]}%; height:100%;"></div>
+        </div>
       `).join('');
+
+      showDialog("👥 PRC Licensure Audience Survey", `
+        <p style="margin-bottom:1rem; font-size:0.85rem; color:#94a3b8;">Votes from 1,000 reviewing teachers:</p>
+        ${pollGraph}
+      `);
     }
 
-    function renderTeacherStudio() {
-      const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-      const tbody = document.getElementById("teacherMasterTableBody");
-      if (subs.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No submissions recorded yet.</td></tr>';
-        return;
-      }
-      tbody.innerHTML = subs.map(s => `
-        <tr>
-          <td><strong>${s.studentName}</strong></td>
-          <td>${s.studentMajor}</td>
-          <td>${s.score}/${s.total} (${s.pct}%)</td>
-          <td style="color:${s.pct >= 75 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${s.status}</td>
-          <td>${s.date}</td>
-        </tr>
-      `).join('');
+    function showDialog(title, html) {
+      document.getElementById("dialogTitle").textContent = title;
+      document.getElementById("dialogBody").innerHTML = html;
+      document.getElementById("dialogModal").classList.remove("hidden");
     }
 
-    function speakCurrentItem() {
-      if (!('speechSynthesis' in window)) return alert("Speech is not supported on this browser.");
-      window.speechSynthesis.cancel();
-      const q = quizActiveItems[currentQuizIndex];
-      const text = `${q.stem}. Option A: ${q.choices[0]}. Option B: ${q.choices[1]}. Option C: ${q.choices[2]}. Option D: ${q.choices[3]}.`;
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.rate = 0.95;
-      window.speechSynthesis.speak(utter);
+    function closeDialog() {
+      document.getElementById("dialogModal").classList.add("hidden");
     }
 
-    function triggerPwaPrompt() {
-      alert("📱 Mobile PWA Sync:\nAdd this page to your mobile home screen to activate offline review mode and sync with Teacher Echo's classroom.");
+    function toggleLadder() {
+      document.getElementById("ladderDrawer").classList.toggle("open");
     }
 
-    function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
-    function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
-
-    function doRegisterStudent() {
-      const name = document.getElementById("regStudentName").value.trim();
-      const email = document.getElementById("regStudentEmail").value.trim();
-      const major = document.getElementById("regStudentMajor").value;
-      if (!name) return alert("Please enter your name.");
-
-      currentUser = { role: "student", name, email, major };
-      sessionStorage.setItem("echolet_user", JSON.stringify(currentUser));
-      closeAuthModal();
-      syncUserState();
-      alert(`🎉 Welcome to class, ${name}!`);
-    }
-
-    function teacherFastSign() {
-      currentUser = { role: "teacher", name: "Teacher Echo" };
-      sessionStorage.setItem("echolet_user", JSON.stringify(currentUser));
-      closeAuthModal();
-      syncUserState();
-      switchView('teacher');
-      alert("👑 Welcome back, Teacher Echo!");
-    }
-
-    function doSignOut() {
-      sessionStorage.removeItem("echolet_user");
-      currentUser = null;
-      syncUserState();
-      switchView('courses');
-    }
-
-    function syncUserState() {
-      const badge = document.getElementById("userBadge");
-      const authBtn = document.getElementById("authBtn");
-      const teachTab = document.getElementById("navTeacherBtn");
-
-      if (currentUser) {
-        badge.className = `user-pill ${currentUser.role}`;
-        badge.textContent = currentUser.role === "teacher" ? "👑 Teacher Echo" : `👤 ${currentUser.name}`;
-        authBtn.className = "btn-action-sm btn-signout";
-        authBtn.textContent = "Sign Out";
-        authBtn.onclick = doSignOut;
-        teachTab.classList.toggle("hidden", currentUser.role !== "teacher");
-      } else {
-        badge.className = "user-pill guest";
-        badge.textContent = "Guest (Signed Out)";
-        authBtn.className = "btn-action-sm btn-signin";
-        authBtn.textContent = "Sign In";
-        authBtn.onclick = openAuthModal;
-        teachTab.classList.add("hidden");
-      }
-    }
-
-    // Startup Initialization
-    updateAiEngineLabel();
-    syncUserState();
-    renderCoursesGrid();
+    // Launch game on page load
+    initGame();
   </script>
 </body>
 </html>

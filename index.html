@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Who Wants to Be a Board Topnotcher? - EchoLET</title>
+  <title>Who Wants to Be a Topnotcher? - Teacher Echo Live Arena</title>
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
 
   <style>
     :root {
-      --bg-dark: #030712;
-      --bg-stage: radial-gradient(circle at center, #1e050c 0%, #060104 70%, #000000 100%);
+      --bg-stage: radial-gradient(circle at center, #2a030d 0%, #0d0105 55%, #000000 100%);
       --crimson: #80001C;
       --crimson-glow: #e60033;
       --gold: #FFD700;
       --gold-dark: #B8860B;
       --gold-glow: rgba(255, 215, 0, 0.45);
-      --choice-blue: #091224;
+      --choice-blue: #0b152c;
       --choice-border: #2563eb;
-      --choice-hover: #1e3a8a;
-      --text: #F9FAFB;
+      --text: #F8FAFC;
       --correct: #10B981;
       --wrong: #EF4444;
       --selected: #F59E0B;
@@ -28,248 +26,301 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
     body { background: var(--bg-stage); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
 
-    /* Arena Header */
+    /* ========================================================
+       1. CREATIVE INTRO STAGE (MUSIC & SPOTLIGHTS)
+       ======================================================== */
+    #introOverlay {
+      position: fixed; inset: 0; z-index: 500; background: radial-gradient(circle at center, #3b0312 0%, #070003 80%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;
+    }
+    .intro-spotlight {
+      position: absolute; top: -50px; width: 300px; height: 600px;
+      background: radial-gradient(ellipse at top, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
+      transform: rotate(-25deg); pointer-events: none; animation: sweep 6s infinite alternate ease-in-out;
+    }
+    .intro-spotlight.right { right: 10%; transform: rotate(25deg); animation-delay: -3s; }
+    @keyframes sweep {
+      0% { transform: rotate(-35deg) scaleX(0.8); }
+      100% { transform: rotate(35deg) scaleX(1.2); }
+    }
+
+    .intro-title-box { position: relative; z-index: 10; margin-bottom: 2rem; }
+    .intro-subtitle {
+      color: #F87171; font-size: 0.95rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(248, 113, 113, 0.6);
+    }
+    .intro-main-title {
+      font-size: 2.8rem; font-weight: 900; color: var(--gold); text-transform: uppercase;
+      letter-spacing: 2px; line-height: 1.1; text-shadow: 0 0 25px var(--gold-glow), 0 0 50px rgba(255, 215, 0, 0.3);
+    }
+    .intro-tagline { color: #E2E8F0; font-size: 1.05rem; margin-top: 0.6rem; font-weight: 500; }
+
+    .lobby-card {
+      background: rgba(15, 23, 42, 0.85); border: 2px solid var(--gold); border-radius: 16px;
+      padding: 1.8rem; max-width: 440px; width: 100%; box-shadow: 0 0 35px rgba(255, 215, 0, 0.25);
+      position: relative; z-index: 10; backdrop-filter: blur(10px);
+    }
+    .lobby-input {
+      width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--gold-dark); border-radius: 8px;
+      background: #030712; color: #FFF; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; outline: none;
+    }
+    .lobby-input:focus { border-color: var(--gold); box-shadow: 0 0 12px var(--gold-glow); }
+    
+    .btn-intro-start {
+      width: 100%; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: #000; font-weight: 900; font-size: 1.1rem; border: none; padding: 1rem; border-radius: 10px;
+      cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 0 20px var(--gold-glow);
+      transition: all 0.2s;
+    }
+    .btn-intro-start:hover { transform: scale(1.03); box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+
+    /* ========================================================
+       2. LIVE ARENA HEADER & SIMULTANEOUS TRACKER HUD
+       ======================================================== */
     header {
-      padding: 0.8rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.7);
-      border-bottom: 2px solid var(--gold-dark);
-      backdrop-filter: blur(10px);
-      z-index: 50;
+      padding: 0.6rem 1.2rem; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(0, 0, 0, 0.85); border-bottom: 2px solid var(--gold-dark); z-index: 100;
     }
     .game-logo {
-      font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; color: var(--gold);
-      text-transform: uppercase; text-shadow: 0 0 10px var(--gold-glow);
+      font-size: 1.1rem; font-weight: 900; color: var(--gold); text-transform: uppercase;
+      letter-spacing: 1px; text-shadow: 0 0 10px var(--gold-glow);
     }
-    .game-logo span { color: #fff; }
 
-    .lifelines { display: flex; gap: 10px; }
+    .lifelines { display: flex; gap: 8px; }
     .lifeline-btn {
-      width: 44px; height: 38px; border-radius: 50%; background: #0f172a; border: 2px solid var(--gold);
-      color: var(--gold); font-size: 0.85rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+      width: 42px; height: 36px; border-radius: 50%; background: #0f172a; border: 2px solid var(--gold);
+      color: var(--gold); font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
     }
     .lifeline-btn:hover:not(:disabled) { background: var(--gold); color: #000; transform: scale(1.08); }
     .lifeline-btn:disabled { opacity: 0.35; border-color: #64748b; color: #64748b; cursor: not-allowed; text-decoration: line-through; }
 
-    .btn-header {
-      background: rgba(255,255,255,0.08); border: 1px solid var(--gold-dark); color: var(--gold);
-      padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+    /* Live Multi-Racer Ticker & Marathon Bar */
+    .live-race-bar {
+      background: #090e1a; border-bottom: 1px solid #1e293b; padding: 0.4rem 1rem;
+      display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; overflow-x: auto;
     }
-    .btn-header:hover { background: var(--gold); color: #000; }
+    .race-track-avatars { display: flex; gap: 12px; align-items: center; }
+    .racer-pill {
+      background: #1e293b; border: 1px solid #475569; padding: 0.2rem 0.6rem; border-radius: 12px;
+      font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .racer-pill.you { background: var(--crimson); border-color: var(--gold); color: var(--gold); }
+    .racer-pill.crowned { background: #065F46; border-color: #34D399; color: #34D399; }
 
-    /* Game Stage */
+    /* ========================================================
+       3. GAMEPLAY SCREEN (QUESTION & CHOICES)
+       ======================================================== */
     .game-stage {
       flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
-      max-width: 980px; width: 100%; margin: 0 auto; padding: 1.5rem 1rem; position: relative;
+      max-width: 960px; width: 100%; margin: 0 auto; padding: 1rem; position: relative;
     }
 
-    /* Prize / Ladder Pill */
     .level-indicator {
-      background: rgba(0, 0, 0, 0.8); border: 2px solid var(--gold); border-radius: 30px;
-      padding: 0.4rem 1.4rem; font-size: 0.95rem; font-weight: 800; color: var(--gold);
-      margin-bottom: 1.5rem; text-shadow: 0 0 8px var(--gold-glow); box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
-      letter-spacing: 0.5px;
+      background: rgba(0, 0, 0, 0.85); border: 2px solid var(--gold); border-radius: 30px;
+      padding: 0.35rem 1.3rem; font-size: 0.9rem; font-weight: 800; color: var(--gold);
+      margin-bottom: 1.2rem; text-shadow: 0 0 8px var(--gold-glow); box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
     }
 
-    /* Hexagonal Question Box */
-    .question-wrapper { width: 100%; max-width: 860px; margin-bottom: 1.8rem; position: relative; }
+    .question-wrapper { width: 100%; max-width: 860px; margin-bottom: 1.4rem; }
     .question-box {
       background: linear-gradient(180deg, #111827 0%, #030712 100%);
-      border: 2px solid var(--gold); border-radius: 14px; padding: 1.6rem 2rem; text-align: center;
-      font-size: 1.18rem; font-weight: 600; line-height: 1.5; color: #FFFFFF;
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.15), inset 0 0 15px rgba(255, 215, 0, 0.05);
-      min-height: 110px; display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--gold); border-radius: 14px; padding: 1.5rem 2rem; text-align: center;
+      font-size: 1.15rem; font-weight: 600; line-height: 1.5; color: #FFFFFF;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.15); min-height: 100px; display: flex;
+      align-items: center; justify-content: center;
     }
 
-    /* Answer Choices Grid */
     .choices-grid {
-      width: 100%; max-width: 860px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      width: 100%; max-width: 860px; display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem;
     }
     @media (max-width: 720px) {
-      .choices-grid { grid-template-columns: 1fr; gap: 0.75rem; }
-      .question-box { font-size: 1.05rem; padding: 1.2rem; }
+      .choices-grid { grid-template-columns: 1fr; gap: 0.7rem; }
+      .intro-main-title { font-size: 2rem; }
     }
 
     .choice-btn {
       background: linear-gradient(180deg, #0b152c 0%, #030814 100%);
-      border: 2px solid #3b82f6; border-radius: 12px; padding: 1rem 1.4rem; color: #FFF;
-      font-size: 0.98rem; font-weight: 600; cursor: pointer; text-align: left;
-      display: flex; align-items: center; gap: 12px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      border: 2px solid #3b82f6; border-radius: 12px; padding: 0.9rem 1.2rem; color: #FFF;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; text-align: left;
+      display: flex; align-items: center; gap: 10px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .choice-btn:hover:not(:disabled) {
-      border-color: var(--gold); background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-      transform: translateY(-2px); box-shadow: 0 0 15px var(--gold-glow);
+      border-color: var(--gold); background: #1e293b; transform: translateY(-2px); box-shadow: 0 0 15px var(--gold-glow);
     }
-    .choice-btn .key {
-      color: var(--gold); font-weight: 900; font-size: 1.1rem; min-width: 26px;
-    }
+    .choice-btn .key { color: var(--gold); font-weight: 900; font-size: 1.1rem; min-width: 24px; }
     .choice-btn .label { flex: 1; }
 
-    /* Answer States */
     .choice-btn.selected {
       background: var(--selected) !important; border-color: #FFF !important; color: #000 !important;
-      animation: pulseSelection 0.6s infinite alternate;
+      animation: pulseSelection 0.5s infinite alternate;
     }
     .choice-btn.selected .key { color: #000 !important; }
-
     .choice-btn.correct {
       background: linear-gradient(180deg, #059669 0%, #047857 100%) !important;
-      border-color: #34D399 !important; color: #FFF !important;
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.7) !important;
+      border-color: #34D399 !important; color: #FFF !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.7) !important;
     }
-    .choice-btn.correct .key { color: #FFF !important; }
-
     .choice-btn.wrong {
       background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%) !important;
-      border-color: #F87171 !important; color: #FFF !important;
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.7) !important;
+      border-color: #F87171 !important; color: #FFF !important; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7) !important;
     }
-
-    .choice-btn.eliminated {
-      opacity: 0.2; pointer-events: none; border-color: #334155; text-decoration: line-through;
-    }
+    .choice-btn.eliminated { opacity: 0.2; pointer-events: none; text-decoration: line-through; }
 
     @keyframes pulseSelection {
-      from { transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-      to { transform: scale(1.02); box-shadow: 0 0 22px rgba(245, 158, 11, 0.9); }
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
     }
 
     /* ========================================================
-       MODAL: EXPLANATION SCREEN (REAL PHOTOS + AUDIO)
+       4. EXPLANATION OVERLAY (REAL PHOTOS + AUDIO)
        ======================================================== */
     .explanation-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 100;
-      display: flex; align-items: center; justify-content: center; padding: 1rem;
-      backdrop-filter: blur(8px); animation: fadeIn 0.3s ease;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(8px);
     }
     .explanation-card {
       background: #0f172a; border: 2px solid var(--gold); border-radius: 16px;
-      max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto;
+      max-width: 660px; width: 100%; max-height: 90vh; overflow-y: auto;
       box-shadow: 0 0 35px rgba(255, 215, 0, 0.3); display: flex; flex-direction: column;
     }
     .explanation-header {
-      padding: 1.1rem 1.4rem; display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255, 215, 0, 0.3); background: rgba(0,0,0,0.4);
+      padding: 0.9rem 1.2rem; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3); background: rgba(0,0,0,0.5);
     }
-    .outcome-pill {
-      font-size: 0.85rem; font-weight: 900; padding: 0.3rem 0.8rem; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .outcome-correct { background: #065F46; color: #34D399; border: 1px solid #34D399; }
-    .outcome-wrong { background: #7F1D1D; color: #F87171; border: 1px solid #F87171; }
-
-    /* Real Photo Box */
     .photo-frame {
-      width: 100%; height: 240px; position: relative; background: #000; overflow: hidden;
+      width: 100%; height: 230px; position: relative; background: #000; overflow: hidden;
       border-bottom: 2px solid var(--gold-dark);
     }
     .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
     .photo-caption {
-      position: absolute; bottom: 0; left: 0; right: 0; padding: 0.5rem 1rem;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
-      font-size: 0.8rem; color: #E2E8F0; font-weight: 500;
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 0.4rem 0.8rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.95)); font-size: 0.8rem; color: #E2E8F0;
     }
-
-    .explanation-content { padding: 1.4rem; flex: 1; }
-    .concept-tag {
-      display: inline-block; background: var(--crimson); color: var(--gold); border: 1px solid var(--gold);
-      padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 800;
-      text-transform: uppercase; margin-bottom: 0.6rem;
-    }
-    .explanation-text {
-      font-size: 0.95rem; line-height: 1.6; color: #E2E8F0; margin-bottom: 1.2rem;
-    }
-    .explanation-text strong { color: var(--gold); }
-
+    .explanation-content { padding: 1.2rem; }
     .audio-narration-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      background: rgba(255, 215, 0, 0.08); border: 1px solid var(--gold); border-radius: 10px;
-      padding: 0.65rem 1rem; margin-bottom: 1.2rem;
+      display: flex; align-items: center; justify-content: space-between; background: rgba(255, 215, 0, 0.08);
+      border: 1px solid var(--gold); border-radius: 8px; padding: 0.6rem 0.9rem; margin: 0.8rem 0;
     }
-    .narration-label { font-size: 0.85rem; color: var(--gold); font-weight: 700; display: flex; align-items: center; gap: 6px; }
-    .btn-voice {
-      background: var(--gold); color: #000; border: none; padding: 0.4rem 0.9rem;
-      border-radius: 20px; font-weight: 800; font-size: 0.8rem; cursor: pointer; transition: transform 0.2s;
-    }
-    .btn-voice:hover { transform: scale(1.05); }
 
     .btn-continue {
       width: 100%; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-      color: #000; font-weight: 900; font-size: 1.05rem; border: none; padding: 1rem;
-      border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); transition: transform 0.2s;
+      color: #000; font-weight: 900; font-size: 1.05rem; border: none; padding: 0.9rem; border-radius: 8px;
+      cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
     }
-    .btn-continue:hover { transform: scale(1.02); }
 
-    /* Ladder Overlay */
+    /* ========================================================
+       5. PHILIPPINE RANK LADDER DRAWER & OPPONENT PINS
+       ======================================================== */
     .ladder-drawer {
-      position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
-      background: #090d16; border-left: 2px solid var(--gold); padding: 1.5rem 1rem;
-      z-index: 90; transition: right 0.3s ease; display: flex; flex-direction: column;
+      position: fixed; top: 0; right: -360px; width: 340px; height: 100%;
+      background: #090d16; border-left: 2px solid var(--gold); padding: 1rem; z-index: 150;
+      transition: right 0.3s ease; display: flex; flex-direction: column;
     }
     .ladder-drawer.open { right: 0; }
     .ladder-item {
-      display: flex; justify-content: space-between; padding: 0.45rem 0.8rem;
-      font-size: 0.85rem; font-weight: 700; border-radius: 6px; margin-bottom: 2px;
-      color: #94a3b8;
+      display: flex; justify-content: space-between; align-items: center; padding: 0.35rem 0.6rem;
+      font-size: 0.8rem; font-weight: 700; border-radius: 6px; margin-bottom: 2px; color: #94a3b8;
+      position: relative;
     }
     .ladder-item.milestone { color: #FFF; font-weight: 900; }
     .ladder-item.active { background: var(--selected); color: #000; font-weight: 900; }
     .ladder-item.cleared { color: var(--gold); }
-
-    /* Modal dialog for Lifelines */
-    .dialog-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 150;
-      display: flex; align-items: center; justify-content: center; padding: 1rem;
-    }
-    .dialog-card {
-      background: #0f172a; border: 2px solid var(--gold); border-radius: 12px;
-      max-width: 440px; width: 100%; padding: 1.5rem; text-align: center;
+    .ladder-opponents-tag {
+      font-size: 0.65rem; background: var(--crimson); color: white; padding: 0.1rem 0.35rem;
+      border-radius: 10px; font-weight: 800; border: 1px solid var(--gold); margin-left: 4px;
     }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    /* ========================================================
+       6. TOP 3 PODIUM CEREMONY SCREEN
+       ======================================================== */
+    #podiumModal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 600;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;
+    }
+    .podium-container {
+      display: flex; align-items: flex-end; justify-content: center; gap: 15px; margin: 2rem 0; width: 100%; max-width: 500px;
+    }
+    .podium-pillar {
+      flex: 1; border-radius: 10px 10px 0 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end; padding-bottom: 1rem; font-weight: 900; color: #000;
+    }
+    .podium-pillar.rank-1 { height: 190px; background: linear-gradient(180deg, #FDE047 0%, #CA8A04 100%); order: 2; }
+    .podium-pillar.rank-2 { height: 140px; background: linear-gradient(180deg, #E2E8F0 0%, #94A3B8 100%); order: 1; }
+    .podium-pillar.rank-3 { height: 110px; background: linear-gradient(180deg, #FDBA74 0%, #C2410C 100%); order: 3; }
+
+    canvas#confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 610; }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Game Header -->
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- ========================================================
+       STAGE 1: DRAMATIC INTRO SCREEN WITH THEME SOUND
+       ======================================================== */ -->
+  <div id="introOverlay">
+    <div class="intro-spotlight"></div>
+    <div class="intro-spotlight right"></div>
+
+    <div class="intro-title-box">
+      <div class="intro-subtitle">👑 Professional Education Licensure Arena</div>
+      <h1 class="intro-main-title">Who Wants to Be a<br><span style="color:#FFF;">Topnotcher?</span></h1>
+      <p class="intro-tagline">15 Philippine DepEd & PRC Career Tiers &bull; Real-time Simultaneous Race</p>
+    </div>
+
+    <div class="lobby-card">
+      <h3 style="color:var(--gold); font-size:1rem; margin-bottom:0.8rem; text-transform:uppercase;">Examinee Check-In</h3>
+      <input type="text" id="playerNicknameInput" class="lobby-input" placeholder="Enter Full Name or Alias" value="Teacher Juan" />
+      <button class="btn-intro-start" onclick="startTopnotcherBattle()">Enter Battle Arena ⚡</button>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.8rem;">
+        🔊 Cinematic theme sound synthesizes upon entry! Play simultaneously against live student peers.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       STAGE 2: LIVE MULTIPLAYER GAME SCREEN
+       ======================================================== */ -->
   <header>
-    <div class="game-logo">Topnotcher <span>Millionaire</span></div>
+    <div class="game-logo">Who Wants to Be a <span>Topnotcher</span></div>
     
-    <!-- Lifelines -->
     <div class="lifelines">
       <button id="life5050" class="lifeline-btn" onclick="use5050()" title="50:50 Lifeline">50:50</button>
-      <button id="lifeEcho" class="lifeline-btn" onclick="useAskEcho()" title="Ask Teacher Echo">🤖</button>
-      <button id="lifePoll" class="lifeline-btn" onclick="useAudiencePoll()" title="Audience Poll">👥</button>
+      <button id="lifeEcho" class="lifeline-btn" onclick="useAskEcho()" title="Ask Teacher Echo AI">🤖</button>
+      <button id="lifePoll" class="lifeline-btn" onclick="useAudiencePoll()" title="PRC Audience Poll">👥</button>
     </div>
 
-    <div>
-      <button class="btn-header" onclick="toggleLadder()">🏆 Money Tree</button>
-    </div>
+    <button class="btn-header" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:0.35rem 0.8rem; border-radius:20px; font-weight:700; cursor:pointer;" onclick="toggleLadder()">
+      🇵🇭 Rank Ladder
+    </button>
   </header>
 
-  <!-- Central Game Screen -->
+  <!-- Simultaneous Opponent Race HUD Bar -->
+  <div class="live-race-bar">
+    <div style="font-weight:800; color:var(--gold); display:flex; align-items:center; gap:6px;">
+      <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10B981; animation:pulseSelection 1s infinite alternate;"></span>
+      LIVE EXAMINEE TRACKER:
+    </div>
+    <div class="race-track-avatars" id="liveRaceAvatars"></div>
+  </div>
+
+  <!-- Center Stage Arena -->
   <main class="game-stage">
     
-    <!-- Rank / Prize Badge -->
+    <!-- Current Philippine Rank Badge -->
     <div class="level-indicator" id="rankBadge">
-      QUESTION 1 &bull; ₱1,000 (Freshman Cadet)
+      RANK TIER 1 &bull; ₱1,000 (Pre-Service Student Intern)
     </div>
 
     <!-- Question Box -->
     <div class="question-wrapper">
-      <div class="question-box" id="questionStem">
-        Loading question...
-      </div>
+      <div class="question-box" id="questionStem">Loading question...</div>
     </div>
 
-    <!-- Choices Grid (A, B, C, D) -->
-    <div class="choices-grid" id="choicesGrid">
+    <!-- 4 Choices (A, B, C, D) -->
+    <div class="choices-grid">
       <button class="choice-btn" id="btnChoice0" onclick="chooseAnswer(0)">
         <span class="key">A:</span> <span class="label" id="labelChoice0">...</span>
       </button>
@@ -285,228 +336,324 @@
     </div>
   </main>
 
-  <!-- EXPLANATION VIEW (REAL PHOTOS + AUDIO RATIONALIZATION) -->
+  <!-- ========================================================
+       STAGE 3: EXPLANATION SCREEN (REAL PHOTOS + AUDIO)
+       ======================================================== */ -->
   <div id="explanationModal" class="explanation-overlay hidden">
     <div class="explanation-card">
       <div class="explanation-header">
-        <span id="explanationOutcomePill" class="outcome-pill outcome-correct">CORRECT ANSWER!</span>
-        <span id="explanationPrizeWon" style="color:var(--gold); font-weight:800; font-size:0.9rem;">₱1,000 EARNED</span>
+        <span id="explanationOutcomePill" style="font-weight:900; font-size:0.85rem; padding:0.25rem 0.75rem; border-radius:20px; text-transform:uppercase;">CORRECT</span>
+        <span id="explanationPrizeWon" style="color:var(--gold); font-weight:800; font-size:0.9rem;">₱1,000</span>
       </div>
 
       <!-- Real Photograph Frame -->
       <div class="photo-frame">
-        <img id="explanationPhoto" src="" alt="Pedagogical Concept Photo" />
-        <div class="photo-caption" id="explanationPhotoCaption">Pedagogical Concept Overview</div>
+        <img id="explanationPhoto" src="" alt="Real Pedagogical Photography" />
+        <div class="photo-caption" id="explanationPhotoCaption">Pedagogical Concept</div>
       </div>
 
       <!-- Explanation Content -->
       <div class="explanation-content">
-        <span class="concept-tag" id="explanationConceptTag">Domain</span>
+        <span style="display:inline-block; background:var(--crimson); color:var(--gold); border:1px solid var(--gold); padding:0.2rem 0.6rem; border-radius:6px; font-size:0.75rem; font-weight:800;" id="explanationConceptTag">Domain</span>
+        
         <div class="audio-narration-bar">
-          <span class="narration-label">🔊 Audio Teacher Explanation:</span>
-          <button class="btn-voice" id="btnToggleSpeech" onclick="toggleAudioNarration()">▶ Listen to Teacher Echo</button>
+          <span style="font-size:0.85rem; color:var(--gold); font-weight:700;">🔊 Teacher Echo Audio Explanation:</span>
+          <button style="background:var(--gold); border:none; padding:0.35rem 0.8rem; border-radius:20px; font-weight:800; cursor:pointer;" id="btnToggleSpeech" onclick="toggleAudioNarration()">▶ Listen</button>
         </div>
 
-        <div class="explanation-text" id="explanationText"></div>
+        <div style="font-size:0.95rem; line-height:1.6; color:#E2E8F0; margin-bottom:1.2rem;" id="explanationText"></div>
 
-        <button class="btn-continue" id="btnModalNext" onclick="nextQuestion()">Continue To Next Question →</button>
+        <button class="btn-continue" id="btnModalNext" onclick="nextQuestion()">Advance in Ranking →</button>
       </div>
     </div>
   </div>
 
-  <!-- Prize Ladder Drawer -->
+  <!-- ========================================================
+       STAGE 4: PHILIPPINE RANK LADDER DRAWER
+       ======================================================== */ -->
   <aside class="ladder-drawer" id="ladderDrawer">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-      <h3 style="color:var(--gold); font-size:1rem;">LPT RANK LADDER</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+      <h3 style="color:var(--gold); font-size:1rem;">🇵🇭 PHILIPPINE CAREER LADDER</h3>
       <button onclick="toggleLadder()" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
     <div id="ladderList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column-reverse;"></div>
   </aside>
 
-  <!-- Lifeline Dialog (Ask Echo / Audience Poll) -->
-  <div id="dialogModal" class="dialog-overlay hidden">
-    <div class="dialog-card">
-      <h3 id="dialogTitle" style="color:var(--gold); margin-bottom:0.8rem;">Lifeline</h3>
-      <div id="dialogBody" style="font-size:0.92rem; color:#cbd5e1; line-height:1.6; margin-bottom:1.2rem;"></div>
-      <button class="btn-continue" style="padding:0.6rem;" onclick="closeDialog()">Return to Game</button>
+  <!-- ========================================================
+       STAGE 5: TOP 3 PODIUM CELEBRATION MODAL
+       ======================================================== */ -->
+  <div id="podiumModal" class="hidden">
+    <h1 style="color:var(--gold); font-size:2.4rem; text-shadow:0 0 20px var(--gold-glow); text-transform:uppercase;">
+      🏆 TOP 3 TOPNOTCHERS CROWNED!
+    </h1>
+    <p style="color:#E2E8F0; font-size:1.1rem; margin-top:0.4rem;">The Live Licensure Board Battle is Officially Concluded!</p>
+
+    <div class="podium-container" id="podiumPod">
+      <div class="podium-pillar rank-2">
+        <span style="font-size:1.4rem;">🥈</span>
+        <div id="podiumName2">2nd Place</div>
+        <div style="font-size:0.75rem; color:#334155;">Rank 2 Finalist</div>
+      </div>
+      <div class="podium-pillar rank-1">
+        <span style="font-size:1.8rem;">🥇</span>
+        <div id="podiumName1" style="font-size:1.1rem;">1st Place</div>
+        <div style="font-size:0.75rem; color:#78350F;">₱1,000,000 Top 1</div>
+      </div>
+      <div class="podium-pillar rank-3">
+        <span style="font-size:1.3rem;">🥉</span>
+        <div id="podiumName3">3rd Place</div>
+        <div style="font-size:0.75rem; color:#7C2D12;">Rank 3 Finalist</div>
+      </div>
     </div>
+
+    <button class="btn-continue" style="max-width:320px;" onclick="location.reload()">Start New Live Battle Arena ↺</button>
   </div>
 
   <script>
     /* ========================================================
-       CURATED 15-TIER PRIZE LADDER
+       100% PHILIPPINE DEPD & PRC CAREER RANK LADDER (15 TIERS)
        ======================================================== */
-    const prizeLadder = [
-      { level: 1, prize: "₱1,000", title: "Freshman Cadet", milestone: false },
-      { level: 2, prize: "₱2,000", title: "Sophomore Major", milestone: false },
-      { level: 3, prize: "₱3,000", title: "Junior Major", milestone: false },
-      { level: 4, prize: "₱5,000", title: "Senior Field Intern", milestone: false },
-      { level: 5, prize: "₱10,000", title: "✨ SAFE HAVEN: BSED/BEED GRADUATE", milestone: true },
-      { level: 6, prize: "₱20,000", title: "PRC Board Applicant", milestone: false },
-      { level: 7, prize: "₱40,000", title: "Examinee In Review", milestone: false },
-      { level: 8, prize: "₱70,000", title: "Teacher I Candidate", milestone: false },
-      { level: 9, prize: "₱100,000", title: "Teacher II Candidate", milestone: false },
-      { level: 10, prize: "₱150,000", title: "✨ SAFE HAVEN: LICENSED PROFESSIONAL TEACHER (LPT)", milestone: true },
-      { level: 11, prize: "₱250,000", title: "Master Teacher I", milestone: false },
-      { level: 12, prize: "₱400,000", title: "Head Teacher", milestone: false },
-      { level: 13, prize: "₱600,000", title: "School Principal", milestone: false },
-      { level: 14, prize: "₱800,000", title: "Regional Top 5", milestone: false },
-      { level: 15, prize: "₱1,000,000", title: "🏆 NATIONAL TOPNOTCHER #1", milestone: true }
+    const philippineRankLadder = [
+      { level: 1, prize: "₱1,000", title: "Pre-Service Student Intern (BEEd/BSEd)", milestone: false },
+      { level: 2, prize: "₱2,000", title: "DepEd Para-Teacher (RA 9293)", milestone: false },
+      { level: 3, prize: "₱3,000", title: "Teacher I (Entry-Level DepEd)", milestone: false },
+      { level: 4, prize: "₱5,000", title: "Teacher II (DepEd SG 12)", milestone: false },
+      { level: 5, prize: "₱10,000", title: "✨ SAFE HAVEN: Teacher III (Proficient Teacher)", milestone: true },
+      { level: 6, prize: "₱20,000", title: "Teacher IV (Career Progression EO 174)", milestone: false },
+      { level: 7, prize: "₱40,000", title: "Master Teacher I (Highly Proficient)", milestone: false },
+      { level: 8, prize: "₱70,000", title: "Master Teacher II", milestone: false },
+      { level: 9, prize: "₱100,000", title: "Master Teacher III / Head Teacher", milestone: false },
+      { level: 10, prize: "₱150,000", title: "✨ SAFE HAVEN: School Principal I", milestone: true },
+      { level: 11, prize: "₱250,000", title: "Public Schools District Supervisor (PSDS)", milestone: false },
+      { level: 12, prize: "₱400,000", title: "Schools Division Superintendent (SDS)", milestone: false },
+      { level: 13, prize: "₱600,000", title: "DepEd Regional Director (CESO Rank)", milestone: false },
+      { level: 14, prize: "₱800,000", title: "PRC Board Top 10 National Ranker", milestone: false },
+      { level: 15, prize: "₱1,000,000", title: "🏆 PRC NATIONAL RANK 1 BOARD TOPNOTCHER", milestone: true }
     ];
 
     /* ========================================================
-       TOPIC IMAGE MAP (REAL HIGH-RES PHOTOGRAPHS)
+       CURATED REAL PHOTOGRAPHS FOR PHILIPPINE DOMAINS
        ======================================================== */
-    const topicPhotos = {
+    const domainPhotos = {
       philosophy: {
         url: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=900&q=80",
-        caption: "Western Philosophical Traditions & Epistemological Roots"
-      },
-      eastern: {
-        url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
-        caption: "Eastern Philosophies: Harmony, Dharma, and Filial Piety"
+        caption: "Foundations of Education & Epistemological Philosophies"
       },
       community: {
         url: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=900&q=80",
-        caption: "School & Community Alliances (Brigada Eskwela)"
+        caption: "Philippine School & Community Partnerships (DepEd Brigada Eskwela)"
       },
       leadership: {
         url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
-        caption: "Decentralized School-Based Management & Leadership"
+        caption: "School-Based Management (RA 9155) & Instructional Leadership"
       },
       history: {
         url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
-        caption: "Classical & Renaissance Educational Heritage"
+        caption: "Historical Foundations of World & Philippine Education"
       },
-      assessment: {
-        url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=80",
-        caption: "Assessment of Learning & Cognitive Evaluation"
+      eastern: {
+        url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
+        caption: "Eastern Philosophies: Buddhism, Confucianism, Dharma & Ren"
       },
       safety: {
         url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80",
-        caption: "Child Protection, Psychological Welfare & Inclusive Climate"
+        caption: "DepEd Child Protection Policy & Student-Centered Climate"
       }
     };
 
     /* ========================================================
-       AUTHENTIC 65 LET BOARD EXAM QUESTIONS BANK
+       LET EXAM QUESTION REPOSITORY (WITH PHILIPPINE CONTEXT)
        ======================================================== */
-    const masterQuestionBank = [
-      { stem: "Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "Child Protection & Safety", photoKey: "safety", rationale: "Psychological abuse involves threats, intimidation, and inducing fear in an individual to assert control." },
-      { stem: "What does SDG 15 – 30 mean?", choices: ["Sustainable Development Goals after MDG 2015", "Sustaining Gross National Product", "Specific Development Goals for developing nations", "Sustaining Development by Giant Nations"], ans: 0, concept: "Global Development Goals", photoKey: "history", rationale: "The Sustainable Development Goals (SDGs) run from 2016–2030, building on the 2000–2015 Millennium Development Goals." },
-      { stem: "Which is TRUE of a school and community partnership?", choices: ["Community helps school only", "School is only a recipient of assistance", "Both school and community benefit", "Both school and community lose"], ans: 2, concept: "School & Community Alliances", photoKey: "community", rationale: "School-community partnerships are mutually beneficial collaborations that enrich both institutions." },
-      { stem: "Which program is proof of school-community partnership where stakeholders donate time, talent, and treasure every May?", choices: ["PTA Assembly", "School Governing Council", "Brigada Eskwela", "Palarong Pambansa"], ans: 2, concept: "DepEd Programs", photoKey: "community", rationale: "Brigada Eskwela unites stakeholders every May to clean, maintain, and ready public school classrooms." },
-      { stem: "'It takes a village to educate a child.' Which does this statement imply?", choices: ["PTA is enough partnership", "Institutionalize school-community partnerships", "School substitutes for parents", "Children need more models"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "This proverb asserts that educating youth requires wide-scale, institutionalized community participation." },
-      { stem: "As a teacher, you are a facilitator of learning. What is expected of you?", choices: ["Do not fail anyone", "Make teaching-learning interactive and exciting", "Use video clips exclusively", "Allow unlimited smartphone use"], ans: 1, concept: "Pedagogical Leadership", photoKey: "assessment", rationale: "A facilitator designs interactive, student-centered environments that spark active inquiry." },
-      { stem: "Who is the most interested in improving the present status of an organization?", choices: ["The authoritarian leader", "The laissez-faire leader", "The transformational leader", "The servant leader"], ans: 2, concept: "Organizational Leadership", photoKey: "leadership", rationale: "Transformational leaders actively disrupt complacency to elevate organizational performance." },
-      { stem: "Is SBM, if implemented the right way, an effective way to strengthen school and community partnership?", choices: ["Yes", "No", "Depends on size of school", "Depends on location"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "Yes, School-Based Management (RA 9155) directly empowers local stakeholders in school governance." },
-      { stem: "Which is an advantage of SBM?", choices: ["Principal decides everything alone", "Sense of ownership among stakeholders", "Independence from all national laws", "Complete privatization"], ans: 1, concept: "School-Based Management", photoKey: "leadership", rationale: "Stakeholder participation fosters deep shared ownership and commitment to school success." },
-      { stem: "For SBM to succeed, which must be present?", choices: ["Effective school support system", "Leader with authoritarian personality", "Docile community", "Low academic expectations"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "SBM requires robust technical and institutional support systems to sustain decentralization." },
-      { stem: "Which is TRUE of school culture?", choices: ["Inherited like biological genes", "Formed only by the school principal", "Has significant effect on student performance", "Cannot be altered once built"], ans: 2, concept: "School Culture", photoKey: "community", rationale: "The values, beliefs, and climate within a school directly determine student achievement." },
-      { stem: "Which is the most effective way of making policies in school?", choices: ["School head to involve stakeholders", "Students must never participate", "Only parents of honor students participate", "Make policies permanent"], ans: 0, concept: "Educational Governance", photoKey: "leadership", rationale: "Participatory policy-making builds consensus, compliance, and lasting institutional trust." },
-      { stem: "A school head who charts strategic direction, makes informed decisions, and leads change demonstrates:", choices: ["Strategic thinking and innovation", "Personal survival only", "Laissez-faire governance", "Authoritarian rule"], ans: 0, concept: "NCBS-SH Competencies", photoKey: "leadership", rationale: "Under Domain 1 of NCBS-SH, strategic thinking combines vision-setting, data-informed choices, and innovation." },
-      { stem: "Supervising and evaluating teachers' instructional performance aligns with which domain of NCBS-SH?", choices: ["Strategic thinking", "Instructional leadership", "Personal excellence", "Fiscal management"], ans: 1, concept: "Instructional Supervision", photoKey: "assessment", rationale: "Instructional supervision, clinical mentoring, and teacher appraisal sit in Domain 2: Instructional Leadership." },
-      { stem: "Teacher Q regards the student as a spiritual entity and part of the larger spiritual universe. To which philosophy does Teacher Q subscribe?", choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"], ans: 0, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Idealism (Plato) views ultimate reality as spiritual, mental, and anchored in eternal ideas." },
-      { stem: "Who believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?", choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Essentialism (William Bagley) champions academic rigor, mastery of core 3Rs, and teacher authority." },
-      { stem: "Teacher U emphasizes deep personal reflection on one's choices and commitments. Teacher U subscribes to:", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Existentialism asserts that existence precedes essence; learners must freely define their own purpose." },
-      { stem: "In a vocational school, students are taught skills with direct practical application. Which source of knowledge aligns with this approach?", choices: ["Inquiry into the divine", "The mind and innate forms", "The practical utility and consequences of knowledge", "Purely theoretical ontology"], ans: 2, concept: "Epistemology", photoKey: "philosophy", rationale: "Pragmatism (John Dewey) tests the truth and value of knowledge by its practical, experiential utility." },
-      { stem: "Cosmology as a branch of Metaphysics is primarily concerned with:", choices: ["Beauty and aesthetic taste", "The origin and nature of the universe", "Valid syllogistic reasoning", "Ethics of right and wrong"], ans: 1, concept: "Metaphysics", photoKey: "philosophy", rationale: "Cosmology examines the origins, structural laws, and nature of the cosmos/universe." },
-      { stem: "Which period focused on the rediscovery of classical Greek philosophy, literature, and art?", choices: ["Athenian period", "Medieval period", "Reformation period", "Renaissance period"], ans: 3, concept: "Historical Foundations", photoKey: "history", rationale: "The Renaissance celebrated humanism by reviving classical Greco-Roman arts and philosophies." },
-      { stem: "Who is considered the first great teacher of Ancient China and key figure in Confucianism?", choices: ["Lao Tzu", "Siddhartha Gautama", "Confucius", "Guru Nanak"], ans: 2, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Confucius established ethical teachings centered on Ren (benevolence) and Li (propriety)." },
-      { stem: "How is Karma understood in Hinduism?", choices: ["Liberation from cycles of birth", "Law of cause and effect where actions determine future consequences", "The cosmic supreme creator", "Ritual asceticism"], ans: 1, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Karma is the moral law of cause and effect governing all actions and their reincarnated results." },
-      { stem: "According to Buddhism, what does the concept of Impermanence (Anicca) suggest?", choices: ["Everything is permanent and enduring", "Nothing is permanent; all things change", "Only suffering is eternal", "The self is absolute"], ans: 1, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Anicca teaches that all conditioned physical and mental phenomena are subject to continuous change." },
-      { stem: "How do folkways differ from mores?", choices: ["Folkways are legal codes; mores are customs", "Folkways are repetitive conventions; mores carry profound moral weight", "Folkways are strict; mores are optional", "Folkways are religious dogmas"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "Folkways govern casual etiquette; mores dictate deep moral values that invoke severe societal sanctions." },
-      { stem: "According to Conflict Theory, what is the primary driver of social change?", choices: ["Cooperation between institutions", "Inequality and power struggles between groups", "Shared symbolic interactions", "Spiritual consensus"], ans: 1, concept: "Sociological Theories", photoKey: "safety", rationale: "Conflict theory (Karl Marx) posits that societal evolution is propelled by clashes over scarce resources." }
+    const masterBank = [
+      { stem: "Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "Child Protection Policy", photoKey: "safety", rationale: "DepEd Child Protection Policy defines psychological abuse as intimidating or causing mental trauma to assert control." },
+      { stem: "What does SDG 15 – 30 mean in global and Philippine basic education goals?", choices: ["Sustainable Development Goals after MDG 2015", "Sustaining Gross National Product", "Specific Development Goals for developing nations", "Sustaining Giant Nations"], ans: 0, concept: "Global Education Goals", photoKey: "history", rationale: "The Sustainable Development Goals (SDGs) span 2016–2030, succeeding the UN Millennium Development Goals." },
+      { stem: "Which is TRUE of a school and community partnership under DepEd guidelines?", choices: ["Community helps school only", "School is only a recipient of charity", "Both school and community benefit mutually", "Both school and community lose autonomy"], ans: 2, concept: "School-Community Alliance", photoKey: "community", rationale: "School-community partnerships are bidirectional, reciprocal collaborations that enrich both institutions." },
+      { stem: "Which annual DepEd program brings stakeholders together every May to prepare facilities prior to class opening?", choices: ["PTA General Assembly", "School Governing Council", "Brigada Eskwela", "Palarong Pambansa"], ans: 2, concept: "DepEd Alliances", photoKey: "community", rationale: "Brigada Eskwela (National Schools Maintenance Week) mobilizes parents, alumni, and civic partners every May." },
+      { stem: "'It takes a village to educate a child.' Which does this statement imply in Philippine schools?", choices: ["PTA is more than enough", "Institutionalize school-community partnerships", "School substitutes for absentee parents", "Children only need textbook models"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "Educating a Filipino child requires extensive, institutionalized alliances beyond classroom walls." },
+      { stem: "As a professional teacher, you are a facilitator of learning. What is expected of you?", choices: ["Do not fail anyone under any circumstance", "Make teaching-learning interactive and exciting", "Use video clips exclusively", "Allow uncontrolled smartphone usage"], ans: 1, concept: "Instructional Leadership", photoKey: "leadership", rationale: "Facilitators cultivate active, engaging, and reflective learning environments." },
+      { stem: "Who is the most interested in transforming and improving the present status of a school organization?", choices: ["The authoritarian leader", "The laissez-faire leader", "The transformational leader", "The passive bureaucrat"], ans: 2, concept: "Organizational Leadership", photoKey: "leadership", rationale: "Transformational leaders challenge the status quo and inspire faculties to innovate." },
+      { stem: "Is SBM (School-Based Management), if implemented properly under RA 9155, an effective partnership?", choices: ["Yes", "No", "Depends on school size only", "Depends on geographical region"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "Yes, RA 9155 decentralizes governance directly to empower local school stakeholders." },
+      { stem: "Which is a proven advantage of SBM in Philippine public schools?", choices: ["Principal decides without consultations", "Sense of ownership among local stakeholders", "Exemption from state accountability", "Total privatization of basic education"], ans: 1, concept: "School-Based Management", photoKey: "leadership", rationale: "Direct involvement in school improvement planning fosters genuine stakeholder ownership." },
+      { stem: "For SBM to succeed, which component must be present in the school system?", choices: ["Effective school support system", "Leader with dictatorial personality", "Docile and silent community", "Low academic expectations"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "SBM requires structured institutional, fiscal, and instructional support systems." },
+      { stem: "Which is TRUE of school culture in Philippine basic education?", choices: ["Passed on biologically like hereditary traits", "Formed only by division superintendents", "Has significant measurable effect on student performance", "Cannot be altered once established"], ans: 2, concept: "School Culture & Climate", photoKey: "community", rationale: "A school's shared norms, rituals, and climate directly correlate with student learning gains." },
+      { stem: "Which is the most effective approach in formulating school policies?", choices: ["School head involves all affected stakeholders", "Students should never participate", "Only parents of honor graduates decide", "Policies must remain rigid and permanent"], ans: 0, concept: "Educational Governance", photoKey: "leadership", rationale: "Participatory formulation generates durable, respected, and transparent policies." },
+      { stem: "A school head who charts strategic direction, makes informed decisions, and leads change demonstrates:", choices: ["Strategic thinking and innovation (Domain 1)", "Personal survival skills only", "Laissez-faire management", "Authoritarian leadership"], ans: 0, concept: "NCBS-SH Competencies", photoKey: "leadership", rationale: "Under DepEd Order 32, s. 2010 (NCBS-SH), strategic thinking combines direction-setting and innovation." },
+      { stem: "Supervising and evaluating teachers' pedagogical performance belongs to which domain in NCBS-SH?", choices: ["Personal excellence", "Instructional leadership (Domain 2)", "Operations management", "Fiscal management"], ans: 1, concept: "Instructional Supervision", photoKey: "leadership", rationale: "Instructional mentoring, classroom observation, and appraisal belong directly to Domain 2." },
+      { stem: "Teacher Q regards the student as a spiritual entity and part of the universal spiritual world. Teacher Q subscribes to:", choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"], ans: 0, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Idealism (Platonic philosophy) views the universe as fundamentally spiritual and ideas as enduring truth." },
+      { stem: "Who among the following believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?", choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Essentialism emphasizes core 3Rs academic discipline, prescribed curriculum, and teacher authority." },
+      { stem: "Teacher U emphasizes deep personal reflection on one's choices and commitments. Teacher U adheres to:", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Existentialism (Sartre, Kierkegaard) asserts that individuals define their own essence through conscious choice." },
+      { stem: "In a technical-vocational school, students are taught skills with direct practical consequences. Which epistemology aligns with this?", choices: ["Inquiry into the divine", "The mind and innate ideas", "The practical utility and consequences of knowledge", "Purely theoretical deductive ontology"], ans: 2, concept: "Epistemology", photoKey: "philosophy", rationale: "Pragmatism (John Dewey) holds that knowledge is validated through practical action and experiential utility." },
+      { stem: "Cosmology as a sub-branch of Metaphysics explores:", choices: ["The nature of beauty and art", "The origin, structure, and nature of the universe", "Valid reasoning and syllogisms", "Ethics and moral codes"], ans: 1, concept: "Metaphysics", photoKey: "philosophy", rationale: "Cosmology investigates the physical and ontological origins and laws governing the cosmos." },
+      { stem: "Which historical period emphasized the rediscovery of classical Greek philosophy, literature, and art?", choices: ["Athenian classical period", "Medieval period", "Reformation period", "Renaissance period"], ans: 3, concept: "Historical Foundations", photoKey: "history", rationale: "The Renaissance celebrated humanism through the revival of classical Greco-Roman arts and sciences." },
+      { stem: "Who is considered the first great teacher of Ancient China and key figure in Confucianism?", choices: ["Lao Tzu", "Siddhartha Gautama", "Confucius", "Guru Nanak"], ans: 2, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Confucius shaped oriental educational philosophy around Ren (benevolence) and Li (propriety)." },
+      { stem: "How is Karma understood in Eastern philosophical traditions?", choices: ["Total liberation from rebirth", "Moral law of cause and effect where actions dictate future outcomes", "Supreme cosmic deity", "Ritual self-denial"], ans: 1, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Karma is the cosmic moral law where ethical conduct produces corresponding consequences." },
+      { stem: "According to Buddhism, what does the concept of Impermanence (Anicca) signify?", choices: ["All things in the universe are permanent", "Nothing is permanent; everything is in constant flux", "Only pain is eternal", "The individual ego is unchanging"], ans: 1, concept: "Eastern Philosophies", photoKey: "eastern", rationale: "Anicca teaches that all conditioned existence is transient, fluid, and ever-changing." },
+      { stem: "How do folkways differ from mores in sociological foundations of education?", choices: ["Folkways are legal statutes; mores are casual etiquette", "Folkways are repetitive conventions; mores carry strict moral significance", "Folkways are mandatory; mores are optional", "Folkways are religious dogmas"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "Folkways govern customary conventions, while mores embody severe moral duties punishable by society." },
+      { stem: "According to Conflict Theory, what is the primary engine of social transformation?", choices: ["Institutional harmony", "Inequality and struggles for scarce power and resources", "Shared symbolic gestures", "Spiritual consensus"], ans: 1, concept: "Sociological Theories", photoKey: "safety", rationale: "Conflict theory posits that societal evolution is sparked by friction between competing economic classes." }
     ];
 
     /* ========================================================
-       GAME STATE
+       STATE & MULTIPLAYER BROADCAST CHANNEL
        ======================================================== */
-    let currentLevel = 0;
-    let currentGameQuestions = [];
+    let currentTierIndex = 0;
     let activeQuestion = null;
-    let selectedChoiceIndex = null;
-    let isLocked = false;
-    let speechSynth = window.speechSynthesis;
-    let currentUtterance = null;
+    let isChoiceLocked = false;
+    let playerName = "Teacher Juan";
+    let channel = null;
 
-    // Lifeline tracking
-    let used5050 = false;
-    let usedEcho = false;
-    let usedPoll = false;
+    // Simulated / Live Competitors
+    let competitors = [
+      { id: "c1", name: "M. Santos", tier: 0, isCrowned: false },
+      { id: "c2", name: "J. Reyes", tier: 0, isCrowned: false },
+      { id: "c3", name: "K. Aquino", tier: 0, isCrowned: false },
+      { id: "c4", name: "A. Mendoza", tier: 0, isCrowned: false }
+    ];
+
+    let top3Winners = [];
+    let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let speechSynth = window.speechSynthesis;
+    let currentSpeech = null;
 
     /* ========================================================
-       AUDIO SYNTHESIZER (WEB AUDIO API)
+       ORCHESTRAL INTRO THEME MUSIC (WEB AUDIO API SYNTH)
        ======================================================== */
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playDramaticIntroTheme() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const now = audioCtx.currentTime;
 
-    function playTone(freq, duration, type = "sine", gainVal = 0.2) {
-      try {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+      // 1. Heavy Suspense Sub-Bass Drone
+      const bassOsc = audioCtx.createOscillator();
+      const bassGain = audioCtx.createGain();
+      bassOsc.type = "sawtooth";
+      bassOsc.frequency.setValueAtTime(65.41, now); // C2
+      bassGain.gain.setValueAtTime(0.25, now);
+      bassGain.gain.exponentialRampToValueAtTime(0.01, now + 4.5);
+      bassOsc.connect(bassGain);
+      bassGain.connect(audioCtx.destination);
+      bassOsc.start(now);
+      bassOsc.stop(now + 4.5);
+
+      // 2. Rising Dramatic Brass Chord Stabs (Who Wants to Be a Topnotcher signature)
+      const chordNotes = [130.81, 164.81, 196.00, 246.94, 293.66]; // C-E-G-B-D minor 9th
+      chordNotes.forEach((freq, i) => {
         const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) { console.log(e); }
+        const g = audioCtx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now + (i * 0.12));
+        g.gain.setValueAtTime(0.18, now + (i * 0.12));
+        g.gain.exponentialRampToValueAtTime(0.001, now + 3.8);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start(now + (i * 0.12));
+        osc.stop(now + 3.8);
+      });
+
+      // 3. Climax Gong Shimmer
+      setTimeout(() => {
+        playTone(587.33, 1.8, "sine", 0.2); // D5
+        playTone(880.00, 2.2, "sine", 0.15); // A5
+      }, 700);
     }
 
-    function soundSelect() { playTone(440, 0.25, "triangle", 0.15); }
+    function playTone(freq, dur, type = "sine", gain = 0.2) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        g.gain.setValueAtTime(gain, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start();
+        o.stop(audioCtx.currentTime + dur);
+      } catch (e) {}
+    }
+
+    function soundSelect() { playTone(440, 0.25, "triangle", 0.18); }
     function soundCorrect() {
       setTimeout(() => playTone(523.25, 0.15, "triangle", 0.25), 0);
-      setTimeout(() => playTone(659.25, 0.15, "triangle", 0.25), 150);
-      setTimeout(() => playTone(783.99, 0.45, "triangle", 0.3), 300);
+      setTimeout(() => playTone(659.25, 0.15, "triangle", 0.25), 140);
+      setTimeout(() => playTone(783.99, 0.5, "triangle", 0.3), 280);
     }
     function soundWrong() {
       playTone(180, 0.6, "sawtooth", 0.3);
-      setTimeout(() => playTone(140, 0.8, "sawtooth", 0.35), 250);
-    }
-    function soundLifeline() {
-      playTone(800, 0.1, "sine", 0.2);
-      setTimeout(() => playTone(1200, 0.25, "sine", 0.2), 100);
+      setTimeout(() => playTone(130, 0.7, "sawtooth", 0.35), 250);
     }
 
     /* ========================================================
-       GAME ENGINE & NAVIGATION
+       GAMEPLAY INITIALIZATION & MULTIPLAYER
        ======================================================== */
-    function initGame() {
-      // Shuffle & select 15 questions for the run
-      const shuffled = [...masterQuestionBank].sort(() => 0.5 - Math.random());
-      currentGameQuestions = shuffled.slice(0, 15);
-      currentLevel = 0;
-      used5050 = false;
-      usedEcho = false;
-      usedPoll = false;
-      document.getElementById("life5050").disabled = false;
-      document.getElementById("lifeEcho").disabled = false;
-      document.getElementById("lifePoll").disabled = false;
-      renderLadder();
-      loadQuestionAtCurrentLevel();
+    function startTopnotcherBattle() {
+      const input = document.getElementById("playerNicknameInput").value.trim();
+      if (input) playerName = input;
+
+      playDramaticIntroTheme();
+
+      // Connect to Cross-Tab Peer Sync via BroadcastChannel
+      try {
+        channel = new BroadcastChannel("topnotcher_simultaneous_arena");
+        channel.onmessage = handlePeerUpdate;
+      } catch (e) {}
+
+      document.getElementById("introOverlay").classList.add("hidden");
+      currentTierIndex = 0;
+      renderPhilippineLadder();
+      loadTierQuestion();
+      startSimulatedOpponents();
+      broadcastPlayerProgress();
     }
 
-    function renderLadder() {
+    function renderPhilippineLadder() {
       const list = document.getElementById("ladderList");
-      list.innerHTML = prizeLadder.map((tier, idx) => `
-        <div class="ladder-item ${tier.milestone ? 'milestone' : ''} ${idx === currentLevel ? 'active' : ''} ${idx < currentLevel ? 'cleared' : ''}" id="ladderTier${idx}">
-          <span>${tier.level}. ${tier.title}</span>
-          <span>${tier.prize}</span>
-        </div>
-      `).join('');
+      list.innerHTML = philippineRankLadder.map((item, idx) => {
+        // Collect competitors at this tier
+        const opponentsHere = competitors.filter(c => c.tier === idx).map(c => c.name);
+        return `
+          <div class="ladder-item ${item.milestone ? 'milestone' : ''} ${idx === currentTierIndex ? 'active' : ''} ${idx < currentTierIndex ? 'cleared' : ''}" id="tierNode${idx}">
+            <span>${item.level}. ${item.title}</span>
+            <div style="display:flex; align-items:center;">
+              ${opponentsHere.length > 0 ? `<span class="ladder-opponents-tag">${opponentsHere.join(', ')}</span>` : ''}
+              <span style="margin-left:8px;">${item.prize}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+      renderLiveTrackHUD();
     }
 
-    function loadQuestionAtCurrentLevel() {
-      isLocked = false;
-      selectedChoiceIndex = null;
-      activeQuestion = currentGameQuestions[currentLevel];
-      const tier = prizeLadder[currentLevel];
+    function renderLiveTrackHUD() {
+      const container = document.getElementById("liveRaceAvatars");
+      const myTierData = philippineRankLadder[currentTierIndex];
+      
+      let html = `
+        <div class="racer-pill you">
+          <span>👑 YOU (${playerName}):</span>
+          <strong>${myTierData.prize}</strong>
+        </div>
+      `;
+
+      competitors.forEach(c => {
+        const cTier = philippineRankLadder[c.tier];
+        html += `
+          <div class="racer-pill ${c.isCrowned ? 'crowned' : ''}">
+            <span>${c.isCrowned ? '🏆' : '👤'} ${c.name}:</span>
+            <span>${cTier ? cTier.prize : '₱0'}</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function loadTierQuestion() {
+      isChoiceLocked = false;
+      activeQuestion = masterBank[currentTierIndex % masterBank.length];
+      const tier = philippineRankLadder[currentTierIndex];
 
       document.getElementById("rankBadge").innerHTML = `
-        QUESTION ${tier.level} OF 15 &bull; <strong style="color:#FFF;">${tier.prize}</strong> (${tier.title})
+        RANK TIER ${tier.level} OF 15 &bull; <strong style="color:#FFF;">${tier.prize}</strong> (${tier.title})
       `;
 
       document.getElementById("questionStem").textContent = activeQuestion.stem;
@@ -518,19 +665,17 @@
         document.getElementById(`labelChoice${i}`).textContent = activeQuestion.choices[i];
       }
 
-      renderLadder();
+      renderPhilippineLadder();
     }
 
     function chooseAnswer(idx) {
-      if (isLocked) return;
-      isLocked = true;
-      selectedChoiceIndex = idx;
+      if (isChoiceLocked) return;
+      isChoiceLocked = true;
       soundSelect();
 
       const btn = document.getElementById(`btnChoice${idx}`);
       btn.classList.add("selected");
 
-      // Dramatic suspense delay (1.2s)
       setTimeout(() => {
         const isRight = (idx === activeQuestion.ans);
         btn.classList.remove("selected");
@@ -544,179 +689,224 @@
           soundWrong();
         }
 
-        // Show Explanation Screen with Real Photo & Audio after 1s
         setTimeout(() => {
           showExplanationModal(isRight);
-        }, 1000);
-
-      }, 1200);
+        }, 900);
+      }, 1100);
     }
 
     /* ========================================================
-       EXPLANATION SCREEN (REAL PHOTOS + AUDIO SYNTHESIS)
+       EXPLANATION SCREEN (REAL PHOTOS + AUDIO SYNTH)
        ======================================================== */
     function showExplanationModal(isRight) {
       const modal = document.getElementById("explanationModal");
-      const tier = prizeLadder[currentLevel];
-      const photoData = topicPhotos[activeQuestion.photoKey] || topicPhotos.philosophy;
+      const tier = philippineRankLadder[currentTierIndex];
+      const photo = domainPhotos[activeQuestion.photoKey] || domainPhotos.philosophy;
 
-      // Populate Status Banner
       const pill = document.getElementById("explanationOutcomePill");
-      pill.className = `outcome-pill ${isRight ? 'outcome-correct' : 'outcome-wrong'}`;
-      pill.textContent = isRight ? "✓ CORRECT ANSWER!" : "✕ INCORRECT!";
+      pill.style.background = isRight ? "#065F46" : "#7F1D1D";
+      pill.style.color = isRight ? "#34D399" : "#F87171";
+      pill.textContent = isRight ? "✓ CORRECT RANK PROMOTION" : "✕ FAILED ATTEMPT";
 
-      document.getElementById("explanationPrizeWon").textContent = isRight
-        ? `${tier.prize} SECURED`
-        : `FALLBACK: ${getGuaranteedPrize()}`;
-
-      // Set Real High-Resolution Photograph
-      document.getElementById("explanationPhoto").src = photoData.url;
-      document.getElementById("explanationPhotoCaption").textContent = photoData.caption;
-
-      // Populate Concept & Explanation Text
-      document.getElementById("explanationConceptTag").textContent = `Domain: ${activeQuestion.concept}`;
+      document.getElementById("explanationPrizeWon").textContent = isRight ? `${tier.prize} REACHED` : "FALLBACK TO SAFE HAVEN";
+      document.getElementById("explanationPhoto").src = photo.url;
+      document.getElementById("explanationPhotoCaption").textContent = photo.caption;
+      document.getElementById("explanationConceptTag").textContent = `Competency: ${activeQuestion.concept}`;
+      
       document.getElementById("explanationText").innerHTML = `
         <p><strong>Correct Answer:</strong> ${activeQuestion.choices[activeQuestion.ans]}</p>
         <p style="margin-top:0.6rem;"><strong>💡 PRC Board Exam Rationalization:</strong><br>${activeQuestion.rationale}</p>
       `;
 
-      // Setup Continue / Game Over Button
       const nextBtn = document.getElementById("btnModalNext");
       if (isRight) {
-        if (currentLevel === 14) {
-          nextBtn.textContent = "🏆 CLAIM ₱1,000,000 & TOPNOTCHER TROPHY!";
-          nextBtn.onclick = () => { alert("🎉 CONGRATULATIONS! You achieved Rank 1 in the Board Licensure Examination!"); initGame(); closeModal(); };
+        if (currentTierIndex === 14) {
+          registerTop3Finish(playerName);
+          nextBtn.textContent = "🏆 CLAIM NATIONAL TOP 1 TOPNOTCHER CROWN!";
+          nextBtn.onclick = () => { closeModal(); checkGamePodiumEnd(); };
         } else {
-          nextBtn.textContent = `Climb to Question ${currentLevel + 2} (${prizeLadder[currentLevel + 1].prize}) →`;
-          nextBtn.onclick = () => { closeModal(); currentLevel++; loadQuestionAtCurrentLevel(); };
+          nextBtn.textContent = `Climb to Tier ${currentTierIndex + 2} (${philippineRankLadder[currentTierIndex + 1].prize}) →`;
+          nextBtn.onclick = () => {
+            closeModal();
+            currentTierIndex++;
+            broadcastPlayerProgress();
+            loadTierQuestion();
+          };
         }
       } else {
-        nextBtn.textContent = `Game Over. Walk Away With ${getGuaranteedPrize()} (Restart) ↺`;
-        nextBtn.onclick = () => { closeModal(); initGame(); };
+        nextBtn.textContent = `Attempt Restart from Safe Haven ↺`;
+        nextBtn.onclick = () => {
+          closeModal();
+          currentTierIndex = (currentTierIndex >= 10) ? 9 : (currentTierIndex >= 5 ? 4 : 0);
+          broadcastPlayerProgress();
+          loadTierQuestion();
+        };
       }
 
       modal.classList.remove("hidden");
-
-      // Auto start speech audio narration
-      startAudioNarration();
+      startAudioVoice();
     }
 
     function closeModal() {
-      stopAudioNarration();
+      stopAudioVoice();
       document.getElementById("explanationModal").classList.add("hidden");
     }
 
-    function getGuaranteedPrize() {
-      if (currentLevel >= 10) return "₱150,000 (Licensed Professional Teacher)";
-      if (currentLevel >= 5) return "₱10,000 (Education Graduate)";
-      return "₱0 (Cadet)";
-    }
-
-    /* AUDIO NARRATION (WEB SPEECH SYNTHESIS) */
-    function startAudioNarration() {
+    /* SPEECH SYNTHESIS NARRATION */
+    function startAudioVoice() {
       if (!('speechSynthesis' in window)) return;
       speechSynth.cancel();
-
-      const text = `The correct answer is: ${activeQuestion.choices[activeQuestion.ans]}. Here is Teacher Echo's explanation. ${activeQuestion.rationale}`;
-      currentUtterance = new SpeechSynthesisUtterance(text);
-      currentUtterance.rate = 0.95;
-      currentUtterance.onend = () => {
-        document.getElementById("btnToggleSpeech").textContent = "▶ Replay Explanation";
+      const txt = `Correct answer is: ${activeQuestion.choices[activeQuestion.ans]}. ${activeQuestion.rationale}`;
+      currentSpeech = new SpeechSynthesisUtterance(txt);
+      currentSpeech.rate = 0.95;
+      currentSpeech.onend = () => {
+        document.getElementById("btnToggleSpeech").textContent = "▶ Replay";
       };
-      speechSynth.speak(currentUtterance);
-      document.getElementById("btnToggleSpeech").textContent = "⏹ Stop Voice Narration";
+      speechSynth.speak(currentSpeech);
+      document.getElementById("btnToggleSpeech").textContent = "⏹ Stop Voice";
     }
 
-    function stopAudioNarration() {
+    function stopAudioVoice() {
       if ('speechSynthesis' in window) speechSynth.cancel();
-      document.getElementById("btnToggleSpeech").textContent = "▶ Listen to Teacher Echo";
+      document.getElementById("btnToggleSpeech").textContent = "▶ Listen";
     }
 
     function toggleAudioNarration() {
-      if (speechSynth.speaking) {
-        stopAudioNarration();
-      } else {
-        startAudioNarration();
-      }
+      if (speechSynth.speaking) stopAudioVoice();
+      else startAudioVoice();
     }
 
     /* ========================================================
-       LIFELINES IMPLEMENTATION
+       SIMULTANEOUS OPPONENT ADVANCEMENT & TOP 3 FINISH
        ======================================================== */
+    function startSimulatedOpponents() {
+      // Competitors advance asynchronously every 5-9 seconds
+      setInterval(() => {
+        if (top3Winners.length >= 3) return;
+
+        const racer = competitors[Math.floor(Math.random() * competitors.length)];
+        if (!racer.isCrowned && racer.tier < 14) {
+          // 80% chance to climb
+          if (Math.random() < 0.8) {
+            racer.tier++;
+            if (racer.tier === 14) {
+              racer.isCrowned = true;
+              registerTop3Finish(racer.name);
+            }
+            renderPhilippineLadder();
+          }
+        }
+      }, 5500);
+    }
+
+    function broadcastPlayerProgress() {
+      renderPhilippineLadder();
+      if (channel) {
+        channel.postMessage({ type: 'PROGRESS', name: playerName, tier: currentTierIndex });
+      }
+    }
+
+    function handlePeerUpdate(e) {
+      if (!e.data || e.data.type !== 'PROGRESS') return;
+      let existing = competitors.find(c => c.name === e.data.name);
+      if (existing) {
+        existing.tier = e.data.tier;
+        if (existing.tier === 14 && !existing.isCrowned) {
+          existing.isCrowned = true;
+          registerTop3Finish(existing.name);
+        }
+      } else {
+        competitors.push({ id: "peer-" + Date.now(), name: e.data.name, tier: e.data.tier, isCrowned: e.data.tier === 14 });
+      }
+      renderPhilippineLadder();
+    }
+
+    function registerTop3Finish(name) {
+      if (top3Winners.includes(name)) return;
+      top3Winners.push(name);
+
+      if (top3Winners.length === 1) {
+        alert(`🚨 ALERT: ${name} JUST REACHED ₱1,000,000 & SECURED RANK 1 TOPNOTCHER! 2 PODIUM SLOTS REMAIN! KEEP FIGHTING!`);
+      } else if (top3Winners.length === 2) {
+        alert(`🚨 ALERT: ${name} HAS TAKEN 2ND PLACE! ONLY 1 TOPNOTCHER SLOT LEFT!`);
+      } else if (top3Winners.length >= 3) {
+        triggerGrandPodiumCeremony();
+      }
+    }
+
+    function checkGamePodiumEnd() {
+      if (top3Winners.length >= 3 || top3Winners.includes(playerName)) {
+        triggerGrandPodiumCeremony();
+      }
+    }
+
+    function triggerGrandPodiumCeremony() {
+      // Ensure 3 slots filled
+      while (top3Winners.length < 3) {
+        top3Winners.push("Examinee " + (top3Winners.length + 1));
+      }
+
+      document.getElementById("podiumName1").textContent = top3Winners[0];
+      document.getElementById("podiumName2").textContent = top3Winners[1];
+      document.getElementById("podiumName3").textContent = top3Winners[2];
+
+      document.getElementById("podiumModal").classList.remove("hidden");
+      launchConfetti();
+    }
+
+    /* CONFETTI ANIMATION */
+    function launchConfetti() {
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const pieces = Array.from({ length: 150 }).map(() => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        color: ['#FFD700', '#F87171', '#34D399', '#60A5FA'][Math.floor(Math.random() * 4)],
+        size: Math.random() * 8 + 4,
+        speed: Math.random() * 4 + 2
+      }));
+
+      function anim() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.y += p.speed;
+          if (p.y > canvas.height) p.y = -10;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        });
+        requestAnimationFrame(anim);
+      }
+      anim();
+    }
+
+    /* LIFELINES */
     function use5050() {
-      if (used5050 || isLocked) return;
-      used5050 = true;
-      soundLifeline();
+      playTone(700, 0.2);
       document.getElementById("life5050").disabled = true;
-
-      // Find two incorrect answers to eliminate
-      const wrongIndices = [0, 1, 2, 3].filter(i => i !== activeQuestion.ans);
-      const shuffledWrongs = wrongIndices.sort(() => 0.5 - Math.random()).slice(0, 2);
-
-      shuffledWrongs.forEach(i => {
-        const btn = document.getElementById(`btnChoice${i}`);
-        btn.classList.add("eliminated");
+      const wrongs = [0, 1, 2, 3].filter(i => i !== activeQuestion.ans);
+      wrongs.sort(() => 0.5 - Math.random()).slice(0, 2).forEach(i => {
+        document.getElementById(`btnChoice${i}`).classList.add("eliminated");
       });
     }
 
     function useAskEcho() {
-      if (usedEcho || isLocked) return;
-      usedEcho = true;
-      soundLifeline();
+      playTone(850, 0.25);
       document.getElementById("lifeEcho").disabled = true;
-
-      const hints = [
-        `"Teacher Echo says: Focus closely on the primary definition of <strong>${activeQuestion.concept}</strong>. Distractor options often swap legal requirements with mere customs!"`,
-        `"Teacher Echo whispers: I strongly advise eliminating choice ${activeQuestion.choices[(activeQuestion.ans + 1) % 4]}. The Board examiners always place that as a superficial trap."`,
-        `"Teacher Echo analysis: Notice the direct connection between the question stem and <strong>${activeQuestion.choices[activeQuestion.ans].split(' ')[0]}</strong>!"`
-      ];
-
-      showDialog("🤖 Ask Teacher Echo (AI Lifeline)", hints[Math.floor(Math.random() * hints.length)]);
+      alert(`🤖 Teacher Echo says: "Analyze the root philosophy of ${activeQuestion.concept}. Do not fall for superficial wording in choice ${activeQuestion.choices[(activeQuestion.ans + 1) % 4]}!"`);
     }
 
     function useAudiencePoll() {
-      if (usedPoll || isLocked) return;
-      usedPoll = true;
-      soundLifeline();
+      playTone(900, 0.25);
       document.getElementById("lifePoll").disabled = true;
-
-      const letters = ["A", "B", "C", "D"];
-      let dist = [10, 10, 10, 10];
-      dist[activeQuestion.ans] = 65; // Heavily weight audience towards the correct answer
-      dist[(activeQuestion.ans + 1) % 4] += 15;
-
-      const pollGraph = letters.map((l, i) => `
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.85rem;">
-          <span style="font-weight:700;">Choice ${l}</span>
-          <span style="color:var(--gold); font-weight:800;">${dist[i]}%</span>
-        </div>
-        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-bottom:8px;">
-          <div style="background:var(--gold); width:${dist[i]}%; height:100%;"></div>
-        </div>
-      `).join('');
-
-      showDialog("👥 PRC Licensure Audience Survey", `
-        <p style="margin-bottom:1rem; font-size:0.85rem; color:#94a3b8;">Votes from 1,000 reviewing teachers:</p>
-        ${pollGraph}
-      `);
-    }
-
-    function showDialog(title, html) {
-      document.getElementById("dialogTitle").textContent = title;
-      document.getElementById("dialogBody").innerHTML = html;
-      document.getElementById("dialogModal").classList.remove("hidden");
-    }
-
-    function closeDialog() {
-      document.getElementById("dialogModal").classList.add("hidden");
+      alert(`👥 PRC Reviewee Poll Results:\n\nChoice A: ${activeQuestion.ans === 0 ? '68%' : '11%'}\nChoice B: ${activeQuestion.ans === 1 ? '68%' : '14%'}\nChoice C: ${activeQuestion.ans === 2 ? '68%' : '10%'}\nChoice D: ${activeQuestion.ans === 3 ? '68%' : '7%'}`);
     }
 
     function toggleLadder() {
       document.getElementById("ladderDrawer").classList.toggle("open");
     }
-
-    // Launch game on page load
-    initGame();
   </script>
 </body>
 </html>

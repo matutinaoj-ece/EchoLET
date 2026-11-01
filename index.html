@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>EchoLET AI - Intelligent Classroom & Remediation Engine</title>
+  <title>EchoLET AI - Intelligent Classroom & Board Exam Engine</title>
   
-  <!-- Pencil Favicon & Manifest -->
+  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
   <meta name="theme-color" content="#5B0013" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <style>
     :root {
@@ -34,7 +32,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", -apple-system, Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; padding-bottom: 5rem; }
 
-    /* Header */
+    /* Top Bar */
     header {
       background: var(--surface);
       border-bottom: 2px solid var(--gold-border);
@@ -75,7 +73,7 @@
     .btn-signout { background: #FFF; border-color: var(--danger); color: var(--danger); }
     .btn-signout:hover { background: var(--danger); color: #fff; }
 
-    /* Navigation Tabs */
+    /* Tabs */
     .classroom-tabs {
       display: flex; justify-content: flex-start; overflow-x: auto; background: var(--surface);
       border-bottom: 1px solid var(--border); padding: 0 1rem; gap: 0.8rem; scrollbar-width: none;
@@ -91,7 +89,6 @@
       height: 3px; background: var(--crimson); border-radius: 3px 3px 0 0;
     }
 
-    /* Main Container */
     main { max-width: 1040px; margin: 1.25rem auto; padding: 0 1rem; }
 
     /* Banner */
@@ -119,7 +116,6 @@
       text-transform: uppercase; display: inline-block; margin-bottom: 0.5rem;
     }
     .badge-core { background: var(--gold-light); color: var(--crimson-dark); border: 1px solid var(--gold); }
-    .badge-custom { background: #E0F2FE; color: #0369A1; border: 1px solid #7DD3FC; }
     .card h3 { font-size: 1.05rem; color: var(--crimson); margin-bottom: 0.4rem; }
     .card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
     
@@ -139,51 +135,77 @@
     .btn-outline:hover { border-color: var(--crimson); color: var(--crimson); }
     .btn-block { width: 100%; justify-content: center; }
 
-    /* Teacher Dashboard Specifics */
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--gold-border); border-radius: var(--radius);
-      padding: 1rem; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-    .stat-val { font-size: 1.8rem; font-weight: 900; color: var(--crimson); }
-    .stat-lbl { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+    /* Lesson Layout */
+    .lesson-grid { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
+    @media (max-width: 860px) { .lesson-grid { grid-template-columns: 1fr; } }
 
-    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: var(--surface); border-radius: var(--radius); overflow: hidden; }
-    .data-table th, .data-table td { padding: 0.75rem 0.9rem; border: 1px solid var(--border); text-align: left; }
-    .data-table th { background: var(--crimson); color: white; }
-    
-    /* Lesson View & Multimedia */
-    .lesson-grid { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; }
-    @media (max-width: 820px) { .lesson-grid { grid-template-columns: 1fr; } }
     .media-player-box {
-      background: #000; border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem;
-      position: relative; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
-      color: white; border: 2px solid var(--gold-border);
+      background: #111; border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem;
+      aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--gold-border);
     }
-    .media-player-box img, .media-player-box video { width: 100%; height: 100%; object-fit: cover; }
+    .media-player-box img { width: 100%; height: 100%; object-fit: cover; }
     .media-caption-box {
       background: var(--gold-light); border-left: 4px solid var(--gold); padding: 0.8rem;
       border-radius: 4px; font-size: 0.85rem; margin-bottom: 1rem;
     }
 
-    /* AI Assistant Drawer / Card */
-    .ai-assistant-box {
-      background: #FAFAFD; border: 1.5px solid #C7D2FE; border-radius: var(--radius);
-      padding: 1.25rem; margin-top: 1.5rem;
+    /* ========================================================
+       ADVANCED AI TUTOR CONVERSATION DRAWER (PHASE 3)
+       ======================================================== */
+    .ai-tutor-container {
+      background: #FFFFFF; border: 2px solid #C7D2FE; border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(67, 56, 202, 0.08); display: flex; flex-direction: column;
+      overflow: hidden; margin-top: 1.2rem; height: 500px;
     }
-    .ai-header { display: flex; align-items: center; gap: 8px; color: #4338CA; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.8rem; }
-    .ai-output {
-      background: white; border: 1px solid #E0E7FF; border-radius: 8px; padding: 1rem;
-      min-height: 90px; font-size: 0.88rem; line-height: 1.5; color: #1E1B4B; margin-bottom: 0.8rem;
+    .ai-tutor-header {
+      background: linear-gradient(135deg, #3730A3 0%, #1E1B4B 100%); color: #FFF;
+      padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;
     }
-    .ai-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .ai-chip {
-      background: #EEF2FF; border: 1px solid #C7D2FE; color: #3730A3; font-size: 0.75rem;
-      padding: 0.3rem 0.65rem; border-radius: 16px; cursor: pointer; font-weight: 600;
+    .ai-badge-engine {
+      background: rgba(255, 255, 255, 0.2); font-size: 0.7rem; padding: 0.2rem 0.5rem;
+      border-radius: 12px; font-weight: 600;
     }
-    .ai-chip:hover { background: #4338CA; color: white; }
+    .ai-chat-history {
+      flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column;
+      gap: 0.75rem; background: #F8FAFC;
+    }
+    .chat-bubble {
+      max-width: 88%; padding: 0.75rem 0.95rem; border-radius: 12px; font-size: 0.86rem;
+      line-height: 1.5; word-wrap: break-word;
+    }
+    .chat-bubble.ai {
+      align-self: flex-start; background: #FFFFFF; color: #1E293B;
+      border: 1px solid #E2E8F0; border-left: 4px solid #4F46E5; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .chat-bubble.user {
+      align-self: flex-end; background: var(--crimson); color: #FFFFFF;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-bubble strong { color: var(--crimson); }
+    .chat-bubble.user strong { color: var(--gold); }
+    
+    .ai-quick-prompts {
+      display: flex; gap: 5px; overflow-x: auto; padding: 0.5rem 0.8rem;
+      background: #EEF2FF; border-top: 1px solid #E0E7FF; scrollbar-width: none;
+    }
+    .ai-quick-prompts::-webkit-scrollbar { display: none; }
+    .chip-prompt {
+      background: white; border: 1px solid #C7D2FE; color: #4338CA; font-size: 0.72rem;
+      padding: 0.25rem 0.6rem; border-radius: 12px; cursor: pointer; white-space: nowrap; font-weight: 600;
+    }
+    .chip-prompt:hover { background: #4338CA; color: white; }
 
-    /* Interactive Assessment Elements */
+    .ai-input-bar {
+      display: flex; padding: 0.6rem 0.8rem; background: #FFF; border-top: 1px solid var(--border); gap: 6px;
+    }
+    .ai-input-bar input {
+      flex: 1; padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 0.85rem; outline: none;
+    }
+    .ai-input-bar input:focus { border-color: #4F46E5; }
+
+    /* Assessment Elements */
     .stem-card {
       background: white; border: 1px solid var(--border); border-left: 5px solid var(--crimson);
       border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.2rem;
@@ -207,17 +229,12 @@
       padding: 1rem; border-radius: 6px; margin: 1.2rem 0; font-size: 0.88rem; display: none;
     }
 
-    /* Remediation Innovation Panel (Phase 5) */
     .remediation-panel {
       background: #FDF2F2; border: 1.5px solid #F87171; border-radius: var(--radius);
       padding: 1.5rem; margin-top: 1.5rem;
     }
-    .delta-badge {
-      background: #10B981; color: white; padding: 0.2rem 0.6rem; border-radius: 20px;
-      font-weight: 800; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;
-    }
 
-    /* Modal Sheet */
+    /* Modal */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
       display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem;
@@ -231,72 +248,59 @@
       width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px;
       margin-top: 0.35rem; margin-bottom: 1rem; font-size: 0.9rem;
     }
-    .role-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.2rem; }
-    .role-tab {
-      flex: 1; padding: 0.6rem; text-align: center; background: none; border: none;
-      font-weight: 700; color: var(--text-muted); cursor: pointer;
-    }
-    .role-tab.active { color: var(--crimson); border-bottom: 3px solid var(--crimson); }
 
-    /* Mobile Bottom PWA Sync Bar */
-    .mobile-sync-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface);
-      border-top: 1px solid var(--border); padding: 0.6rem 1rem; display: flex;
-      justify-content: space-between; align-items: center; font-size: 0.8rem; z-index: 90;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: var(--surface); }
+    .data-table th, .data-table td { padding: 0.75rem 0.9rem; border: 1px solid var(--border); text-align: left; }
+    .data-table th { background: var(--crimson); color: white; }
 
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
+  <!-- Top Navigation Header -->
   <header>
     <div class="header-left" onclick="switchView('courses')">
       <div class="pencil-logo">
         <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
       </div>
-      <div class="app-title">Echo<span>LET</span> AI</div>
+      <div class="app-title">Echo<span>LET</span> AI Tutor</div>
     </div>
     <div class="header-right">
+      <button class="btn btn-outline" style="padding:0.35rem 0.65rem; font-size:0.75rem;" onclick="openAiSettingsModal()">⚙️ AI Settings</button>
       <div id="userBadge" class="user-pill guest">Guest (Signed Out)</div>
       <button id="authBtn" class="btn-action-sm btn-signin" onclick="openAuthModal()">Sign In</button>
     </div>
   </header>
 
-  <!-- Navigation Tabs (Phase 1 & 6) -->
+  <!-- Tabs Navigation -->
   <div class="classroom-tabs">
-    <button id="navCoursesBtn" class="tab-btn active" onclick="switchView('courses')">📚 Classwork & Courses</button>
+    <button id="navCoursesBtn" class="tab-btn active" onclick="switchView('courses')">📚 Classwork & Modules</button>
     <button id="navTeacherBtn" class="tab-btn hidden" onclick="switchView('teacher')">👑 Teacher Studio</button>
     <button id="navDiagnosticsBtn" class="tab-btn" onclick="switchView('diagnostics')">📊 Cognitive Diagnostics</button>
-    <button id="navPwaBtn" class="tab-btn" onclick="triggerPwaPrompt()">📱 Mobile App Sync</button>
+    <button class="tab-btn" onclick="triggerPwaPrompt()">📱 PWA / Mobile Sync</button>
   </div>
 
   <main>
     <!-- Welcome Banner -->
     <div class="classroom-banner">
-      <h1 id="bannerTitle">Licensure Examination for Teachers (LET) Studio</h1>
-      <p id="bannerSub">Phase 1–6 Unified Engine: Adaptive Remediation, AI Tutor & Multi-Domain Drills</p>
-      <div class="banner-badge" id="bannerStatus">🔒 Private Portal: Please Sign In to turn in assignments</div>
+      <h1>Licensure Examination for Teachers (LET) Studio</h1>
+      <p>Equipped with Dual-Brain AI: Interactive Conversational Tutor, Item Diagnostic Engine, and Adaptive Remediation.</p>
+      <div class="banner-badge" id="bannerStatus">🔒 Private Classroom: Sign In with code ECHO-LPT-75</div>
     </div>
 
     <!-- ========================================== -->
-    <!-- VIEW 1: COURSES & MODULES LIST (PHASE 1 & 2) -->
+    <!-- VIEW 1: COURSES DIRECTORY -->
     <!-- ========================================== -->
     <section id="viewCourses">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:10px;">
-        <h2 style="font-size:1.25rem; color:var(--crimson);">Active Modules & Curriculum</h2>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-outline" onclick="filterCourses('all')">All</button>
-          <button class="btn btn-outline" onclick="filterCourses('completed')">Completed</button>
-        </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h2 style="font-size:1.25rem; color:var(--crimson);">Active Review Modules</h2>
       </div>
       <div class="grid-courses" id="coursesGrid"></div>
     </section>
 
     <!-- ========================================== -->
-    <!-- VIEW 2: MULTIMEDIA LESSON PLAYER (PHASE 2 & 3) -->
+    <!-- VIEW 2: LESSON & CONVERSATIONAL AI TUTOR -->
     <!-- ========================================== -->
     <section id="viewLesson" class="hidden">
       <div style="margin-bottom:1rem;">
@@ -304,27 +308,42 @@
       </div>
 
       <div class="lesson-grid">
-        <!-- Left: Topics Drawer -->
+        <!-- Left: Topics List & Upgraded AI Chatbot -->
         <div>
-          <div class="card" style="padding:1rem;">
+          <div class="card" style="padding:1rem; margin-bottom:1rem;">
             <h4 style="color:var(--crimson); font-size:0.95rem; margin-bottom:0.6rem;">📑 Course Syllabus</h4>
             <div id="topicsList" style="display:flex; flex-direction:column; gap:6px;"></div>
           </div>
 
-          <!-- Phase 3: AI Tutor Assistant Box -->
-          <div class="ai-assistant-box">
-            <div class="ai-header">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7H8V5.73C7.4 5.39 7 4.74 7 4a2 2 0 0 1 2-2h3m-4 9a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m8 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2z"/></svg>
-              Echo AI Tutor
+          <!-- SMART CONVERSATIONAL AI TUTOR CHAT DRAWER -->
+          <div class="ai-tutor-container">
+            <div class="ai-tutor-header">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7H8V5.73C7.4 5.39 7 4.74 7 4a2 2 0 0 1 2-2h3m-4 9a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m8 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2z"/></svg>
+                <span style="font-weight:700; font-size:0.9rem;">EchoLET Smart Tutor</span>
+              </div>
+              <span class="ai-badge-engine" id="aiEngineLabel">Offline Brain Active</span>
             </div>
-            <div class="ai-output" id="aiOutputText">
-              Hello! I am your AI LET Tutor. Select a topic and ask me to simplify complex concepts, generate memory mnemonics, or explain misconceptions.
+
+            <!-- Chat Messages Container -->
+            <div class="ai-chat-history" id="aiChatHistory">
+              <div class="chat-bubble ai">
+                Hello! I am your <strong>Teacher Echo AI Assistant</strong>. Ask me <em>any question</em> about Philippine Education, teaching laws, philosophies, or rationalizations for all 65 exam items!
+              </div>
             </div>
-            <div class="ai-chips">
-              <span class="ai-chip" onclick="askAiTutor('summarize')">⚡ Summarize Topic</span>
-              <span class="ai-chip" onclick="askAiTutor('simplify')">🌱 Explain Like I'm 12</span>
-              <span class="ai-chip" onclick="askAiTutor('mnemonic')">🧠 Mnemonics for LET</span>
-              <span class="ai-chip" onclick="askAiTutor('relevance')">🎯 Board Exam Relevance</span>
+
+            <!-- Contextual Quick Chips -->
+            <div class="ai-quick-prompts">
+              <span class="chip-prompt" onclick="sendAiQuickPrompt('Explain the difference between folkways and mores.')">Folkways vs Mores</span>
+              <span class="chip-prompt" onclick="sendAiQuickPrompt('Explain Piaget\'s 4 stages of cognitive development.')">Piaget's Stages</span>
+              <span class="chip-prompt" onclick="sendAiQuickPrompt('What is RA 4670 Magna Carta for Public School Teachers?')">RA 4670</span>
+              <span class="chip-prompt" onclick="sendAiQuickPrompt('Explain question 18 and why Essentialism was the correct answer.')">Explain Item 18</span>
+            </div>
+
+            <!-- Interactive Text Input -->
+            <div class="ai-input-bar">
+              <input type="text" id="aiUserInput" placeholder="Ask anything about this lesson or LET..." onkeydown="if(event.key==='Enter') executeAiQuery()" />
+              <button class="btn btn-primary" style="padding:0.5rem 0.8rem;" onclick="executeAiQuery()">Ask</button>
             </div>
           </div>
         </div>
@@ -340,10 +359,7 @@
               <button id="markCompleteBtn" class="btn btn-outline" onclick="toggleTopicCompletion()">✓ Mark as Done</button>
             </div>
 
-            <!-- Multimedia Embed Simulation -->
-            <div class="media-player-box" id="mediaPlayerContainer">
-              <!-- Dynamically populated video/audio/infographic -->
-            </div>
+            <div class="media-player-box" id="mediaPlayerContainer"></div>
 
             <div class="media-caption-box" id="mediaCaption">
               <strong>💡 Instructional Guide:</strong> Review this core conceptual pillar thoroughly before attempting the 65-item drill.
@@ -353,7 +369,7 @@
 
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:1rem;">
               <span style="font-size:0.85rem; color:var(--text-muted);" id="lessonProgressIndicator">Topic 1 of 12</span>
-              <button class="btn btn-gold" id="btnLaunchQuiz" onclick="launchQuizForCurrentCourse()">Take Intelligent Assessment →</button>
+              <button class="btn btn-gold" id="btnLaunchQuiz" onclick="launchQuizForCurrentCourse()">Take 65-Item Assessment →</button>
             </div>
           </div>
         </div>
@@ -361,7 +377,7 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- VIEW 3: INTELLIGENT ASSESSMENT (PHASE 4 & 5) -->
+    <!-- VIEW 3: INTELLIGENT ASSESSMENT -->
     <!-- ========================================== -->
     <section id="viewQuiz" class="hidden">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
@@ -377,7 +393,7 @@
       </div>
 
       <div class="stem-card">
-        <div class="competency-tag" id="quizConceptTag">Domain: Foundations of Education</div>
+        <div class="competency-tag" id="quizConceptTag">Competency Domain</div>
         <h3 id="quizStemText" style="font-size:1.15rem; font-weight:600; line-height:1.5;">Question stem will load here...</h3>
         <div class="choices-list" id="quizChoicesBox"></div>
         <div class="rationale-drawer" id="quizRationaleBox">
@@ -386,192 +402,107 @@
         </div>
       </div>
 
-      <div style="display:flex; justify-content:flex-end;">
+      <div style="display:flex; justify-content:space-between;">
+        <button class="btn btn-outline" onclick="askAiAboutCurrentItem()">🤖 Ask AI To Explain This Question</button>
         <button id="btnNextQuizItem" class="btn btn-primary hidden" onclick="stepQuizNext()">Next Question →</button>
       </div>
 
       <!-- Phase 5 Innovation: Targeted Remediation Loop Card -->
       <div id="remediationInnovationCard" class="remediation-panel hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-          <h3 style="color:var(--danger); font-size:1.1rem;">🔬 Adaptive Misconception Remediation (Phase 5 Innovation)</h3>
-          <span class="delta-badge" id="remediationDeltaBadge">Diagnostic Mode Active</span>
-        </div>
-        <p style="font-size:0.88rem; color:var(--text-main); margin-bottom:0.8rem;" id="remediationDiagnosisText">
-          Diagnosing recurrent wrong patterns and concept fragility...
-        </p>
+        <h3 style="color:var(--danger); font-size:1.1rem; margin-bottom:0.4rem;">🔬 Adaptive Misconception Remediation</h3>
+        <p style="font-size:0.88rem; color:var(--text-main); margin-bottom:0.8rem;" id="remediationDiagnosisText"></p>
         <div id="remediationResourceBox" style="background:white; border:1px solid #FECACA; border-radius:8px; padding:0.9rem; margin-bottom:1rem; font-size:0.88rem;"></div>
-        <button class="btn btn-gold" id="btnLaunchTargetedReassessment" onclick="launchTargetedMicroQuiz()">⚡ Take 3-Item Targeted Re-Assessment</button>
+        <button class="btn btn-gold" onclick="launchTargetedMicroQuiz()">⚡ Take 3-Item Targeted Re-Assessment</button>
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- VIEW 4: COGNITIVE DIAGNOSTICS & GRADES (PHASE 4 & 5) -->
+    <!-- VIEW 4: DIAGNOSTICS & GRADES -->
     <!-- ========================================== -->
     <section id="viewDiagnostics" class="hidden">
-      <h2 style="color:var(--crimson); font-size:1.3rem; margin-bottom:0.3rem;">🧠 Cognitive Error Diagnostics & Analytics</h2>
-      <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:1.2rem;">Item response modeling identifies which competencies trigger recurrent false answers.</p>
-
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-val" id="diagScoreAverage">0%</div>
-          <div class="stat-lbl">Average Score</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val" id="diagRecurrentErrors">0</div>
-          <div class="stat-lbl">Recurrent Pitfalls</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val" id="diagMasteryDelta">+0%</div>
-          <div class="stat-lbl">Remediation Delta (Δ)</div>
-        </div>
-      </div>
-
+      <h2 style="color:var(--crimson); font-size:1.3rem; margin-bottom:0.3rem;">🧠 Cognitive Error Diagnostics</h2>
+      <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:1.2rem;">Detailed item analysis and diagnosed learning gaps.</p>
       <div class="card" style="margin-bottom:1.5rem;">
-        <h3 style="color:var(--crimson); font-size:1rem; margin-bottom:0.6rem;">⚠️ Top Fragile Competencies (Needs Targeted Review)</h3>
+        <h3 style="color:var(--crimson); font-size:1rem; margin-bottom:0.6rem;">⚠️ Top Fragile Competencies</h3>
         <ul id="fragileConceptsList" style="padding-left:1.2rem; font-size:0.88rem; color:var(--text-muted);">
           <li>Take the 65-item assessment to generate your personalized error matrix.</li>
         </ul>
       </div>
-
       <div class="card">
-        <h3 style="color:var(--crimson); font-size:1rem; margin-bottom:0.8rem;">📋 Complete Submission Ledger</h3>
-        <div style="overflow-x:auto;">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Course Domain</th>
-                <th>Score</th>
-                <th>PRC Rating (75% Benchmark)</th>
-                <th>Diagnosed Weakness</th>
-                <th>Remediation Δ</th>
-              </tr>
-            </thead>
-            <tbody id="studentDiagnosticTableBody">
-              <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No recorded assessments yet.</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <h3 style="color:var(--crimson); font-size:1rem; margin-bottom:0.8rem;">📋 Complete Submissions Ledger</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Course</th><th>Score</th><th>Status</th><th>Diagnosed Weakness</th></tr>
+          </thead>
+          <tbody id="studentDiagnosticTableBody">
+            <tr><td colspan="4" style="text-align:center;">No submissions recorded yet.</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- VIEW 5: TEACHER STUDIO (PHASE 1, 2, & 4) -->
+    <!-- VIEW 5: TEACHER STUDIO -->
     <!-- ========================================== -->
     <section id="viewTeacher" class="hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:10px;">
-        <div>
-          <h2 style="color:var(--crimson); font-size:1.4rem;">👑 Teacher Echo's Control Tower</h2>
-          <p style="color:var(--text-muted); font-size:0.88rem;">Manage course creation, multimedia drops, and live class rosters.</p>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-gold" onclick="openCreateCourseModal()">➕ New Course</button>
-          <button class="btn btn-primary" onclick="exportMasterCSV()">📊 Export CSV</button>
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-val" id="teachTotalStudents">0</div><div class="stat-lbl">Enrolled Examinees</div></div>
-        <div class="stat-card"><div class="stat-val" id="teachTotalSubmissions">0</div><div class="stat-lbl">Turned-In Assessments</div></div>
-        <div class="stat-card"><div class="stat-val" id="teachPassRate">0%</div><div class="stat-lbl">Pass Rate (75%+)</div></div>
-      </div>
-
-      <div class="card" style="margin-bottom:1.5rem;">
-        <h3 style="color:var(--crimson); font-size:1.05rem; margin-bottom:0.6rem;">🎓 Master Gradebook & Live Examinee Submissions</h3>
-        <div style="overflow-x:auto;">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Specialization</th>
-                <th>Course Completed</th>
-                <th>Raw Score</th>
-                <th>Percent</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody id="teacherMasterTableBody">
-              <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Waiting for examinees to submit assessments.</td></tr>
-            </tbody>
-          </table>
-        </div>
+      <h2 style="color:var(--crimson); font-size:1.4rem; margin-bottom:0.8rem;">👑 Teacher Echo's Control Tower</h2>
+      <div class="card">
+        <h3 style="color:var(--crimson); margin-bottom:0.8rem;">Student Submissions</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Student</th><th>Major</th><th>Score</th><th>Rating</th><th>Date</th></tr>
+          </thead>
+          <tbody id="teacherMasterTableBody">
+            <tr><td colspan="5" style="text-align:center;">No submissions recorded yet.</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </main>
 
-  <!-- PWA & Mobile Sync Simulation Bar (Phase 6) -->
-  <div class="mobile-sync-bar">
-    <div style="display:flex; align-items:center; gap:6px;">
-      <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10B981;"></span>
-      <span>Mobile Cloud Sync: <strong>Connected</strong></span>
+  <!-- AI SETTINGS MODAL -->
+  <div id="aiSettingsModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <button onclick="closeAiSettingsModal()" style="position:absolute; right:1rem; top:1rem; border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      <h3 style="color:var(--crimson); margin-bottom:0.6rem;">⚙️ EchoLET AI Settings</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">
+        EchoLET features a <strong>Built-in Offline Pedagogical Engine</strong>. To unlock unlimited, full-strength LLM reasoning, paste your free Google Gemini API Key below.
+      </p>
+      <label style="font-size:0.8rem; font-weight:700;">Google Gemini API Key (Optional):</label>
+      <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." />
+      <button class="btn btn-primary btn-block" onclick="saveAiSettings()">Save API Configuration</button>
+      <button class="btn btn-outline btn-block" style="margin-top:0.5rem;" onclick="clearAiKey()">Use Built-In Offline Brain Only</button>
     </div>
-    <button class="btn btn-outline" style="padding:0.25rem 0.6rem; font-size:0.72rem;" onclick="triggerPushNotificationSimulation()">🔔 Test Alert</button>
   </div>
 
-  <!-- AUTHENTICATION MODAL (PHASE 1) -->
+  <!-- AUTH MODAL -->
   <div id="authModal" class="modal-backdrop hidden">
     <div class="modal-card">
       <button onclick="closeAuthModal()" style="position:absolute; right:1rem; top:1rem; border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      <div class="role-tabs">
-        <button id="roleTabStudent" class="role-tab active" onclick="switchAuthTab('student')">Student Enrollment</button>
-        <button id="roleTabTeacher" class="role-tab" onclick="switchAuthTab('teacher')">👑 Teacher Login</button>
-      </div>
-
-      <!-- Student Registration Form -->
-      <div id="authStudentForm">
-        <label style="font-size:0.8rem; font-weight:700;">Class Enrollment Code (Required):</label>
-        <input type="text" id="regClassCode" placeholder="Enter Class Code (e.g. ECHO-LPT-75)" value="ECHO-LPT-75" />
-        
-        <label style="font-size:0.8rem; font-weight:700;">Full Name:</label>
-        <input type="text" id="regStudentName" placeholder="Juan Dela Cruz" />
-
-        <label style="font-size:0.8rem; font-weight:700;">Email Address:</label>
-        <input type="email" id="regStudentEmail" placeholder="juan@university.edu" />
-
-        <label style="font-size:0.8rem; font-weight:700;">Degree Major / Specialization:</label>
-        <select id="regStudentMajor">
-          <option>Bachelor of Elementary Education (BEEd)</option>
-          <option>BSEd - English</option>
-          <option>BSEd - Social Studies</option>
-          <option>BSEd - Mathematics</option>
-          <option>BSEd - General Science</option>
-        </select>
-        <button class="btn btn-primary btn-block" onclick="doRegisterStudent()">Enroll & Enter Classroom</button>
-      </div>
-
-      <!-- Teacher Auth Form -->
-      <div id="authTeacherForm" class="hidden">
-        <label style="font-size:0.8rem; font-weight:700;">Teacher Admin Passcode:</label>
-        <input type="password" id="teacherPasscode" placeholder="Enter Teacher Echo Passcode" />
-        <button class="btn btn-gold btn-block" onclick="doTeacherLogin()">Unlock Teacher Studio</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- COURSE CREATION MODAL (PHASE 1 & 2) -->
-  <div id="courseModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <button onclick="closeCourseModal()" style="position:absolute; right:1rem; top:1rem; border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      <h3 style="color:var(--crimson); margin-bottom:1rem;">➕ Create New Course Module</h3>
-      <label style="font-size:0.8rem; font-weight:700;">Course Title:</label>
-      <input type="text" id="newCourseTitle" placeholder="e.g. Assessment of Learning" />
-      <label style="font-size:0.8rem; font-weight:700;">Subject Domain:</label>
-      <input type="text" id="newCourseDomain" placeholder="e.g. Professional Education" />
-      <label style="font-size:0.8rem; font-weight:700;">Description & Objectives:</label>
-      <textarea id="newCourseDesc" rows="3" placeholder="Course syllabus overview..."></textarea>
-      <label style="font-size:0.8rem; font-weight:700;">Multimedia Type:</label>
-      <select id="newCourseMediaType">
-        <option value="video">Interactive Video Lecture</option>
-        <option value="audio">Podcast / Audio Lecture</option>
-        <option value="infographic">Visual Slide / Infographic</option>
+      <h3 style="color:var(--crimson); margin-bottom:1rem;">Sign In / Enroll</h3>
+      <label style="font-size:0.8rem; font-weight:700;">Class Enrollment Code:</label>
+      <input type="text" id="regClassCode" value="ECHO-LPT-75" />
+      <label style="font-size:0.8rem; font-weight:700;">Full Name:</label>
+      <input type="text" id="regStudentName" placeholder="Maria Santos" />
+      <label style="font-size:0.8rem; font-weight:700;">Email Address:</label>
+      <input type="email" id="regStudentEmail" placeholder="maria@univ.edu" />
+      <label style="font-size:0.8rem; font-weight:700;">Degree Specialization:</label>
+      <select id="regStudentMajor">
+        <option>Bachelor of Elementary Education (BEEd)</option>
+        <option>BSEd - English</option>
+        <option>BSEd - Social Studies</option>
+        <option>BSEd - Mathematics</option>
+        <option>BSEd - Science</option>
       </select>
-      <button class="btn btn-primary btn-block" onclick="saveNewCourse()">Publish Course to Roster</button>
+      <button class="btn btn-primary btn-block" onclick="doRegisterStudent()">Enter Classroom</button>
+      <hr style="margin:1rem 0;" />
+      <button class="btn btn-outline btn-block" onclick="teacherFastSign()">👑 Sign In as Teacher Echo</button>
     </div>
   </div>
 
   <script>
     /* ========================================================
-       DATA REPOSITORY: 65 AUTHENTIC LET ITEMS WITH CONCEPT TAGS
+       65 COMPLETE AUTHENTIC LET QUESTIONS REPOSITORY
        ======================================================== */
     const master65Items = [
       { stem: "1. Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "School Safety & Child Protection", rationale: "Psychological abuse involves threats, intimidation, and inducing fear in an individual to assert control." },
@@ -642,194 +573,313 @@
     ];
 
     /* ========================================================
-       PHASE 1 & 2: MULTIMEDIA COURSES & TOPIC CURRICULUM
+       COURSE & SYLLABUS DATA
        ======================================================== */
-    const defaultCourse = {
-      id: "course-1",
-      title: "The Teacher & Community, School Culture & Organizational Leadership",
-      domain: "Professional Education",
-      desc: "Comprehensive 12-pillar module aligned with NCBS-SH, PPSSH, and Philippine Professional Standards for Teachers.",
-      mediaType: "video",
-      items: master65Items,
-      topics: [
-        {
-          id: "t1",
-          title: "1. Philosophical Foundations of Education",
-          mediaUrl: "https://images.unsplash.com/photo-1532012164546-f432f2e3777a?auto=format&fit=crop&w=900&q=80",
-          mediaCaption: "Epistemological and Metaphysical Branches of Western Thought.",
-          body: `<h3>Metaphysics & Epistemology</h3><p>Philosophy represents the love of wisdom (philia + sophia). In the Licensure Examination, metaphysics explores the nature of reality (ontology, cosmology, theology), while epistemology determines the origin and limits of knowledge (empirical observation, rationalism, constructivism, pragmatism).</p>`
-        },
-        {
-          id: "t2",
-          title: "2. Eastern Philosophies in Education",
-          mediaUrl: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=900&q=80",
-          mediaCaption: "Core tenets of Hinduism, Buddhism, Taoism, and Confucianism.",
-          body: `<h3>Dharma, Karma & Anicca</h3><p>Hinduism stresses the moral cycle of cause and effect (Karma) and spiritual liberation (Moksha). Buddhism instructs on the Four Noble Truths and impermanence (Anicca). Confucianism prioritizes humaneness (Ren) and ritual etiquette (Li).</p>`
-        },
-        {
-          id: "t3",
-          title: "3. Organizational Leadership & SBM",
-          mediaUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
-          mediaCaption: "Decentralized School-Based Management (R.A. 9155).",
-          body: `<h3>School-Based Management (SBM)</h3><p>School-Based Management decentralizes institutional authority to empower local school communities. Transformational leaders rely on visionary inspiration and collective motivation rather than raw coercion.</p>`
-        }
-      ]
-    };
+    const courses = [
+      {
+        id: "course-1",
+        title: "The Teacher & Community, School Culture & Organizational Leadership",
+        domain: "Professional Education",
+        desc: "NCBS-SH, PPSSH, Philosophies of Education, DepEd Orders & School-Community Alliances.",
+        items: master65Items,
+        topics: [
+          {
+            id: "t1",
+            title: "1. Philosophical Foundations of Education",
+            mediaUrl: "https://images.unsplash.com/photo-1532012164546-f432f2e3777a?auto=format&fit=crop&w=900&q=80",
+            mediaCaption: "Epistemology, Metaphysics, Axiology, and Classical Philosophies.",
+            body: "<p><strong>Philosophy</strong> is derived from the Greek <em>philia</em> (love) and <em>sophia</em> (wisdom). Metaphysics studies existence; Epistemology explores knowledge origins; Axiology governs ethics and aesthetics.</p>"
+          },
+          {
+            id: "t2",
+            title: "2. Eastern Philosophies in Education",
+            mediaUrl: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=900&q=80",
+            mediaCaption: "Hinduism, Buddhism, Confucianism, Taoism, and Sikhism.",
+            body: "<p>Eastern schools of thought cultivate harmony, duty, and holistic spiritual balance. Confucianism emphasizes <em>Ren</em> (benevolence) and filial piety; Buddhism teaches <em>Anicca</em> (impermanence).</p>"
+          },
+          {
+            id: "t3",
+            title: "3. Organizational Leadership & SBM",
+            mediaUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
+            mediaCaption: "Decentralized School-Based Management (RA 9155).",
+            body: "<p>School-Based Management empowers school heads and communities to collaborate on school improvement plans (SIP), fostering mutual accountability.</p>"
+          }
+        ]
+      }
+    ];
 
-    /* ========================================================
-       APPLICATION STATE & PERSISTENCE
-       ======================================================== */
-    let courses = JSON.parse(localStorage.getItem("echolet_courses")) || [defaultCourse];
+    let activeCourse = courses[0];
+    let currentTopicIndex = 0;
     let currentUser = JSON.parse(sessionStorage.getItem("echolet_user")) || null;
     let completedTopics = JSON.parse(localStorage.getItem("echolet_completed_topics")) || {};
     let errorBank = JSON.parse(localStorage.getItem("echolet_error_bank")) || {};
-    let activeCourse = courses[0];
-    let currentTopicIndex = 0;
-    
+    let geminiApiKey = localStorage.getItem("echolet_gemini_key") || "";
+
     // Quiz Execution State
     let quizActiveItems = [];
     let currentQuizIndex = 0;
     let currentQuizScore = 0;
     let currentFailedItems = [];
-    let isRemediationMode = false;
 
     /* ========================================================
-       PHASE 1: AUTHENTICATION & ACCESS CONTROL
+       PHASE 3: SMART DUAL-BRAIN AI TUTOR ENGINE
        ======================================================== */
-    function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
-    function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
-
-    function switchAuthTab(role) {
-      document.getElementById("roleTabStudent").classList.toggle("active", role === 'student');
-      document.getElementById("roleTabTeacher").classList.toggle("active", role === 'teacher');
-      document.getElementById("authStudentForm").classList.toggle("hidden", role !== 'student');
-      document.getElementById("authTeacherForm").classList.toggle("hidden", role !== 'teacher');
+    function openAiSettingsModal() {
+      document.getElementById("geminiApiKeyInput").value = geminiApiKey;
+      document.getElementById("aiSettingsModal").classList.remove("hidden");
     }
+    function closeAiSettingsModal() { document.getElementById("aiSettingsModal").classList.add("hidden"); }
 
-    function doRegisterStudent() {
-      const code = document.getElementById("regClassCode").value.trim().toUpperCase();
-      const name = document.getElementById("regStudentName").value.trim();
-      const email = document.getElementById("regStudentEmail").value.trim();
-      const major = document.getElementById("regStudentMajor").value;
-
-      if (code !== "ECHO-LPT-75") {
-        alert("❌ Invalid Class Code. Please use the official code: ECHO-LPT-75");
-        return;
-      }
-      if (!name || !email) {
-        alert("Please provide your name and email.");
-        return;
-      }
-
-      currentUser = { role: "student", name, email, major, enrolledDate: new Date().toLocaleDateString() };
-      sessionStorage.setItem("echolet_user", JSON.stringify(currentUser));
-
-      // Append to persistent teacher roster
-      const roster = JSON.parse(localStorage.getItem("echolet_roster")) || [];
-      if (!roster.some(r => r.email === email)) {
-        roster.push(currentUser);
-        localStorage.setItem("echolet_roster", JSON.stringify(roster));
-      }
-
-      closeAuthModal();
-      syncUserInterface();
-      alert(`🎉 Welcome to Teacher Echo's Studio, ${name}!`);
-    }
-
-    function doTeacherLogin() {
-      const pin = document.getElementById("teacherPasscode").value.trim();
-      if (pin !== "EchoTeacher75") {
-        alert("❌ Incorrect Teacher Admin Passcode.");
-        return;
-      }
-
-      currentUser = { role: "teacher", name: "Teacher Echo" };
-      sessionStorage.setItem("echolet_user", JSON.stringify(currentUser));
-      document.getElementById("teacherPasscode").value = "";
-      closeAuthModal();
-      syncUserInterface();
-      switchView('teacher');
-      alert("👑 Welcome to your Teacher Studio, Teacher Echo!");
-    }
-
-    function doSignOut() {
-      if (confirm("Sign out of EchoLET?")) {
-        sessionStorage.removeItem("echolet_user");
-        currentUser = null;
-        syncUserInterface();
-        switchView('courses');
-      }
-    }
-
-    function syncUserInterface() {
-      const badge = document.getElementById("userBadge");
-      const authBtn = document.getElementById("authBtn");
-      const teachTabBtn = document.getElementById("navTeacherBtn");
-      const bannerStatus = document.getElementById("bannerStatus");
-
-      if (currentUser) {
-        if (currentUser.role === "teacher") {
-          badge.className = "user-pill teacher";
-          badge.textContent = "👑 Teacher Echo";
-          teachTabBtn.classList.remove("hidden");
-          bannerStatus.textContent = "Teacher Studio Active • Administrative Access Granted";
-        } else {
-          badge.className = "user-pill student";
-          badge.textContent = `👤 ${currentUser.name.split(' ')[0]}`;
-          teachTabBtn.classList.add("hidden");
-          bannerStatus.textContent = `Enrolled Examinee: ${currentUser.name} (${currentUser.major})`;
-        }
-        authBtn.className = "btn-action-sm btn-signout";
-        authBtn.textContent = "Sign Out";
-        authBtn.onclick = doSignOut;
+    function saveAiSettings() {
+      const val = document.getElementById("geminiApiKeyInput").value.trim();
+      geminiApiKey = val;
+      if (val) {
+        localStorage.setItem("echolet_gemini_key", val);
+        alert("✅ Gemini Live AI Connected! Unlimited intelligence active.");
       } else {
-        badge.className = "user-pill guest";
-        badge.textContent = "Guest (Signed Out)";
-        teachTabBtn.classList.add("hidden");
-        bannerStatus.textContent = "🔒 Private Portal: Please Sign In to turn in assignments";
-        authBtn.className = "btn-action-sm btn-signin";
-        authBtn.textContent = "Sign In";
-        authBtn.onclick = openAuthModal;
+        localStorage.removeItem("echolet_gemini_key");
+        alert("Offline Brain selected.");
       }
-      renderCoursesGrid();
-      renderTeacherStudio();
-      renderDiagnosticsView();
+      closeAiSettingsModal();
+      updateAiEngineLabel();
+    }
+
+    function clearAiKey() {
+      geminiApiKey = "";
+      localStorage.removeItem("echolet_gemini_key");
+      document.getElementById("geminiApiKeyInput").value = "";
+      closeAiSettingsModal();
+      updateAiEngineLabel();
+      alert("Switched to Built-in Offline Brain.");
+    }
+
+    function updateAiEngineLabel() {
+      const lbl = document.getElementById("aiEngineLabel");
+      if (geminiApiKey) {
+        lbl.textContent = "⚡ Live Gemini 2.5 Flash Online";
+        lbl.style.background = "#10B981";
+      } else {
+        lbl.textContent = "🧠 Built-In Offline LET Brain";
+        lbl.style.background = "rgba(255, 255, 255, 0.2)";
+      }
+    }
+
+    function appendChatBubble(role, htmlText) {
+      const container = document.getElementById("aiChatHistory");
+      const bubble = document.createElement("div");
+      bubble.className = `chat-bubble ${role}`;
+      bubble.innerHTML = htmlText;
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendAiQuickPrompt(promptText) {
+      document.getElementById("aiUserInput").value = promptText;
+      executeAiQuery();
+    }
+
+    async function executeAiQuery() {
+      const input = document.getElementById("aiUserInput");
+      const query = input.value.trim();
+      if (!query) return;
+
+      appendChatBubble("user", query);
+      input.value = "";
+
+      // Add loading state
+      const loadingId = "ai-loading-" + Date.now();
+      appendChatBubble("ai", `<span id="${loadingId}">Thinking and analyzing pedagogical concepts...</span>`);
+
+      if (geminiApiKey) {
+        try {
+          const answer = await queryGeminiApi(query);
+          document.getElementById(loadingId).parentElement.innerHTML = answer;
+          return;
+        } catch (err) {
+          console.warn("Gemini API call failed, falling back to Offline Brain:", err);
+        }
+      }
+
+      // Offline Semantic Brain
+      setTimeout(() => {
+        const fallbackAns = generateOfflineBrainResponse(query);
+        const el = document.getElementById(loadingId);
+        if (el) el.parentElement.innerHTML = fallbackAns;
+      }, 350);
+    }
+
+    async function queryGeminiApi(userPrompt) {
+      const systemPrompt = `You are Teacher Echo's AI, a master LET (Licensure Examination for Teachers) coach in the Philippines.
+Your domain expertise covers: Professional Education (Philippine Laws: RA 7836, RA 10533, RA 4670, RA 9155; DepEd Orders, PPST, PPSSH; Western & Eastern Philosophies; Child & Adolescent Development; Assessment of Learning; Curriculum).
+Respond clearly with concise board-exam formatting:
+1. Direct, authoritative answer
+2. High-Yield LET Board Exam Trap/Tip
+3. Memory Mnemonic or Concrete Classroom Example. Keep answers engaging and focused.`;
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+      const payload = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: `${systemPrompt}\n\nExaminee Question: ${userPrompt}` }]
+          }
+        ]
+      };
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error("Gemini API request failed.");
+      const data = await res.json();
+      return formatMarkdown(data.candidates[0].content.parts[0].text);
+    }
+
+    function formatMarkdown(txt) {
+      return txt
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    }
+
+    /* EMBEDDED KNOWLEDGE GRAPH FOR OFFLINE BRAIN */
+    function generateOfflineBrainResponse(q) {
+      const low = q.toLowerCase();
+
+      // Check if querying a specific item number (e.g. "Item 18", "Question 42", "#2")
+      const itemMatch = low.match(/(?:item|question|number|#)\s*(\d+)/);
+      if (itemMatch) {
+        const itemNum = parseInt(itemMatch[1]);
+        if (itemNum >= 1 && itemNum <= 65) {
+          const item = master65Items[itemNum - 1];
+          const correctLetter = ["A", "B", "C", "D"][item.ans];
+          const correctChoice = item.choices[item.ans];
+          return `<strong>🎯 Analysis of Item #${itemNum}:</strong><br>
+          <strong>Competency Tag:</strong> ${item.concept}<br>
+          <strong>Question:</strong> "${item.stem}"<br>
+          <strong>Correct Answer:</strong> Option ${correctLetter} — <em>${correctChoice}</em><br><br>
+          <strong>💡 PRC Rationalization:</strong> ${item.rationale}<br><br>
+          <strong>⚡ Board Exam Strategy:</strong> Remember that in LET, distractors are chosen to trigger superficial word-associations. Always look at the underlying philosophical or legal premise!`;
+        }
+      }
+
+      // Semantic Keyword Matchers
+      if (low.includes("folkway") || low.includes("mores")) {
+        return `<strong>Sociological Norms: Folkways vs. Mores</strong><br>
+        • <strong>Folkways:</strong> Everyday customary habits, conventions, and etiquette (e.g., table manners, dress codes). Violating them results in mild social disapproval or eccentric labels, but no severe moral sanctions.<br>
+        • <strong>Mores (pronounced mor-ays):</strong> Deeply held moral and ethical norms crucial to societal welfare. Violating mores (e.g., child abuse, treason) causes strong moral outrage and severe societal punishment.<br><br>
+        <strong>🧠 Mnemonic:</strong> <em>Folkways = Fashion/Fad (Mild); Mores = Morals (Severe).</em>`;
+      }
+
+      if (low.includes("piaget")) {
+        return `<strong>Jean Piaget's Stages of Cognitive Development:</strong><br>
+        1. <strong>Sensorimotor (0–2 yrs):</strong> Object permanence, sensory-motor coordination.<br>
+        2. <strong>Preoperational (2–7 yrs):</strong> Egocentrism, symbolic play, centration (lacks conservation).<br>
+        3. <strong>Concrete Operational (7–11 yrs):</strong> Mastery of conservation, reversibility, seriation, logic tied to concrete objects.<br>
+        4. <strong>Formal Operational (11+ yrs):</strong> Abstract reasoning, hypothetical-deductive logic.<br><br>
+        <strong>🧠 Board Mnemonic:</strong> <strong>S</strong>mart <strong>P</strong>eople <strong>C</strong>ook <strong>F</strong>ish (Sensorimotor, Pre-op, Concrete, Formal).`;
+      }
+
+      if (low.includes("4670") || low.includes("magna carta")) {
+        return `<strong>Republic Act No. 4670: The Magna Carta for Public School Teachers (1966)</strong><br>
+        • <strong>Teaching Hours:</strong> Maximum 6 hours of actual classroom instruction per day; additional duties require 25% compensation.<br>
+        • <strong>Health & Leave:</strong> Free annual medical examination, study leaves (one year with 60% pay after 7 years of service).<br>
+        • <strong>Salary Scale:</strong> Automatic salary progression based on credentials; protected from non-consensual transfers.<br>
+        <strong>⚡ LET Tip:</strong> Memorize that 6 hours is the statutory classroom ceiling, NOT 8 hours.`;
+      }
+
+      if (low.includes("7836") || low.includes("9293") || low.includes("licensure") || low.includes("prc")) {
+        return `<strong>Philippine Teachers Professionalization Acts:</strong><br>
+        • <strong>RA 7836 (1994):</strong> Created the Board for Professional Teachers (BPT) under PRC; instituted the LET.<br>
+        • <strong>RA 9293 (2004):</strong> Amended RA 7836. Permitted para-teachers who scored 70–74% to receive 2-year special permits to teach in underserved areas.<br>
+        • <strong>Passing Benchmark:</strong> General average of 75% with no rating below 50% in any sub-test.`;
+      }
+
+      if (low.includes("idealism") || low.includes("realism") || low.includes("existentialism") || low.includes("pragmatism") || low.includes("essentialism") || low.includes("perennialism")) {
+        return `<strong>Quick Matrix of Western Philosophies in Education:</strong><br>
+        • <strong>Idealism (Plato):</strong> Reality is spiritual and mental. Truth is absolute and enduring.<br>
+        • <strong>Realism (Aristotle):</strong> Reality is physical and objective; truth is discovered through direct sensory empirical observation.<br>
+        • <strong>Pragmatism (John Dewey):</strong> Truth is what works in practical human experience (learning by doing).<br>
+        • <strong>Existentialism (Sartre, Kierkegaard):</strong> Existence precedes essence; individual freedom and self-defined choice.<br>
+        • <strong>Essentialism (Bagley):</strong> Rigorous mastery of 3Rs and traditional core academic disciplines.<br>
+        • <strong>Perennialism (Hutchins, Adler):</strong> Universal, unchanging truths through the Great Books.`;
+      }
+
+      if (low.includes("assessment") || low.includes("formative") || low.includes("summative")) {
+        return `<strong>Three Dimensions of Assessment:</strong><br>
+        1. <strong>Assessment FOR Learning (Formative):</strong> Ongoing during teaching to identify misconceptions and guide instructional adjustments (ungraded quizzes, check-ins).<br>
+        2. <strong>Assessment OF Learning (Summative):</strong> End-of-unit measurement for grading and certification (periodical exams, LET).<br>
+        3. <strong>Assessment AS Learning (Self/Peer):</strong> Students monitor, reflect upon, and regulate their own metacognitive processes.`;
+      }
+
+      // Default high-yield pedagogical overview response
+      return `<strong>Teacher Echo AI Response:</strong><br>
+      You asked: <em>"${q}"</em><br><br>
+      In the context of the <strong>Philippine Licensure Examination for Teachers (LET)</strong>, always tie this concept back to learner-centered pedagogy, the <em>Philippine Professional Standards for Teachers (PPST)</em>, and RA 10533.<br><br>
+      <strong>💡 Tip:</strong> Try asking me about:<br>
+      • Specific exam questions: <em>"Explain question 43"</em><br>
+      • Educational laws: <em>"What is RA 10533?"</em><br>
+      • Theories: <em>"Explain Vygotsky's ZPD and Scaffolding"</em><br>
+      • Connect a free Gemini API key in <strong>⚙️ AI Settings</strong> for open-domain reasoning!`;
+    }
+
+    function askAiAboutCurrentItem() {
+      switchView('lesson');
+      const itemNum = currentQuizIndex + 1;
+      sendAiQuickPrompt(`Explain question ${itemNum} and its complete rationalization.`);
     }
 
     /* ========================================================
-       PHASE 2: MULTIMEDIA LESSON PLAYER & TOPIC ENGINE
+       APPLICATION CONTROLLER & ROUTING
        ======================================================== */
+    function switchView(viewName) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      ['viewCourses', 'viewLesson', 'viewQuiz', 'viewDiagnostics', 'viewTeacher'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      if (viewName === 'courses') {
+        document.getElementById('viewCourses').classList.remove('hidden');
+        document.getElementById('navCoursesBtn').classList.add('active');
+        renderCoursesGrid();
+      } else if (viewName === 'lesson') {
+        document.getElementById('viewLesson').classList.remove('hidden');
+        document.getElementById('navCoursesBtn').classList.add('active');
+        renderLessonScreen();
+      } else if (viewName === 'quiz') {
+        document.getElementById('viewQuiz').classList.remove('hidden');
+      } else if (viewName === 'diagnostics') {
+        document.getElementById('viewDiagnostics').classList.remove('hidden');
+        document.getElementById('navDiagnosticsBtn').classList.add('active');
+        renderDiagnosticsView();
+      } else if (viewName === 'teacher') {
+        document.getElementById('viewTeacher').classList.remove('hidden');
+        document.getElementById('navTeacherBtn').classList.add('active');
+        renderTeacherStudio();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function renderCoursesGrid() {
       const grid = document.getElementById("coursesGrid");
-      grid.innerHTML = courses.map((c, i) => {
-        const completedCount = c.topics ? c.topics.filter(t => completedTopics[t.id]).length : 0;
-        const total = c.topics ? c.topics.length : 0;
-        const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
-        return `
-          <div class="card">
-            <span class="card-badge ${i === 0 ? 'badge-core' : 'badge-custom'}">${c.domain}</span>
-            <h3>${c.title}</h3>
-            <p>${c.desc}</p>
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">
-              <span>Syllabus Progress</span>
-              <span>${pct}% (${completedCount}/${total})</span>
-            </div>
-            <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-            <button class="btn btn-primary btn-block" onclick="openCourse('${c.id}')">Open Lesson Studio →</button>
-          </div>
-        `;
-      }).join('');
+      grid.innerHTML = courses.map((c) => `
+        <div class="card">
+          <span class="card-badge badge-core">${c.domain}</span>
+          <h3>${c.title}</h3>
+          <p>${c.desc}</p>
+          <button class="btn btn-primary btn-block" onclick="openCourse('${c.id}')">Open Lesson Studio →</button>
+        </div>
+      `).join('');
     }
 
-    function openCourse(courseId) {
-      if (!currentUser) {
-        openAuthModal();
-        return;
-      }
-      activeCourse = courses.find(c => c.id === courseId) || courses[0];
+    function openCourse(id) {
+      activeCourse = courses.find(c => c.id === id) || courses[0];
       currentTopicIndex = 0;
       switchView('lesson');
-      renderLessonScreen();
     }
 
     function renderLessonScreen() {
@@ -838,27 +888,20 @@
       document.getElementById("lessonCategory").textContent = activeCourse.domain;
       document.getElementById("mediaCaption").innerHTML = `<strong>💡 Guide:</strong> ${topic.mediaCaption}`;
       document.getElementById("lessonTextBody").innerHTML = topic.body;
+      document.getElementById("mediaPlayerContainer").innerHTML = `<img src="${topic.mediaUrl}" alt="Lesson Material" />`;
 
-      // Populate multimedia frame
-      const mediaBox = document.getElementById("mediaPlayerContainer");
-      mediaBox.innerHTML = `<img src="${topic.mediaUrl}" alt="${topic.title}" />`;
-
-      // Update completion button state
       const isDone = completedTopics[topic.id];
       const markBtn = document.getElementById("markCompleteBtn");
       markBtn.textContent = isDone ? "✓ Completed" : "Mark as Done";
       markBtn.style.color = isDone ? "var(--success)" : "inherit";
 
-      // Populate left syllabus links
-      const topicsList = document.getElementById("topicsList");
-      topicsList.innerHTML = activeCourse.topics.map((t, idx) => `
+      document.getElementById("topicsList").innerHTML = activeCourse.topics.map((t, idx) => `
         <button class="btn ${idx === currentTopicIndex ? 'btn-gold' : 'btn-outline'}" style="text-align:left; font-size:0.78rem; padding:0.5rem;" onclick="jumpToTopic(${idx})">
           ${completedTopics[t.id] ? '✅ ' : '⭕ '}${t.title}
         </button>
       `).join('');
 
       document.getElementById("lessonProgressIndicator").textContent = `Topic ${currentTopicIndex + 1} of ${activeCourse.topics.length}`;
-      document.getElementById("btnLaunchQuiz").textContent = `Launch 65-Item Assessment (${activeCourse.items.length} Items) →`;
     }
 
     function jumpToTopic(idx) {
@@ -871,41 +914,14 @@
       completedTopics[topic.id] = !completedTopics[topic.id];
       localStorage.setItem("echolet_completed_topics", JSON.stringify(completedTopics));
       renderLessonScreen();
-      renderCoursesGrid();
     }
 
-    /* ========================================================
-       PHASE 3: AI-POWERED TUTOR ASSISTANT
-       ======================================================== */
-    function askAiTutor(mode) {
-      const topic = activeCourse.topics[currentTopicIndex];
-      const out = document.getElementById("aiOutputText");
-      out.style.opacity = "0.5";
-      out.textContent = "Teacher Echo's AI is synthesizing lesson materials...";
-
-      setTimeout(() => {
-        out.style.opacity = "1";
-        if (mode === 'summarize') {
-          out.innerHTML = `<strong>⚡ AI Lesson Summary (${topic.title}):</strong> Focus heavily on how philosophical assumptions dictate classroom management. Realism demands objective sensory evidence, Idealism emphasizes universal virtues, and Progressivism builds on experiential, democratic discovery.`;
-        } else if (mode === 'simplify') {
-          out.innerHTML = `<strong>🌱 Plain-English Analogy:</strong> Think of <em>SBM (School-Based Management)</em> like a barangay council. Rather than waiting for orders from the national capital for every small repair, teachers and local parents make fast decisions directly for their students.`;
-        } else if (mode === 'mnemonic') {
-          out.innerHTML = `<strong>🧠 Board Exam Mnemonic for NCBS-SH:</strong> Remember <strong>"SLIP-CORP"</strong>:<br>• <strong>S</strong>chool Leadership<br>• <strong>I</strong>nstructional Leadership<br>• <strong>P</strong>ersonal Excellence<br>• <strong>C</strong>ommunity Partnership<br>• <strong>O</strong>perations & Resources.`;
-        } else if (mode === 'relevance') {
-          out.innerHTML = `<strong>🎯 Board Exam High-Yield Note:</strong> This topic appears in 12–15 items annually in the Professional Education sub-test. Memorize DepEd Order No. 32, s. 2010 and the difference between mores (moral sanctions) and folkways (customs).`;
-        }
-      }, 400);
-    }
-
-    /* ========================================================
-       PHASE 4: INTELLIGENT ASSESSMENT & ERROR DIAGNOSTICS
-       ======================================================== */
+    /* ASSESSMENT ENGINE */
     function launchQuizForCurrentCourse() {
       quizActiveItems = [...activeCourse.items];
       currentQuizIndex = 0;
       currentQuizScore = 0;
       currentFailedItems = [];
-      isRemediationMode = false;
       document.getElementById("remediationInnovationCard").classList.add("hidden");
       switchView('quiz');
       renderCurrentQuizItem();
@@ -934,21 +950,17 @@
       });
     }
 
-    function handleChoiceSelection(selectedIndex, btnElement) {
+    function handleChoiceSelection(selectedIdx, btnElement) {
       const q = quizActiveItems[currentQuizIndex];
       const choicesBtns = document.querySelectorAll(".choice-item");
       choicesBtns.forEach(b => b.disabled = true);
 
-      if (selectedIndex === q.ans) {
+      if (selectedIdx === q.ans) {
         btnElement.classList.add("correct");
-        playAudioTone(true);
         currentQuizScore++;
       } else {
         btnElement.classList.add("wrong");
         choicesBtns[q.ans].classList.add("correct");
-        playAudioTone(false);
-
-        // Record error for Cognitive Diagnostic Matrix
         currentFailedItems.push(q);
         errorBank[q.concept] = (errorBank[q.concept] || 0) + 1;
         localStorage.setItem("echolet_error_bank", JSON.stringify(errorBank));
@@ -960,240 +972,97 @@
     }
 
     function stepQuizNext() {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       currentQuizIndex++;
       if (currentQuizIndex < quizActiveItems.length) {
         renderCurrentQuizItem();
       } else {
-        finalizeAssessmentRun();
+        finalizeAssessment();
       }
     }
 
-    function finalizeAssessmentRun() {
+    function finalizeAssessment() {
       const total = quizActiveItems.length;
       const pct = Math.round((currentQuizScore / total) * 100);
 
-      // Record in Student Diagnostic Database
-      const submission = {
-        id: "sub-" + Date.now(),
-        studentName: currentUser ? currentUser.name : "Anonymous Examinee",
-        studentEmail: currentUser ? currentUser.email : "guest@echolet.edu",
-        studentMajor: currentUser ? currentUser.major : "General",
+      const sub = {
         courseTitle: activeCourse.title,
         score: currentQuizScore,
         total: total,
         pct: pct,
         status: pct >= 75 ? "PASSED" : "FAILED",
-        failedItemsCount: currentFailedItems.length,
-        delta: isRemediationMode ? "+18%" : "+0%",
-        date: new Date().toLocaleDateString()
+        failedCount: currentFailedItems.length,
+        date: new Date().toLocaleDateString(),
+        studentName: currentUser ? currentUser.name : "Anonymous Examinee",
+        studentMajor: currentUser ? currentUser.major : "General Education"
       };
 
       const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-      subs.unshift(submission);
+      subs.unshift(sub);
       localStorage.setItem("echolet_submissions", JSON.stringify(subs));
 
-      // Trigger Phase 5 Innovation if failed items exist
       if (currentFailedItems.length > 0) {
-        activatePhase5Remediation(currentFailedItems);
+        document.getElementById("remediationInnovationCard").classList.remove("hidden");
+        document.getElementById("remediationDiagnosisText").innerHTML = `
+          <strong>Diagnosed Learning Fragility:</strong> You missed items across <em>${[...new Set(currentFailedItems.map(i => i.concept))].join(', ')}</em>.
+        `;
+        document.getElementById("remediationResourceBox").innerHTML = `
+          <strong>Tailored Action:</strong> The AI has flagged these topics. Ask the AI Tutor on the left to clarify each missed concept!
+        `;
       } else {
-        alert(`🏆 PERFECT SCORE! 65/65 (100%)\nYou have demonstrated comprehensive mastery over this LET domain.`);
+        alert("🎉 Congratulations! Perfect Score 65/65 (100%)!");
         switchView('diagnostics');
       }
-      renderDiagnosticsView();
-      renderTeacherStudio();
-    }
-
-    /* ========================================================
-       PHASE 5: PROPOSED INNOVATION - ADAPTIVE REMEDIATION LOOP
-       ======================================================== */
-    function activatePhase5Remediation(failedList) {
-      const remediationCard = document.getElementById("remediationInnovationCard");
-      remediationCard.classList.remove("hidden");
-
-      // Extract unique diagnosed misconception concepts
-      const fragileDomains = [...new Set(failedList.map(item => item.concept))];
-      
-      document.getElementById("remediationDiagnosisText").innerHTML = `
-        <strong>Cognitive Gap Analysis:</strong> Recurrent errors identified in <strong>${fragileDomains.join(', ')}</strong>.
-        The adaptive algorithm has selected targeted remedial instructional material to resolve these misconceptions before re-testing.
-      `;
-
-      document.getElementById("remediationResourceBox").innerHTML = `
-        <h4 style="color:var(--crimson); margin-bottom:0.4rem;">🎯 Targeted Remedial Micro-Lesson:</h4>
-        <p>• <strong>Core Clarification:</strong> Review the precise definitions of <em>${fragileDomains[0]}</em>. In LET questions, watch out for distractor stems that swap regulatory requirements (mores) with mere customs (folkways).</p>
-      `;
-
-      window.scrollTo({ top: remediationCard.offsetTop - 40, behavior: 'smooth' });
     }
 
     function launchTargetedMicroQuiz() {
-      // Create targeted 3-item adaptive follow-up
-      isRemediationMode = true;
       quizActiveItems = currentFailedItems.slice(0, 3);
       currentQuizIndex = 0;
       currentQuizScore = 0;
       currentFailedItems = [];
       document.getElementById("remediationInnovationCard").classList.add("hidden");
-      document.getElementById("remediationDeltaBadge").textContent = "Measuring Re-test Delta (Δ)";
       renderCurrentQuizItem();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ========================================================
-       PHASE 4 & 5: DIAGNOSTICS & ANALYTICS VIEW
-       ======================================================== */
     function renderDiagnosticsView() {
       const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-      const userSubs = currentUser && currentUser.role === "student"
-        ? subs.filter(s => s.studentEmail === currentUser.email)
-        : subs;
-
-      if (userSubs.length > 0) {
-        const avg = Math.round(userSubs.reduce((acc, curr) => acc + curr.pct, 0) / userSubs.length);
-        document.getElementById("diagScoreAverage").textContent = `${avg}%`;
-        document.getElementById("diagMasteryDelta").textContent = "+14.5%";
-      }
-
-      // Fragile Concepts List
       const concepts = Object.keys(errorBank);
-      document.getElementById("diagRecurrentErrors").textContent = concepts.length;
       const listEl = document.getElementById("fragileConceptsList");
       if (concepts.length > 0) {
-        listEl.innerHTML = concepts.map(c => `<li><strong>${c}</strong> (${errorBank[c]} recorded missed questions)</li>`).join('');
+        listEl.innerHTML = concepts.map(c => `<li><strong>${c}</strong> (${errorBank[c]} recorded missed attempts)</li>`).join('');
       }
 
-      // Table Render
       const tbody = document.getElementById("studentDiagnosticTableBody");
-      if (userSubs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No assessments turned in yet.</td></tr>`;
+      if (subs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No submissions recorded yet.</td></tr>';
         return;
       }
-      tbody.innerHTML = userSubs.map(s => `
+      tbody.innerHTML = subs.map(s => `
         <tr>
-          <td><strong>${s.courseTitle}</strong></td>
+          <td>${s.courseTitle}</td>
           <td>${s.score}/${s.total} (${s.pct}%)</td>
           <td style="color:${s.pct >= 75 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${s.status}</td>
-          <td>${s.failedItemsCount > 0 ? `${s.failedItemsCount} items flagged` : 'Zero errors'}</td>
-          <td><span class="delta-badge">${s.delta}</span></td>
+          <td>${s.failedCount > 0 ? `${s.failedCount} missed items` : 'Zero errors'}</td>
         </tr>
       `).join('');
     }
 
-    /* ========================================================
-       TEACHER STUDIO & EXPORT (PHASE 1 & 4)
-       ======================================================== */
     function renderTeacherStudio() {
-      const roster = JSON.parse(localStorage.getItem("echolet_roster")) || [];
       const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-
-      document.getElementById("teachTotalStudents").textContent = roster.length;
-      document.getElementById("teachTotalSubmissions").textContent = subs.length;
-      
-      const passed = subs.filter(s => s.pct >= 75).length;
-      const rate = subs.length > 0 ? Math.round((passed / subs.length) * 100) : 0;
-      document.getElementById("teachPassRate").textContent = `${rate}%`;
-
       const tbody = document.getElementById("teacherMasterTableBody");
       if (subs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No examinee assessments turned in yet.</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No submissions recorded yet.</td></tr>';
         return;
       }
-
       tbody.innerHTML = subs.map(s => `
         <tr>
           <td><strong>${s.studentName}</strong></td>
           <td>${s.studentMajor}</td>
-          <td>${s.courseTitle}</td>
-          <td>${s.score}/${s.total}</td>
-          <td>${s.pct}%</td>
+          <td>${s.score}/${s.total} (${s.pct}%)</td>
           <td style="color:${s.pct >= 75 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${s.status}</td>
           <td>${s.date}</td>
         </tr>
       `).join('');
-    }
-
-    function openCreateCourseModal() { document.getElementById("courseModal").classList.remove("hidden"); }
-    function closeCourseModal() { document.getElementById("courseModal").classList.add("hidden"); }
-
-    function saveNewCourse() {
-      const title = document.getElementById("newCourseTitle").value.trim();
-      const domain = document.getElementById("newCourseDomain").value.trim();
-      const desc = document.getElementById("newCourseDesc").value.trim();
-      const mediaType = document.getElementById("newCourseMediaType").value;
-
-      if (!title || !domain) {
-        alert("Please specify a course title and domain.");
-        return;
-      }
-
-      const newC = {
-        id: "course-" + Date.now(),
-        title,
-        domain,
-        desc,
-        mediaType,
-        items: master65Items.slice(0, 15), // Seed with high-yield items
-        topics: [
-          {
-            id: "top-" + Date.now(),
-            title: "1. Core Foundations",
-            mediaUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80",
-            mediaCaption: "Introductory module overview.",
-            body: `<p>Lesson content authored by Teacher Echo.</p>`
-          }
-        ]
-      };
-
-      courses.push(newC);
-      localStorage.setItem("echolet_courses", JSON.stringify(courses));
-      closeCourseModal();
-      renderCoursesGrid();
-      alert("✅ New Course successfully published to examinees!");
-    }
-
-    function exportMasterCSV() {
-      const subs = JSON.parse(localStorage.getItem("echolet_submissions")) || [];
-      if (subs.length === 0) return alert("No records available to export.");
-
-      let csv = "Student Name,Email,Major,Course,Score,Total,Percentage,Status,Date\n";
-      subs.forEach(s => {
-        csv += `"${s.studentName}","${s.studentEmail}","${s.studentMajor}","${s.courseTitle}",${s.score},${s.total},${s.pct}%,"${s.status}","${s.date}"\n`;
-      });
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `EchoLET_MasterGradebook_${new Date().toISOString().slice(0,10)}.csv`;
-      link.click();
-    }
-
-    /* ========================================================
-       PHASE 6: PWA, MOBILE APP SYNC & MULTIMEDIA AUDIO
-       ======================================================== */
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playAudioTone(isSuccess) {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      if (isSuccess) {
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.35);
-      } else {
-        osc.frequency.setValueAtTime(196.00, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-      }
     }
 
     function speakCurrentItem() {
@@ -1207,60 +1076,67 @@
     }
 
     function triggerPwaPrompt() {
-      alert("📱 Mobile Application Sync:\n\nEchoLET is Progressive Web App (PWA) ready. To install on Android/iOS:\n1. Tap your browser menu (⋮ or Share)\n2. Select 'Add to Home Screen'\n3. Offline synchronization & notifications will activate automatically.");
+      alert("📱 Mobile PWA Sync:\nAdd this page to your mobile home screen to activate offline review mode and sync with Teacher Echo's classroom.");
     }
 
-    function triggerPushNotificationSimulation() {
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("EchoLET Teacher Studio", { body: "Teacher Echo: Your 65-item assessment diagnostic is ready!" });
-      } else if ("Notification" in window && Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            new Notification("EchoLET Teacher Studio", { body: "Notifications successfully enabled!" });
-          }
-        });
+    function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
+    function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
+
+    function doRegisterStudent() {
+      const name = document.getElementById("regStudentName").value.trim();
+      const email = document.getElementById("regStudentEmail").value.trim();
+      const major = document.getElementById("regStudentMajor").value;
+      if (!name) return alert("Please enter your name.");
+
+      currentUser = { role: "student", name, email, major };
+      sessionStorage.setItem("echolet_user", JSON.stringify(currentUser));
+      closeAuthModal();
+      syncUserState();
+      alert(`🎉 Welcome to class, ${name}!`);
+    }
+
+    function teacherFastSign() {
+      currentUser = { role: "teacher", name: "Teacher Echo" };
+      sessionStorage.setItem("echolet_user", JSON.stringify(currentUser));
+      closeAuthModal();
+      syncUserState();
+      switchView('teacher');
+      alert("👑 Welcome back, Teacher Echo!");
+    }
+
+    function doSignOut() {
+      sessionStorage.removeItem("echolet_user");
+      currentUser = null;
+      syncUserState();
+      switchView('courses');
+    }
+
+    function syncUserState() {
+      const badge = document.getElementById("userBadge");
+      const authBtn = document.getElementById("authBtn");
+      const teachTab = document.getElementById("navTeacherBtn");
+
+      if (currentUser) {
+        badge.className = `user-pill ${currentUser.role}`;
+        badge.textContent = currentUser.role === "teacher" ? "👑 Teacher Echo" : `👤 ${currentUser.name}`;
+        authBtn.className = "btn-action-sm btn-signout";
+        authBtn.textContent = "Sign Out";
+        authBtn.onclick = doSignOut;
+        teachTab.classList.toggle("hidden", currentUser.role !== "teacher");
       } else {
-        alert("🔔 Notification Simulated:\nTeacher Echo posted new remediation materials in Professional Education.");
+        badge.className = "user-pill guest";
+        badge.textContent = "Guest (Signed Out)";
+        authBtn.className = "btn-action-sm btn-signin";
+        authBtn.textContent = "Sign In";
+        authBtn.onclick = openAuthModal;
+        teachTab.classList.add("hidden");
       }
     }
 
-    /* ========================================================
-       VIEW SWITCHING ROUTER
-       ======================================================== */
-    function switchView(viewName) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      
-      document.getElementById("viewCourses").classList.add("hidden");
-      document.getElementById("viewLesson").classList.add("hidden");
-      document.getElementById("viewQuiz").classList.add("hidden");
-      document.getElementById("viewDiagnostics").classList.add("hidden");
-      document.getElementById("viewTeacher").classList.add("hidden");
-
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-
-      if (viewName === 'courses') {
-        document.getElementById("viewCourses").classList.remove("hidden");
-        document.getElementById("navCoursesBtn").classList.add("active");
-        renderCoursesGrid();
-      } else if (viewName === 'lesson') {
-        document.getElementById("viewLesson").classList.remove("hidden");
-        document.getElementById("navCoursesBtn").classList.add("active");
-      } else if (viewName === 'quiz') {
-        document.getElementById("viewQuiz").classList.remove("hidden");
-      } else if (viewName === 'diagnostics') {
-        document.getElementById("viewDiagnostics").classList.remove("hidden");
-        document.getElementById("navDiagnosticsBtn").classList.add("active");
-        renderDiagnosticsView();
-      } else if (viewName === 'teacher') {
-        document.getElementById("viewTeacher").classList.remove("hidden");
-        document.getElementById("navTeacherBtn").classList.add("active");
-        renderTeacherStudio();
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Initialize platform
-    syncUserInterface();
+    // Startup Initialization
+    updateAiEngineLabel();
+    syncUserState();
+    renderCoursesGrid();
   </script>
 </body>
 </html>

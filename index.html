@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Who Wants to Be a Topnotcher? - Teacher Echo Live Arena</title>
+  <title>Who Wants to Be a Topnotcher? - Philippine Licensure Arena</title>
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>" />
 
   <style>
     :root {
-      --bg-stage: radial-gradient(circle at center, #2a030d 0%, #0d0105 55%, #000000 100%);
+      --bg-stage: radial-gradient(circle at center, #23020b 0%, #080104 60%, #000000 100%);
       --crimson: #80001C;
       --crimson-glow: #e60033;
       --gold: #FFD700;
@@ -27,44 +27,43 @@
     body { background: var(--bg-stage); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
 
     /* ========================================================
-       1. REGISTRATION & LOBBY SCREEN (LOOPING SOUND & VOICE)
+       1. REGISTRATION & CATEGORY LOBBY (THRILL MUSIC)
        ======================================================== */
     #introOverlay {
-      position: fixed; inset: 0; z-index: 500; background: radial-gradient(circle at center, #3b0312 0%, #070003 80%);
+      position: fixed; inset: 0; z-index: 500; background: radial-gradient(circle at center, #380210 0%, #070003 85%);
       display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;
     }
     .intro-spotlight {
-      position: absolute; top: -50px; width: 320px; height: 600px;
-      background: radial-gradient(ellipse at top, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
+      position: absolute; top: -60px; width: 340px; height: 650px;
+      background: radial-gradient(ellipse at top, rgba(255, 215, 0, 0.22) 0%, transparent 70%);
       transform: rotate(-25deg); pointer-events: none; animation: sweep 6s infinite alternate ease-in-out;
     }
     .intro-spotlight.right { right: 8%; transform: rotate(25deg); animation-delay: -3s; }
     @keyframes sweep {
-      0% { transform: rotate(-35deg) scaleX(0.8); }
-      100% { transform: rotate(35deg) scaleX(1.2); }
+      0% { transform: rotate(-35deg) scaleX(0.85); }
+      100% { transform: rotate(35deg) scaleX(1.15); }
     }
 
-    .intro-title-box { position: relative; z-index: 10; margin-bottom: 1.5rem; }
+    .intro-title-box { position: relative; z-index: 10; margin-bottom: 1.2rem; }
     .intro-subtitle {
       color: #F87171; font-size: 0.95rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
-      margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(248, 113, 113, 0.6);
+      margin-bottom: 0.4rem; text-shadow: 0 0 10px rgba(248, 113, 113, 0.6);
     }
     .intro-main-title {
       font-size: 2.7rem; font-weight: 900; color: var(--gold); text-transform: uppercase;
       letter-spacing: 2px; line-height: 1.1; text-shadow: 0 0 25px var(--gold-glow), 0 0 50px rgba(255, 215, 0, 0.3);
     }
-    .intro-tagline { color: #E2E8F0; font-size: 1rem; margin-top: 0.6rem; font-weight: 500; }
 
     .lobby-card {
-      background: rgba(15, 23, 42, 0.88); border: 2px solid var(--gold); border-radius: 16px;
-      padding: 1.8rem; max-width: 460px; width: 100%; box-shadow: 0 0 35px rgba(255, 215, 0, 0.25);
+      background: rgba(15, 23, 42, 0.9); border: 2px solid var(--gold); border-radius: 16px;
+      padding: 1.8rem; max-width: 480px; width: 100%; box-shadow: 0 0 40px rgba(255, 215, 0, 0.25);
       position: relative; z-index: 10; backdrop-filter: blur(10px);
     }
 
     .audio-lobby-status {
       display: flex; align-items: center; justify-content: space-between;
       background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold-dark); border-radius: 20px;
-      padding: 0.45rem 1rem; margin-bottom: 1rem; font-size: 0.82rem; color: var(--gold); font-weight: 700;
+      padding: 0.45rem 1rem; margin-bottom: 1.2rem; font-size: 0.82rem; color: var(--gold); font-weight: 700;
     }
     .btn-audio-toggle {
       background: var(--gold); color: #000; border: none; padding: 0.25rem 0.75rem; border-radius: 12px;
@@ -73,9 +72,30 @@
 
     .lobby-input {
       width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--gold-dark); border-radius: 8px;
-      background: #030712; color: #FFF; font-size: 1rem; font-weight: 600; margin-bottom: 0.8rem; outline: none;
+      background: #030712; color: #FFF; font-size: 1rem; font-weight: 600; margin-bottom: 1.2rem; outline: none;
     }
     .lobby-input:focus { border-color: var(--gold); box-shadow: 0 0 12px var(--gold-glow); }
+
+    /* Category Selection Buttons */
+    .category-label {
+      font-size: 0.82rem; font-weight: 800; color: var(--gold); text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 0.5rem; text-align: left; display: block;
+    }
+    .category-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.2rem;
+    }
+    .category-card {
+      background: #0b1329; border: 2px solid #334155; border-radius: 10px; padding: 0.85rem 0.6rem;
+      cursor: pointer; transition: all 0.2s; text-align: center;
+    }
+    .category-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .category-card.active {
+      background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+      border-color: var(--gold); box-shadow: 0 0 18px var(--gold-glow);
+    }
+    .category-card .icon { font-size: 1.4rem; display: block; margin-bottom: 0.2rem; }
+    .category-card .title { font-weight: 800; font-size: 0.85rem; color: #FFF; }
+    .category-card .desc { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
 
     .peer-count-indicator {
       font-size: 0.8rem; font-weight: 700; margin-bottom: 1.2rem;
@@ -104,14 +124,21 @@
       letter-spacing: 1px; text-shadow: 0 0 10px var(--gold-glow);
     }
 
-    .lifelines { display: flex; gap: 8px; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .lifelines { display: flex; gap: 6px; }
     .lifeline-btn {
-      width: 42px; height: 36px; border-radius: 50%; background: #0f172a; border: 2px solid var(--gold);
-      color: var(--gold); font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
+      width: 40px; height: 35px; border-radius: 50%; background: #0f172a; border: 2px solid var(--gold);
+      color: var(--gold); font-size: 0.78rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
       display: flex; align-items: center; justify-content: center;
     }
     .lifeline-btn:hover:not(:disabled) { background: var(--gold); color: #000; transform: scale(1.08); }
     .lifeline-btn:disabled { opacity: 0.35; border-color: #64748b; color: #64748b; cursor: not-allowed; text-decoration: line-through; }
+
+    .btn-thrill-sound {
+      background: rgba(255, 255, 255, 0.08); border: 1px solid var(--gold-dark); color: var(--gold);
+      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-thrill-sound:hover { background: var(--gold); color: #000; }
 
     /* Live Multi-Racer Ticker & Marathon Bar */
     .live-race-bar {
@@ -173,7 +200,7 @@
 
     .choice-btn.selected {
       background: var(--selected) !important; border-color: #FFF !important; color: #000 !important;
-      animation: pulseSelection 0.5s infinite alternate;
+      animation: pulseSelection 0.4s infinite alternate;
     }
     .choice-btn.selected .key { color: #000 !important; }
     .choice-btn.correct {
@@ -276,7 +303,7 @@
   <canvas id="confettiCanvas"></canvas>
 
   <!-- ========================================================
-       STAGE 1: REGISTRATION & LOBBY SCREEN (LOOPING SOUND & VOICE)
+       STAGE 1: REGISTRATION & CATEGORY LOBBY (THRILL MUSIC)
        ======================================================== -->
   <div id="introOverlay">
     <div class="intro-spotlight"></div>
@@ -285,45 +312,63 @@
     <div class="intro-title-box">
       <div class="intro-subtitle">👑 Professional Education Licensure Arena</div>
       <h1 class="intro-main-title">Who Wants to Be a<br><span style="color:#FFF;">Topnotcher?</span></h1>
-      <p class="intro-tagline">15 Philippine DepEd & PRC Career Tiers &bull; Real-time Simultaneous Race</p>
     </div>
 
     <div class="lobby-card">
       <div class="audio-lobby-status">
-        <span id="audioStatusText">🔊 Lobby Theme & Voice Active</span>
+        <span id="audioStatusText">🔊 Thrill Theme & Voice Active</span>
         <button class="btn-audio-toggle" id="btnAudioToggle" onclick="toggleLobbyAudio(event)">Mute Audio</button>
       </div>
 
-      <h3 style="color:var(--gold); font-size:1rem; margin-bottom:0.8rem; text-transform:uppercase;">Examinee Registration</h3>
+      <!-- Examinee Name -->
       <input type="text" id="playerNicknameInput" class="lobby-input" placeholder="Enter Full Name or Alias" value="Teacher Juan" />
 
-      <!-- Dynamic Real/Bot Indicator -->
+      <!-- Category Selection Grid -->
+      <label class="category-label">Select Board Exam Track:</label>
+      <div class="category-grid">
+        <div class="category-card active" id="catCardProfEd" onclick="selectCategory('profed', event)">
+          <span class="icon">🏛️</span>
+          <div class="title">Professional Education</div>
+          <div class="desc">Laws, SBM, Philosophies & Teaching Methods</div>
+        </div>
+        <div class="category-card" id="catCardGenEd" onclick="selectCategory('gened', event)">
+          <span class="icon">📚</span>
+          <div class="title">General Education</div>
+          <div class="desc">English, Math, Science & Philippine History</div>
+        </div>
+      </div>
+
+      <!-- Dynamic Peer/Bot Indicator -->
       <div id="peerCountIndicator" class="peer-count-indicator solo">
         🔍 Detecting classmates on network...
       </div>
 
       <button class="btn-intro-start" onclick="startTopnotcherBattle()">Enter Battle Arena ⚡</button>
       <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.8rem;">
-        Click anywhere to begin audio. If other students are online, bots are disabled automatically!
+        Click anywhere to begin audio. If classmates connect, bots step aside automatically!
       </p>
     </div>
   </div>
 
   <!-- ========================================================
        STAGE 2: LIVE MULTIPLAYER GAME SCREEN
-       ======================================================== -->
+       ======================================================== */ -->
   <header>
     <div class="game-logo">Who Wants to Be a <span>Topnotcher</span></div>
     
-    <div class="lifelines">
-      <button id="life5050" class="lifeline-btn" onclick="use5050()" title="50:50 Lifeline">50:50</button>
-      <button id="lifeEcho" class="lifeline-btn" onclick="useAskEcho()" title="Ask Teacher Echo AI">🤖</button>
-      <button id="lifePoll" class="lifeline-btn" onclick="useAudiencePoll()" title="PRC Audience Poll">👥</button>
-    </div>
+    <div class="header-actions">
+      <div class="lifelines">
+        <button id="life5050" class="lifeline-btn" onclick="use5050()" title="50:50 Lifeline">50:50</button>
+        <button id="lifeEcho" class="lifeline-btn" onclick="useAskEcho()" title="Ask Teacher Echo AI">🤖</button>
+        <button id="lifePoll" class="lifeline-btn" onclick="useAudiencePoll()" title="PRC Audience Poll">👥</button>
+      </div>
 
-    <button style="background:none; border:1px solid var(--gold); color:var(--gold); padding:0.35rem 0.8rem; border-radius:20px; font-weight:700; cursor:pointer;" onclick="toggleLadder()">
-      🇵🇭 Rank Ladder
-    </button>
+      <button class="btn-thrill-sound" id="btnInGameSound" onclick="toggleInGameThrillMusic()">🎵 Thrill Music: ON</button>
+
+      <button style="background:none; border:1px solid var(--gold); color:var(--gold); padding:0.35rem 0.75rem; border-radius:20px; font-weight:700; font-size:0.78rem; cursor:pointer;" onclick="toggleLadder()">
+        🇵🇭 Ladder
+      </button>
+    </div>
   </header>
 
   <!-- Live Multi-Racer Status Bar -->
@@ -363,7 +408,7 @@
 
   <!-- ========================================================
        STAGE 3: EXPLANATION SCREEN (REAL PHOTOS + AUDIO)
-       ======================================================== -->
+       ======================================================== */ -->
   <div id="explanationModal" class="explanation-overlay hidden">
     <div class="explanation-card">
       <div class="explanation-header">
@@ -393,7 +438,7 @@
 
   <!-- ========================================================
        STAGE 4: PHILIPPINE RANK LADDER DRAWER
-       ======================================================== -->
+       ======================================================== */ -->
   <aside class="ladder-drawer" id="ladderDrawer">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
       <h3 style="color:var(--gold); font-size:1rem;">🇵🇭 PHILIPPINE CAREER LADDER</h3>
@@ -404,7 +449,7 @@
 
   <!-- ========================================================
        STAGE 5: TOP 3 PODIUM CEREMONY SCREEN
-       ======================================================== -->
+       ======================================================== */ -->
   <div id="podiumModal" class="hidden">
     <h1 style="color:var(--gold); font-size:2.4rem; text-shadow:0 0 20px var(--gold-glow); text-transform:uppercase;">
       🏆 TOP 3 TOPNOTCHERS CROWNED!
@@ -469,53 +514,63 @@
       },
       history: {
         url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
-        caption: "Historical Foundations of World & Philippine Education"
+        caption: "Philippine & World Historical Foundations"
       },
-      eastern: {
-        url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
-        caption: "Eastern Philosophies: Buddhism, Confucianism, Dharma & Ren"
+      science: {
+        url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=900&q=80",
+        caption: "Biological & Physical Sciences (General Education)"
       },
-      safety: {
-        url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80",
-        caption: "DepEd Child Protection Policy & Student-Centered Climate"
+      math: {
+        url: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=900&q=80",
+        caption: "Mathematics, Logic & Quantitative Reasoning"
+      },
+      language: {
+        url: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=900&q=80",
+        caption: "English & Filipino Literature and Linguistics"
       }
     };
 
-    const masterBank = [
-      { stem: "Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "Child Protection Policy", photoKey: "safety", rationale: "DepEd Child Protection Policy defines psychological abuse as intimidating or causing mental trauma to assert control." },
-      { stem: "What does SDG 15 – 30 mean in global and Philippine basic education goals?", choices: ["Sustainable Development Goals after MDG 2015", "Sustaining Gross National Product", "Specific Development Goals for developing nations", "Sustaining Giant Nations"], ans: 0, concept: "Global Education Goals", photoKey: "history", rationale: "The Sustainable Development Goals (SDGs) span 2016–2030, succeeding the UN Millennium Development Goals." },
-      { stem: "Which is TRUE of a school and community partnership under DepEd guidelines?", choices: ["Community helps school only", "School is only a recipient of charity", "Both school and community benefit mutually", "Both school and community lose autonomy"], ans: 2, concept: "School-Community Alliance", photoKey: "community", rationale: "School-community partnerships are bidirectional, reciprocal collaborations that enrich both institutions." },
+    /* ========================================================
+       QUESTION REPOSITORIES: PROFED & GENED
+       ======================================================== */
+    const profEdBank = [
+      { stem: "Which form of violence occurs when someone uses threats and causes fear in an individual to gain control?", choices: ["Verbal abuse", "Psychological abuse", "Cultural violence", "Emotional violence"], ans: 1, concept: "Child Protection Policy", photoKey: "philosophy", rationale: "DepEd Child Protection Policy defines psychological abuse as intimidating or causing mental trauma to assert control." },
       { stem: "Which annual DepEd program brings stakeholders together every May to prepare facilities prior to class opening?", choices: ["PTA General Assembly", "School Governing Council", "Brigada Eskwela", "Palarong Pambansa"], ans: 2, concept: "DepEd Alliances", photoKey: "community", rationale: "Brigada Eskwela (National Schools Maintenance Week) mobilizes parents, alumni, and civic partners every May." },
-      { stem: "'It takes a village to educate a child.' Which does this statement imply in Philippine schools?", choices: ["PTA is more than enough", "Institutionalize school-community partnerships", "School substitutes for absentee parents", "Children only need textbook models"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "Educating a Filipino child requires extensive, institutionalized alliances beyond classroom walls." },
-      { stem: "As a professional teacher, you are a facilitator of learning. What is expected of you?", choices: ["Do not fail anyone under any circumstance", "Make teaching-learning interactive and exciting", "Use video clips exclusively", "Allow uncontrolled smartphone usage"], ans: 1, concept: "Instructional Leadership", photoKey: "leadership", rationale: "Facilitators cultivate active, engaging, and reflective learning environments." },
-      { stem: "Who is the most interested in transforming and improving the present status of a school organization?", choices: ["The authoritarian leader", "The laissez-faire leader", "The transformational leader", "The passive bureaucrat"], ans: 2, concept: "Organizational Leadership", photoKey: "leadership", rationale: "Transformational leaders challenge the status quo and inspire faculties to innovate." },
-      { stem: "Is SBM (School-Based Management), if implemented properly under RA 9155, an effective partnership?", choices: ["Yes", "No", "Depends on school size only", "Depends on geographical region"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "Yes, RA 9155 decentralizes governance directly to empower local school stakeholders." },
-      { stem: "Which is a proven advantage of SBM in Philippine public schools?", choices: ["Principal decides without consultations", "Sense of ownership among local stakeholders", "Exemption from state accountability", "Total privatization of basic education"], ans: 1, concept: "School-Based Management", photoKey: "leadership", rationale: "Direct involvement in school improvement planning fosters genuine stakeholder ownership." },
-      { stem: "For SBM to succeed, which component must be present in the school system?", choices: ["Effective school support system", "Leader with dictatorial personality", "Docile and silent community", "Low academic expectations"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "SBM requires structured institutional, fiscal, and instructional support systems." },
-      { stem: "Which is TRUE of school culture in Philippine basic education?", choices: ["Passed on biologically like hereditary traits", "Formed only by division superintendents", "Has significant measurable effect on student performance", "Cannot be altered once established"], ans: 2, concept: "School Culture & Climate", photoKey: "community", rationale: "A school's shared norms, rituals, and climate directly correlate with student learning gains." },
-      { stem: "Which is the most effective approach in formulating school policies?", choices: ["School head involves all affected stakeholders", "Students should never participate", "Only parents of honor graduates decide", "Policies must remain rigid and permanent"], ans: 0, concept: "Educational Governance", photoKey: "leadership", rationale: "Participatory formulation generates durable, respected, and transparent policies." },
-      { stem: "A school head who charts strategic direction, makes informed decisions, and leads change demonstrates:", choices: ["Strategic thinking and innovation (Domain 1)", "Personal survival skills only", "Laissez-faire management", "Authoritarian leadership"], ans: 0, concept: "NCBS-SH Competencies", photoKey: "leadership", rationale: "Under DepEd Order 32, s. 2010 (NCBS-SH), strategic thinking combines direction-setting and innovation." },
-      { stem: "Supervising and evaluating teachers' pedagogical performance belongs to which domain in NCBS-SH?", choices: ["Personal excellence", "Instructional leadership (Domain 2)", "Operations management", "Fiscal management"], ans: 1, concept: "Instructional Supervision", photoKey: "leadership", rationale: "Instructional mentoring, classroom observation, and appraisal belong directly to Domain 2." },
+      { stem: "Who is the most interested in transforming and improving the present status of a school organization?", choices: ["The authoritarian leader", "The laissez-faire leader", "The transformational leader", "The passive bureaucrat"], ans: 2, concept: "Organizational Leadership", photoKey: "leadership", rationale: "Transformational leaders challenge the status quo and inspire faculties to innovate and excel." },
+      { stem: "Is SBM (School-Based Management), if implemented properly under RA 9155, an effective partnership?", choices: ["Yes", "No", "Depends on school size only", "Depends on geographical region"], ans: 0, concept: "School-Based Management", photoKey: "leadership", rationale: "Yes, RA 9155 decentralizes governance directly to empower local school heads, teachers, and communities." },
       { stem: "Teacher Q regards the student as a spiritual entity and part of the universal spiritual world. Teacher Q subscribes to:", choices: ["Idealism", "Realism", "Existentialism", "Pragmatism"], ans: 0, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Idealism (Platonic philosophy) views the universe as fundamentally spiritual and ideas as enduring truth." },
       { stem: "Who among the following believes that learning requires disciplined attention, regular homework, and respect for legitimate authority?", choices: ["Reconstructionist", "Essentialist", "Perennialist", "Progressivist"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Essentialism emphasizes core 3Rs academic discipline, prescribed curriculum, and teacher authority." },
-      { stem: "Teacher U emphasizes deep personal reflection on one's choices and commitments. Teacher U adheres to:", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Existentialism (Sartre, Kierkegaard) asserts that individuals define their own essence through conscious choice." },
-      { stem: "In a technical-vocational school, students are taught skills with direct practical consequences. Which epistemology aligns with this?", choices: ["Inquiry into the divine", "The mind and innate ideas", "The practical utility and consequences of knowledge", "Purely theoretical deductive ontology"], ans: 2, concept: "Epistemology", photoKey: "philosophy", rationale: "Pragmatism (John Dewey) holds that knowledge is validated through practical action and experiential utility." }
+      { stem: "Teacher U emphasizes deep personal reflection on one's choices and commitments. Teacher U adheres to:", choices: ["Realism", "Existentialism", "Idealism", "Pragmatism"], ans: 1, concept: "Western Philosophies", photoKey: "philosophy", rationale: "Existentialism asserts that existence precedes essence; learners must freely define their own purpose." },
+      { stem: "In a vocational school, students are taught skills with direct practical consequences. Which epistemology aligns with this?", choices: ["Inquiry into the divine", "The mind and innate ideas", "The practical utility and consequences of knowledge", "Purely theoretical ontology"], ans: 2, concept: "Epistemology", photoKey: "philosophy", rationale: "Pragmatism (John Dewey) holds that knowledge is validated through practical action and experiential utility." },
+      { stem: "How do folkways differ from mores in sociological foundations of education?", choices: ["Folkways are legal statutes; mores are casual etiquette", "Folkways are repetitive conventions; mores carry strict moral significance", "Folkways are mandatory; mores are optional", "Folkways are religious dogmas"], ans: 1, concept: "Sociological Foundations", photoKey: "community", rationale: "Folkways govern customary conventions, while mores embody severe moral duties punishable by society." },
+      { stem: "According to Conflict Theory, what is the primary engine of social transformation?", choices: ["Institutional harmony", "Inequality and struggles for scarce power and resources", "Shared symbolic gestures", "Spiritual consensus"], ans: 1, concept: "Sociological Theories", photoKey: "history", rationale: "Conflict theory posits that societal evolution is sparked by friction between competing economic and social groups." }
+    ];
+
+    const genEdBank = [
+      { stem: "'The pen is mightier than the sword.' Which figure of speech is demonstrated in this line?", choices: ["Metaphor", "Metonymy", "Synecdoche", "Personification"], ans: 1, concept: "English: Figures of Speech", photoKey: "language", rationale: "Metonymy replaces the name of a concept with that of something closely associated (pen for the written word; sword for military force)." },
+      { stem: "Sino ang tinaguriang 'Ama ng Balagtasan' at may-akda ng dakilang obrang 'Florante at Laura'?", choices: ["Jose Rizal", "Francisco Balagtas", "Andres Bonifacio", "Marcelo H. del Pilar"], ans: 1, concept: "Filipino: Panitikan", photoKey: "language", rationale: "Si Francisco 'Balagtas' Baltazar ang kinikilalang prinsipe ng mga manunulang Tagalog at may-akda ng Florante at Laura." },
+      { stem: "Which organelle is universally known as the 'powerhouse of the cell' due to ATP production?", choices: ["Nucleus", "Ribosome", "Mitochondria", "Endoplasmic Reticulum"], ans: 2, concept: "Science: Cellular Biology", photoKey: "science", rationale: "Mitochondria generate most of the cell's supply of adenosine triphosphate (ATP) through cellular respiration." },
+      { stem: "What is the Greatest Common Factor (GCF) of 24, 36, and 60?", choices: ["6", "8", "12", "18"], ans: 2, concept: "Mathematics: Number Theory", photoKey: "math", rationale: "The common factors of 24, 36, and 60 are 1, 2, 3, 4, 6, and 12. The greatest among them is 12." },
+      { stem: "Where did Andres Bonifacio and the Katipuneros tear their cedulas in open defiance of Spanish colonial rule in August 1896?", choices: ["Pugad Lawin", "Kawit, Cavite", "Tirad Pass", "Bagumbayan"], ans: 0, concept: "Social Science: Philippine History", photoKey: "history", rationale: "The historic 'Cry of Pugad Lawin' marked the formal launch of the Philippine Revolution through the tearing of cedulas." },
+      { stem: "If a shirt marked at ₱800 is offered at a 25% discount, what is the discounted purchase price?", choices: ["₱550", "₱600", "₱650", "₱700"], ans: 1, concept: "Mathematics: Percentage & Discount", photoKey: "math", rationale: "Discount = ₱800 × 0.25 = ₱200. Purchase price = ₱800 - ₱200 = ₱600." },
+      { stem: "Which ecological relationship describes two organisms living together where both mutually benefit?", choices: ["Commensalism", "Parasitism", "Mutualism", "Competition"], ans: 2, concept: "Science: Ecology", photoKey: "science", rationale: "Mutualism is an interspecies ecological interaction where both participating organisms derive physiological benefits." },
+      { stem: "Which novel authored by Dr. Jose Rizal is dedicated to the martyrdom of the three priests Gomez, Burgos, and Zamora (GOMBURZA)?", choices: ["Noli Me Tangere", "El Filibusterismo", "Mi Ultimo Adios", "A La Juventud Filipina"], ans: 1, concept: "Social Science: Rizal's Works", photoKey: "history", rationale: "El Filibusterismo (published in 1891 in Ghent) was solemnly dedicated by Dr. Jose Rizal to the memory of GOMBURZA." },
+      { stem: "Identify the part of speech of the underlined word: 'She spoke *very* eloquently during the senate hearing.'", choices: ["Adjective", "Adverb", "Conjunction", "Preposition"], ans: 1, concept: "English: Grammar & Structure", photoKey: "language", rationale: "'Very' is an intensifier adverb modifying another adverb ('eloquently')." },
+      { stem: "What is the primary atmospheric gas that constitutes approximately 78% of Earth's atmosphere by volume?", choices: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Argon"], ans: 2, concept: "Science: Earth Science", photoKey: "science", rationale: "Earth's dry atmosphere is composed of approximately 78.08% nitrogen, 20.95% oxygen, and 0.93% argon." }
     ];
 
     /* ========================================================
-       UNIQUE IDENTIFICATION & DYNAMIC OPPONENT LOGIC
+       STATE, PEER DISCOVERY & CATEGORY SELECTION
        ======================================================== */
     const myPlayerId = "player_" + Math.random().toString(36).substring(2, 9);
     let playerName = "Teacher Juan";
+    let selectedCategory = "profed"; // 'profed' or 'gened'
     let currentTierIndex = 0;
     let activeQuestion = null;
     let isChoiceLocked = false;
     let top3Winners = [];
 
-    // Real Peer registry
     const realPeers = new Map();
-
-    // Default bots (USED ONLY IF SINGLE PLAYER)
     const artificialBots = [
       { id: "bot_1", name: "Bot Dela Cruz", tier: 0, isCrowned: false, isBot: true },
       { id: "bot_2", name: "Bot Santos", tier: 0, isCrowned: false, isBot: true },
@@ -529,20 +584,22 @@
     } catch (e) {}
 
     /* ========================================================
-       LOBBY AUDIO SYNTHESIZER & REPEATING VOICE
+       CINEMATIC THRILL MUSIC ENGINE (WEB AUDIO API SYNTH)
        ======================================================== */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const speechSynth = window.speechSynthesis;
     let isLobbyAudioMuted = false;
+    let isInGameThrillMuted = false;
     let lobbyMusicTimer = null;
     let lobbyVoiceTimer = null;
+    let inGameThrillTimer = null;
     let lobbyHasStarted = false;
 
     function ensureLobbyAudioStarted() {
       if (lobbyHasStarted || isLobbyAudioMuted) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       lobbyHasStarted = true;
-      startLobbySoundtrackLoop();
+      startLobbyThrillMusic();
       startLobbyVoiceLoop();
     }
 
@@ -558,16 +615,24 @@
         stopLobbyMusicAndVoice();
       } else {
         btn.textContent = "Mute Audio";
-        txt.textContent = "🔊 Lobby Theme & Voice Active";
+        txt.textContent = "🔊 Thrill Theme & Voice Active";
         lobbyHasStarted = false;
         ensureLobbyAudioStarted();
       }
     }
 
-    // Melodic game show pulse in C minor
-    function startLobbySoundtrackLoop() {
+    function selectCategory(cat, e) {
+      if (e) e.stopPropagation();
+      playTone(520, 0.1, "sine", 0.15);
+      selectedCategory = cat;
+      document.getElementById("catCardProfEd").classList.toggle("active", cat === "profed");
+      document.getElementById("catCardGenEd").classList.toggle("active", cat === "gened");
+    }
+
+    // Tense cinematic game show rhythm: Sub-bass heartbeat + ticking clock
+    function startLobbyThrillMusic() {
       if (isLobbyAudioMuted) return;
-      const notes = [130.81, 155.56, 174.61, 196.00, 155.56, 174.61]; // C3, Eb3, F3, G3, Eb3, F3
+      const bassNotes = [65.41, 65.41, 77.78, 65.41, 58.27, 65.41]; // C2 drone with minor inflections
       let step = 0;
 
       lobbyMusicTimer = setInterval(() => {
@@ -577,37 +642,63 @@
         }
 
         const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
 
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(notes[step % notes.length], now);
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.45);
-
-        // Sub heartbeat thud on beat 0 and 3
-        if (step % 3 === 0) {
-          const sub = audioCtx.createOscillator();
-          const subG = audioCtx.createGain();
-          sub.type = "sine";
-          sub.frequency.setValueAtTime(75, now);
-          subG.gain.setValueAtTime(0.2, now);
-          subG.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-          sub.connect(subG);
-          subG.connect(audioCtx.destination);
-          sub.start(now);
-          sub.stop(now + 0.3);
+        // 1. Heavy Heartbeat Sub-Kick (Lub-dub)
+        playHeartbeatSub(now, 55, 0.22);
+        if (step % 2 === 0) {
+          playHeartbeatSub(now + 0.2, 50, 0.16);
         }
+
+        // 2. Menacing Clock Tick (Short noise / high-sine transient)
+        playClockTick(now + 0.45);
+
+        // 3. Dark Synth Bass Drone
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(bassNotes[step % bassNotes.length], now);
+        g.gain.setValueAtTime(0.08, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.55);
+
         step++;
-      }, 480);
+      }, 550);
     }
 
-    // Spoken voice repeating "Who wants to be a topnotcher!"
+    function playHeartbeatSub(time, freq, gainVal) {
+      try {
+        const sub = audioCtx.createOscillator();
+        const subG = audioCtx.createGain();
+        sub.type = "sine";
+        sub.frequency.setValueAtTime(freq, time);
+        sub.frequency.exponentialRampToValueAtTime(35, time + 0.25);
+        subG.gain.setValueAtTime(gainVal, time);
+        subG.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
+        sub.connect(subG);
+        subG.connect(audioCtx.destination);
+        sub.start(time);
+        sub.stop(time + 0.25);
+      } catch (e) {}
+    }
+
+    function playClockTick(time) {
+      try {
+        const tick = audioCtx.createOscillator();
+        const tickG = audioCtx.createGain();
+        tick.type = "triangle";
+        tick.frequency.setValueAtTime(1400, time);
+        tickG.gain.setValueAtTime(0.04, time);
+        tickG.gain.exponentialRampToValueAtTime(0.0001, time + 0.04);
+        tick.connect(tickG);
+        tickG.connect(audioCtx.destination);
+        tick.start(time);
+        tick.stop(time + 0.04);
+      } catch (e) {}
+    }
+
     function startLobbyVoiceLoop() {
       if (isLobbyAudioMuted) return;
       
@@ -616,12 +707,11 @@
         speechSynth.cancel();
         const utterance = new SpeechSynthesisUtterance("Who wants to be a topnotcher!");
         utterance.rate = 1.0;
-        utterance.pitch = 1.25; // Energetic game-show presenter tone
+        utterance.pitch = 1.2;
         speechSynth.speak(utterance);
       };
 
-      // Speak immediately then repeat every 6 seconds
-      setTimeout(utterPhrase, 600);
+      setTimeout(utterPhrase, 800);
       lobbyVoiceTimer = setInterval(utterPhrase, 6500);
     }
 
@@ -631,21 +721,80 @@
       speechSynth.cancel();
     }
 
+    // In-game ambient suspense thrill heartbeat
+    function startInGameThrillEngine() {
+      if (isInGameThrillMuted) return;
+      if (inGameThrillTimer) clearInterval(inGameThrillTimer);
+
+      let step = 0;
+      // Heartbeat quickens as higher ladder tiers are reached
+      const intervalMs = Math.max(380, 680 - (currentTierIndex * 20));
+
+      inGameThrillTimer = setInterval(() => {
+        if (isInGameThrillMuted || isChoiceLocked) return;
+
+        const now = audioCtx.currentTime;
+        playHeartbeatSub(now, 55, 0.16);
+        playHeartbeatSub(now + 0.18, 48, 0.12);
+        playClockTick(now + 0.35);
+
+        // Low ambient drone
+        if (step % 4 === 0) {
+          playTone(130.81, 1.2, "sine", 0.04); // C3 suspense hum
+        }
+        step++;
+      }, intervalMs);
+    }
+
+    function stopInGameThrillEngine() {
+      if (inGameThrillTimer) clearInterval(inGameThrillTimer);
+    }
+
+    function toggleInGameThrillMusic() {
+      isInGameThrillMuted = !isInGameThrillMuted;
+      const btn = document.getElementById("btnInGameSound");
+      if (isInGameThrillMuted) {
+        btn.textContent = "🔇 Thrill Music: OFF";
+        stopInGameThrillEngine();
+      } else {
+        btn.textContent = "🎵 Thrill Music: ON";
+        startInGameThrillEngine();
+      }
+    }
+
+    // Rising pitch lock-in tension riser
+    function playLockInRiser() {
+      const now = audioCtx.currentTime;
+      const riser = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      riser.type = "sawtooth";
+      riser.frequency.setValueAtTime(220, now);
+      riser.frequency.exponentialRampToValueAtTime(587.33, now + 1.1); // Tension rise from A3 to D5
+
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+
+      riser.connect(gain);
+      gain.connect(audioCtx.destination);
+      riser.start(now);
+      riser.stop(now + 1.1);
+    }
+
     /* ========================================================
-       PEER DISCOVERY & DYNAMIC OPPONENT SWAPPING
+       PEER DISCOVERY & DYNAMIC BOT TOGGLE
        ======================================================== */
-    // Send discovery heartbeat every 1 second
     setInterval(() => {
       const currentName = document.getElementById("playerNicknameInput").value.trim() || playerName;
       broadcastMessage({
         type: "HEARTBEAT",
         id: myPlayerId,
         name: currentName,
+        category: selectedCategory,
         tier: currentTierIndex,
         timestamp: Date.now()
       });
 
-      // Prune inactive peers (>3.5s silent)
       const now = Date.now();
       for (const [id, peer] of realPeers.entries()) {
         if (now - peer.timestamp > 3500) {
@@ -659,7 +808,6 @@
 
     function broadcastMessage(data) {
       if (channel) channel.postMessage(data);
-      // Fallback cross-window communication
       try {
         localStorage.setItem("topnotcher_wire", JSON.stringify({ ...data, _rand: Math.random() }));
       } catch (e) {}
@@ -681,6 +829,7 @@
         realPeers.set(data.id, {
           id: data.id,
           name: data.name,
+          category: data.category,
           tier: data.tier,
           isCrowned: data.tier === 14,
           timestamp: Date.now()
@@ -702,15 +851,13 @@
       if (realCount > 0) {
         const names = Array.from(realPeers.values()).map(p => p.name).join(", ");
         ind.className = "peer-count-indicator multi";
-        ind.innerHTML = `👥 <strong>${realCount} Real Classmate(s) Online:</strong> ${names}<br><span style="font-size:0.75rem; color:#A7F3D0;">(Automatic bots are completely disabled)</span>`;
+        ind.innerHTML = `👥 <strong>${realCount} Real Classmate(s) Online:</strong> ${names}<br><span style="font-size:0.75rem; color:#A7F3D0;">(No artificial bots. Competing strictly with peers!)</span>`;
       } else {
         ind.className = "peer-count-indicator solo";
         ind.innerHTML = `👤 <strong>Solo Player Detected.</strong><br><span style="font-size:0.75rem; color:#FDE68A;">(Simulated examinee bots will practice with you until a classmate connects)</span>`;
       }
     }
 
-    // Get active roster according to the exact rule:
-    // If real participants exist -> NO BOTS. If 1 player -> AI bots apply.
     function getActiveOpponents() {
       if (realPeers.size > 0) {
         return Array.from(realPeers.values());
@@ -719,7 +866,7 @@
     }
 
     /* ========================================================
-       GAMEPLAY ARENA LOGIC
+       GAME ARENA FLOW & CATEGORY HOOK
        ======================================================== */
     function startTopnotcherBattle() {
       const input = document.getElementById("playerNicknameInput").value.trim();
@@ -733,7 +880,7 @@
       renderPhilippineLadder();
       loadTierQuestion();
 
-      // Start bot advancement loop (ONLY acts if no real peers exist)
+      startInGameThrillEngine();
       startArtificialBotLoop();
     }
 
@@ -804,13 +951,19 @@
       container.innerHTML = html;
     }
 
+    function getActiveQuestionBank() {
+      return (selectedCategory === "gened") ? genEdBank : profEdBank;
+    }
+
     function loadTierQuestion() {
       isChoiceLocked = false;
-      activeQuestion = masterBank[currentTierIndex % masterBank.length];
+      const bank = getActiveQuestionBank();
+      activeQuestion = bank[currentTierIndex % bank.length];
       const tier = philippineRankLadder[currentTierIndex];
 
+      const trackTitle = (selectedCategory === "gened") ? "General Education" : "Professional Education";
       document.getElementById("rankBadge").innerHTML = `
-        RANK TIER ${tier.level} OF 15 &bull; <strong style="color:#FFF;">${tier.prize}</strong> (${tier.title})
+        RANK TIER ${tier.level} OF 15 &bull; <strong style="color:#FFF;">${tier.prize}</strong> (${trackTitle})
       `;
 
       document.getElementById("questionStem").textContent = activeQuestion.stem;
@@ -823,12 +976,16 @@
       }
 
       renderPhilippineLadder();
+      startInGameThrillEngine();
     }
 
     function chooseAnswer(idx) {
       if (isChoiceLocked) return;
       isChoiceLocked = true;
       playTone(440, 0.25, "triangle", 0.15);
+
+      // Play dramatic 1.2s lock-in tension riser
+      playLockInRiser();
 
       const btn = document.getElementById(`btnChoice${idx}`);
       btn.classList.add("selected");
@@ -849,11 +1006,12 @@
         }
 
         setTimeout(() => showExplanationModal(isRight), 900);
-      }, 1100);
+      }, 1200);
     }
 
     /* EXPLANATION SCREEN WITH REAL PHOTOS + AUDIO */
     function showExplanationModal(isRight) {
+      stopInGameThrillEngine();
       const modal = document.getElementById("explanationModal");
       const tier = philippineRankLadder[currentTierIndex];
       const photo = domainPhotos[activeQuestion.photoKey] || domainPhotos.philosophy;
@@ -931,7 +1089,6 @@
     /* BOT ADVANCEMENT (ONLY APPLIES IF REAL PEERS == 0) */
     function startArtificialBotLoop() {
       setInterval(() => {
-        // Strict requirement check: DO NOT RUN IF REAL OPPONENTS ARE REGISTERED
         if (realPeers.size > 0 || top3Winners.length >= 3) return;
 
         const bot = artificialBots[Math.floor(Math.random() * artificialBots.length)];
@@ -953,6 +1110,7 @@
         type: "PROGRESS",
         id: myPlayerId,
         name: playerName,
+        category: selectedCategory,
         tier: currentTierIndex,
         timestamp: Date.now()
       });
@@ -979,6 +1137,7 @@
     }
 
     function triggerGrandPodiumCeremony() {
+      stopInGameThrillEngine();
       while (top3Winners.length < 3) {
         top3Winners.push("Examinee " + (top3Winners.length + 1));
       }
@@ -1047,7 +1206,7 @@
     function useAskEcho() {
       playTone(850, 0.25);
       document.getElementById("lifeEcho").disabled = true;
-      alert(`🤖 Teacher Echo says: "Analyze the root philosophy of ${activeQuestion.concept}. Be cautious with choice ${activeQuestion.choices[(activeQuestion.ans + 1) % 4]}!"`);
+      alert(`🤖 Teacher Echo says: "Analyze the root principle of ${activeQuestion.concept}. Be cautious with choice ${activeQuestion.choices[(activeQuestion.ans + 1) % 4]}!"`);
     }
 
     function useAudiencePoll() {
